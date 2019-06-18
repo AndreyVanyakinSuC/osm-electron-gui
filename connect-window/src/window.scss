@@ -1,0 +1,93 @@
+//  adaptive font
+@import 'main-window/src/styles/responsive-font-size.scss';
+
+$BLUE: #5DA1FF;
+@mixin color-transition() {
+    transition: color 200ms ease-in;
+}
+
+body {
+    height: auto;
+    width: auto;
+    background-color:whitesmoke;
+    user-select: none;
+    overflow: hidden;
+    padding: 0.25rem;
+}
+
+.connect-window-container {
+
+    span {
+        margin: 0 0.5rem 0 0;
+    }
+
+
+    input {
+        // font-size: 0.9em;
+        font-family: inherit;
+        font-weight: normal;
+        text-align: center;
+
+        &:focus {
+            outline-color: $BLUE;
+        }
+    }
+
+    .inputs-container {
+
+        margin: 0.5rem 0;
+        #ip input { width: 8rem;}
+        #port input { width: 4rem;}
+        #pass input {width: 14rem;}
+
+
+        .connect-window-text{
+            margin: 0.25rem 0;
+        }
+
+    }
+
+    .confirmation-check {
+        cursor: pointer;
+        
+        input {
+            display: none;
+        }
+
+        label {
+            cursor: inherit;
+        }
+
+        .checked {
+            color: $BLUE;
+            @include color-transition();
+        }
+
+        .unchecked {
+            color:lightgray; 
+            @include color-transition();
+        }
+    }
+
+    .btn-strip {
+        margin-top: 1rem;
+        display: flex;
+        font-display: row;
+        justify-content: center;
+
+        button {
+            margin: 0.25rem 0.5rem;
+            cursor: pointer;
+
+            #cancel {
+
+            }
+
+            #connect {
+                .spinner { color: $BLUE; }
+            }
+        }
+    }
+
+   
+}
