@@ -22,6 +22,13 @@ export const UNITS = new Map ([
     ['L', 'км'],
 ]);
 
+export const PROP_STRINGS = new Map([
+    ['F', 'Тяжение'],
+    ['dF', 'Прирост тяжения'],
+    ['Tamb', 'Температура'],
+    ['I', 'Стенка'],
+])
+
 
 export const MSGS = new Map ([
     ['011', {
