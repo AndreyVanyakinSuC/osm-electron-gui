@@ -85,13 +85,13 @@ class TowerSensorsPopup extends Component {
 
                     if (position ==='from') {
                         return (
-                            <Fragment>
+                            <Fragment key={id}>
                                 <span className='status'><Ribbon value={I} msgCode={msgCode}/></span>
                                 <span className={position}>{entityName}</span>
                             </Fragment>)
                     } else if (position === 'towards') {
                         return (
-                            <Fragment>
+                            <Fragment key={id}>
                                 <span className={position}>{entityName}</span>
                                 <span className='status'><Ribbon value={I} msgCode={msgCode}/></span>
                             </Fragment>)
