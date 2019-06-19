@@ -91,7 +91,8 @@ const trace = (xyArr, name, propMode, yaxis) => {
         connectgaps: true,
         xcalendar: "gregorian",
         yaxis: yaxis,
-        hoverinfo: "y+text+x"//Any combination of "x", "y", "z", "text", "name" joined with a "+" OR "all" or "none" or "skip". examples: "x", "y", "x+y", "x+y+z", "all" default: "all" Determines which trace information appear on hover. If `none` or `skip` are set, no information is displayed upon hovering. But, if `none` is set, click and hover events are still fired.
+        // hoverinfo: "y+text+x",//Any combination of "x", "y", "z", "text", "name" joined with a "+" OR "all" or "none" or "skip". examples: "x", "y", "x+y", "x+y+z", "all" default: "all" Determines which trace information appear on hover. If `none` or `skip` are set, no information is displayed upon hovering. But, if `none` is set, click and hover events are still fired.
+        hovertemplate: "<b>%{text}</b> <extra></extra>" //Template string used for rendering the information that appear on hover box. Note that this will override `hoverinfo`. Variables are inserted using %{variable}, for example "y: %{y}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Price: %{y:$.2f}". See https://github.com/d3/d3-format/blob/master/README.md#locale_format for details on the formatting syntax. The variables available in `hovertemplate` are the ones emitted as event data described at this link https://plot.ly/javascript/plotlyjs-events/#event-data. Additionally, every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available. Anything contained in tag `<extra>` is displayed in the secondary box, for example "<extra>{fullData.name}</extra>". To hide the secondary box completely, use an empty tag `<extra></extra>`.
     }
 }
 
