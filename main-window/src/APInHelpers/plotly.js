@@ -19,7 +19,7 @@ export const CONFIG = {
         showSendToCloud: false,
         locale: 'ru',
         displaylogo: false,
-        modeBarButtonsToRemove: ['sendDataToCloud','hoverClosestCartesian','hoverCompareCartesian',], //['toImage']
+        modeBarButtonsToRemove: ['sendDataToCloud','hoverClosestCartesian','toggleSpikelines','hoverCompareCartesian',], //['toImage']
         responsive: true
     },
     history: {
@@ -38,7 +38,7 @@ export const CONFIG = {
         showSendToCloud: false,
         locale: 'ru',
         displaylogo: false,
-        modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d','sendDataToCloud','lasso2d', 'zoomOut2d', 'zoomIn2d'], //['toImage']
+        modeBarButtonsToRemove: ['zoom2d', 'pan2d','hoverCompareCartesian' ,'resetScale2d','toggleSpikelines','autoScale2d','hoverClosestCartesian', 'select2d','sendDataToCloud','lasso2d', 'zoomOut2d', 'zoomIn2d'], //['toImage']
         responsive: true
     },
 }
