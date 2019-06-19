@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import * as Plotly from 'plotly.js';
-import * as csDictionary from 'plotly.js/lib/locales/ru.js';
+
+// Building plotly to enable RU locale
+import Plotly from 'plotly.js/dist/plotly';
+import locale from 'plotly.js-locales/ru';
 import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
-Plotly.register(csDictionary);
-// import Plot from 'react-plotly.js';
+Plotly.register(locale);
+Plotly.setPlotConfig({locale: 'ru'})
+
 import _ from 'lodash';
 import { CONFIG, SETTINGS,  wiresToState, displayName_wireID, mainTraces, tempTraces, generalLayout, xLayout,yLayout,normalBandShapes, iceLevelsShapes, traceShapes, highlightDangerShapes, valueAnnotation } from '../../APInHelpers/plotly';
 import { date_UTS, displayHuman, freshMaxTS } from '../../APInHelpers/timeseries';
