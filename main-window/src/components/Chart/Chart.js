@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import Plot from 'react-plotly.js';
+import * as Plotly from 'plotly.js';
+import * as csDictionary from 'plotly.js/lib/locales/ru.js';
+import createPlotlyComponent from 'react-plotly.js/factory';
+const Plot = createPlotlyComponent(Plotly);
+Plotly.register(csDictionary);
+// import Plot from 'react-plotly.js';
 import _ from 'lodash';
 import { CONFIG, SETTINGS,  wiresToState, displayName_wireID, mainTraces, tempTraces, generalLayout, xLayout,yLayout,normalBandShapes, iceLevelsShapes, traceShapes, highlightDangerShapes, valueAnnotation } from '../../APInHelpers/plotly';
 import { date_UTS, displayHuman, freshMaxTS } from '../../APInHelpers/timeseries';
 
 import { readDataByTSRanges } from '../../APInHelpers/database';
-import { ENTITY_NAMES, HISTORY_SPAN_SECS, SCHEMA_1ST_LEVEL_NAMES } from '../../APInHelpers/base';
 
 // PROPS
 // schema.obj= {}
