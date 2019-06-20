@@ -7,7 +7,7 @@ import Department from './Department';
 
 const dashboard = ({schema, fresh, scope, changeScope, focusChart, mapFocus}) => {
         
-    let markup;
+    let markup, expandedUUIDs; // will match keys
 
     // We don't want to show department level if there's only one department
     const deps = Object.keys(schema.deps);
@@ -26,6 +26,8 @@ const dashboard = ({schema, fresh, scope, changeScope, focusChart, mapFocus}) =>
                 focusChart={focusChart}
                 lineID={lineID}/>
         )
+        expandedUUIDs=lines.map(lineID => `line${lineID}`)
+
 
     } else {
 
@@ -40,6 +42,7 @@ const dashboard = ({schema, fresh, scope, changeScope, focusChart, mapFocus}) =>
                 focusChart={focusChart}
                 fresh={fresh}/>
         )
+        expandedUUIDs=deps.map(depID => `dep${depID}`)
 
     }
 
@@ -47,6 +50,7 @@ const dashboard = ({schema, fresh, scope, changeScope, focusChart, mapFocus}) =>
         <Accordion 
             className='dashboard'
             allowMultipleExpanded={true}
+            preExpanded={expandedUUIDs}
             allowZeroExpanded={true}>
             {markup}
         </Accordion>

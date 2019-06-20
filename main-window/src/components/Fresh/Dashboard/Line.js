@@ -21,7 +21,9 @@ const line = ({schema, fresh, lineID, scope, changeScope, mapFocus, focusChart})
         const ribbonData = {value: maxIce, msgCode: msgCode}
 
         return (
-            <AccordionItem className='line_block' > 
+            <AccordionItem 
+                className='line_block' 
+                uuid={`line${lineID}`}> 
                 <AccordionItemHeading>
                     <AccordionItemButton>
                         <AccordionItemState>

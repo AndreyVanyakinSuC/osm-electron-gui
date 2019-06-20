@@ -23,7 +23,9 @@ const department = ({schema, fresh, depID, scope, changeScope, mapFocus, focusCh
 
 
     return (
-        <AccordionItem className={'dep_block'}>
+        <AccordionItem 
+            className={'dep_block'}
+            uuid={`dep${depID}`}>
             
             <AccordionItemHeading>
                 <AccordionItemButton>
@@ -42,6 +44,7 @@ const department = ({schema, fresh, depID, scope, changeScope, mapFocus, focusCh
 
             <AccordionItemPanel>
                 <Accordion 
+                    preExpanded={lines.map(lineID => `line${lineID}`)}
                     allowMultipleExpanded={true}
                     allowZeroExpanded={true}>
                     {lines.map(lineID => 
