@@ -35,6 +35,18 @@ class Chart extends Component {
         // isReady: false,
     };
 
+    // Update isNormalVisible if possibleWireIds have changed
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const prevPossibleWireIDs = _.keys(prevState.isNormalVisible).map(id => parseInt(id));
+        const nextPossibleWireIDs = nextProps.possibleWires; // to compare
+        console.log(prevPossibleWireIDs, nextPossibleWireIDs);
+
+        if (_.isEqual(prevPossibleWireIDs, nextPossibleWireIDs)) {
+            return null;
+        } else {
+            return {isNormalVisible: wiresToState(nextPossibleWireIDs)}
+        }
+    }
 
     // re-read data from DB if range || timespan changed  i.e if new range or new timerange OUT => write data and revision to state
     // write data to state as if everything is visible
