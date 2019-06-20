@@ -8,11 +8,11 @@ const MAIN_TRACE_COLOR = 'slategray';
 const MAIN_AXIS_COLOR = 'black';
 
 const HOVER_BG_COLOR = 'white';
-// const HOVER_BORDER_COLOR = 'white';
 const HOVER_TEXT_COLOR = 'black';
 
-const VALUE_ANNO_BG_COLOR = MAIN_TRACE_COLOR;
-const VALUE_ANNO_TEXT_COLOR = 'white';
+const VALUE_ANNO_BG_COLOR = HOVER_BG_COLOR;
+const VALUE_ANNO_BORDER_COLOR = MAIN_AXIS_COLOR;
+const VALUE_ANNO_TEXT_COLOR = HOVER_TEXT_COLOR;
 
 
 export const CONFIG = {
@@ -83,7 +83,7 @@ const trace = (xyArr, name, propMode, yaxis) => {
     const color = (propMode === 'Tamb') ? TEMP_TRACE_COLOR : MAIN_TRACE_COLOR;
     const bordercolor = (propMode === 'Tamb') ? TEMP_TRACE_COLOR : MAIN_TRACE_COLOR;
     const opacity = (propMode === 'Tamb') ? 0.6 : 1.0;
-    const width = (propMode === 'Tamb') ? 3 : 2;
+    const width = (propMode === 'Tamb') ? 3 : 3;
 
     return {
         type: "scatter",
@@ -323,7 +323,7 @@ export const yLayout = (prop, isTempVisible, mode) => {
             zeroline: zeroline,
             range: range ? range : null,
             visible: true,
-            color: 'black',
+            color: color,
             type: "scatter", 
             autorange: true, // can be reversed 
             fixedrange: fixedrange,
@@ -529,7 +529,7 @@ export const valueAnnotation = (tracesArr) => {
                    '<br>'+
                     `${yData} ${UNITS.get(propMode)}`,
             bgcolor: VALUE_ANNO_BG_COLOR,
-            bordercolor: VALUE_ANNO_BG_COLOR,
+            bordercolor: VALUE_ANNO_BORDER_COLOR,
             borderpad: 2,
             borderwidth: 1,
             align: "left",
