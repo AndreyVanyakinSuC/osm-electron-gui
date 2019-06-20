@@ -16,7 +16,7 @@ class FreshChart extends Component {
         scopedObjects: schemaRangeObjects(this.props.schema, this.props.scope), //[ids]
         rangeHours: 1, // 1,4,8
         isTempVisible: false, //bool
-        isExpectingData: true
+        isExpectingData: false
     }
 
     // select all wires of a range if range chaged
@@ -240,8 +240,7 @@ class FreshChart extends Component {
                     isTempVisible={this.state.isTempVisible}
                     historyPKs={historyPKs}
                     onResize={() => null}
-                    onDataLoaded={()=>null}
-                    // onDataLoaded={this.handleDataReady.bind(this)}
+                    onDataLoaded={this.handleDataReady.bind(this)}
                     mode='fresh' />
             </div>
         )
