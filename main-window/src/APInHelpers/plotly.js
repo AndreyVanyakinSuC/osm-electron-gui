@@ -62,12 +62,12 @@ export const SETTINGS = {
     fresh: {
         DIVID: 'chartId',
         CLASS_NAME: 'current_chart',
-        PTS_COUNT:300
+        PTS_COUNT:400
     },
     history: {
         DIVID: 'historyId',
         CLASS_NAME: 'history_class',
-        PTS_COUNT: 600
+        PTS_COUNT: 800
     }
 }
 
@@ -178,7 +178,7 @@ export const tempTraces = (dataArr, props) => {
 export const generalLayout = (tempVisible, mode) => {
     
     // To fit annotations in fresh mode
-    const rightPad = (mode === 'fresh') ? 80 : 10;
+    const rightMargin = (mode === 'fresh') ? 80 : 10;
     
     return {
         font: {
@@ -191,10 +191,10 @@ export const generalLayout = (tempVisible, mode) => {
         autosize: true,
         margin: { // around the whole chart
             l: 10,
-            r: rightPad,
+            r: rightMargin,
             t: 10,
             b: 10,
-            pad: 0,
+            pad: 10,
             autoexpand: true
         },
         paper_bgcolor: 'white',
@@ -742,7 +742,7 @@ export const Flimits = (minCurve, maxCurve) => {
     const path = `${topCurve} L ${bottomCurve} Z`
     return {
         type: "path",
-        layer: "above",
+        layer: "below",
         xref: "x",
         yref: "y",
         path: path,

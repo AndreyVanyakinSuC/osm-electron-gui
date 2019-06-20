@@ -5,7 +5,7 @@ const CancelBtn = ({clicked}) => {
         <button id="cancel"
             className='cancel-btn'
             onClick={clicked}>
-            Отмена
+            Закрыть
         </button>
     );
 }
