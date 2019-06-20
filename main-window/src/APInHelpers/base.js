@@ -57,4 +57,5 @@ export const MSGS = new Map ([
     }], //  20mm =< ice
 ])
 
+// MAP
 export const TILE_URL = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";

@@ -21,7 +21,7 @@ export default class MyMap extends Component {
     state = {
         viewport: {
             center: geo_Center(this.props.schema),
-            zoom: 13, // not importany
+            zoom: 10, // not importany
         }
     }
 
@@ -39,7 +39,7 @@ export default class MyMap extends Component {
     // }
     
     componentDidMount() {
-        console.log('%c[MAP] Component did mount','color:blue');
+        // console.log('%c[MAP] Component did mount','color:blue');
         console.log('%c[MAP] Refs','color:blue', this.refs);
     }
 
@@ -58,7 +58,8 @@ export default class MyMap extends Component {
             const mapElement = this.refs.map.leafletElement;
             const focusElement = this.refs[focusRef].leafletElement;
 
-            mapElement.fitBounds(focusElement.getBounds());
+            mapElement.fitBounds(focusElement.getBounds(), {padding: [50,50]});
+            // mapElement.fitBounds(focusElement.getBounds().pad(0.1)); //padding
 
             // reset parent
             this.props.resetZoomTo();
@@ -97,7 +98,7 @@ export default class MyMap extends Component {
     render() {
         console.log('%c[MAP] Render','color:blue');
         const { schema, fresh } = this.props;
-        const maxBounds= L.latLngBounds(geo_globalBounds(schema))
+        const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
         const tileUrl = TILE_URL;
 
         //
@@ -153,8 +154,6 @@ export default class MyMap extends Component {
             {renderLines(dID)}
         </FeatureGroup>))
 
-
-
         return (
             <Map
                 ref={'map'}
@@ -162,7 +161,7 @@ export default class MyMap extends Component {
                 // zoom={this.state.zoom}
                 viewport={this.state.viewport}
                 maxBounds={maxBounds}
-                boundsOptions = {{paddong: [50, 50]}}
+                boundsOptions = {{padding: [50, 50]}}
                 // onViewportChange = {this.handleViewportChange.bind(this)}
                 className={'map_cont'}
                 useFlyTo={true}

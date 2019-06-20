@@ -1,5 +1,4 @@
 import _ from 'lodash';
-// import tower from '../components/Fresh/Map/Tower';
 
 // IN schema  schema.lines.id.latlng = [[lat,lon],[lat,lon]...]
 // OUT [lat, lat, lat] and [lon, lon, lon] from all lines in schema
@@ -14,12 +13,10 @@ const geo_allLatLon = (schema) => {
 // IN [[lat,lat,lat],[lon, lon, lon]]
 // OUT bounds [[lat,lon], [lat.lon]]
 export const geo_globalBounds = (schema) => {
-    const allLatLngs = geo_allLatLon(schema);
-    // console.log(allLatLngs);
-
+    const [lats, lons] = geo_allLatLon(schema);
     const res = [
-        [_.min(allLatLngs[0]), _.min(allLatLngs[1])],
-        [_.max(allLatLngs[0]), _.max(allLatLngs[1])]
+        [_.min(lats), _.min(lons)],
+        [_.max(lats), _.max(lons)]
     ]
 
     // console.log(res);
