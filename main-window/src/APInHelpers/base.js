@@ -24,8 +24,8 @@ export const UNITS = new Map ([
 
 export const PROP_STRINGS = new Map([
     ['F', 'Тяжение'],
-    ['dF', 'Прирост тяжения'],
-    ['Tamb', 'Температура'],
+    ['dF', '\u0394 Тяжения'],
+    ['Tamb', 'T воздуха'],
     ['I', 'Стенка'],
 ])
 

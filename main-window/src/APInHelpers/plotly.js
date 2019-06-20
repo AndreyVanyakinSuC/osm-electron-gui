@@ -2,6 +2,19 @@ import { downsample, unixMiliSecs, date_UTS, ts_UnderscoredString, tsmili__Under
 import _ from 'lodash';
 import {ENTITY_NAMES, UNITS, MSGS, PROP_STRINGS} from './base';
 
+const TEMP_TRACE_COLOR = '#3b41bf';
+const TEMP_AXIS_COLOR = TEMP_TRACE_COLOR;
+const MAIN_TRACE_COLOR = 'slategray';
+const MAIN_AXIS_COLOR = 'black';
+
+const HOVER_BG_COLOR = 'white';
+// const HOVER_BORDER_COLOR = 'white';
+const HOVER_TEXT_COLOR = 'black';
+
+const VALUE_ANNO_BG_COLOR = MAIN_TRACE_COLOR;
+const VALUE_ANNO_TEXT_COLOR = 'white';
+
+
 export const CONFIG = {
     fresh: {
         scrollZoom: false,
@@ -65,7 +78,12 @@ export const SETTINGS = {
 // traces
 const trace = (xyArr, name, propMode, yaxis) => {
     const [x,y] = XYpairstoXYarrs(xyArr);
-    const fill = (propMode === 'I') ? 'tonexty' : 'none' 
+    const fill = (propMode === 'I') ? 'tonexty' : 'none';
+    
+    const color = (propMode === 'Tamb') ? TEMP_TRACE_COLOR : MAIN_TRACE_COLOR;
+    const bordercolor = (propMode === 'Tamb') ? TEMP_TRACE_COLOR : MAIN_TRACE_COLOR;
+    const opacity = (propMode === 'Tamb') ? 0.6 : 1.0;
+    const width = (propMode === 'Tamb') ? 3 : 2;
 
     return {
         type: "scatter",
@@ -73,9 +91,10 @@ const trace = (xyArr, name, propMode, yaxis) => {
         propMode: propMode,
         // customdata: msgArr,
         showlegend: false,
+        opacity: opacity,
         line: {
-            color: 'slategray',
-            // width
+            color: color,
+            width: width,
             shape:"spline",
             smoothing:0,  //0 - 1.3
             dash: "solid", // "solid", "dot", "dash", "longdash", "dashdot", or "longdashdot"
@@ -91,9 +110,20 @@ const trace = (xyArr, name, propMode, yaxis) => {
         connectgaps: true,
         xcalendar: "gregorian",
         yaxis: yaxis,
+        hoverlabel: {
+            bgcolor: HOVER_BG_COLOR,
+            bordercolor: bordercolor,
+            font: { color: HOVER_TEXT_COLOR }
+        },
         // hoverinfo:'x',
         // hoverinfo: "y+text+x",//Any combination of "x", "y", "z", "text", "name" joined with a "+" OR "all" or "none" or "skip". examples: "x", "y", "x+y", "x+y+z", "all" default: "all" Determines which trace information appear on hover. If `none` or `skip` are set, no information is displayed upon hovering. But, if `none` is set, click and hover events are still fired.
-        hovertemplate: `<b>%{fullData.name}</b> <br> ${PROP_STRINGS.get(propMode)}: %{y} %{fullData.text} <br> Время: %{x} <extra></extra>` //Template string used for rendering the information that appear on hover box. Note that this will override `hoverinfo`. Variables are inserted using %{variable}, for example "y: %{y}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Price: %{y:$.2f}". See https://github.com/d3/d3-format/blob/master/README.md#locale_format for details on the formatting syntax. The variables available in `hovertemplate` are the ones emitted as event data described at this link https://plot.ly/javascript/plotlyjs-events/#event-data. Additionally, every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available. Anything contained in tag `<extra>` is displayed in the secondary box, for example "<extra>{fullData.name}</extra>". To hide the secondary box completely, use an empty tag `<extra></extra>`.
+        hovertemplate: '<b>%{fullData.name}</b>'+
+                        '<br>'+
+                        `${PROP_STRINGS.get(propMode)}: %{y:.1f} ${UNITS.get(propMode)}`+ 
+                        '<br>'+ 
+                        'Время: %{x}'+ 
+                        '<extra></extra>'
+        //Template string used for rendering the information that appear on hover box. Note that this will override `hoverinfo`. Variables are inserted using %{variable}, for example "y: %{y}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Price: %{y:$.2f}". See https://github.com/d3/d3-format/blob/master/README.md#locale_format for details on the formatting syntax. The variables available in `hovertemplate` are the ones emitted as event data described at this link https://plot.ly/javascript/plotlyjs-events/#event-data. Additionally, every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available. Anything contained in tag `<extra>` is displayed in the secondary box, for example "<extra>{fullData.name}</extra>". To hide the secondary box completely, use an empty tag `<extra></extra>`.
     }
 }
 
@@ -131,7 +161,7 @@ export const tempTraces = (dataArr, props) => {
     const PTS_COUNT = SETTINGS[mode].PTS_COUNT;
 
     const allTempXY = scopedWires.map(w => pullXYpairs(dataArr, w, 'Tamb', PTS_COUNT)) // [[ts, F], [ts, F]]
-    return trace(averageXYpairs(allTempXY), null,'T','y3');
+    return trace(averageXYpairs(allTempXY), 'Участок','Tamb','y2');
 
 }
 
@@ -147,14 +177,6 @@ export const tempTraces = (dataArr, props) => {
 
 export const generalLayout = (tempVisible, mode) => {
     
-    const grid = tempVisible ? { 
-        subplots: ["xy", "xy3"],
-        ygap: 0.3,
-        rows: 2,
-        columns: 1,
-    } 
-        : null
-
     // To fit annotations in fresh mode
     const rightPad = (mode === 'fresh') ? 80 : 10;
     
@@ -180,7 +202,7 @@ export const generalLayout = (tempVisible, mode) => {
         showlegend: false,
         hovermode: 'closest', // check
         hoverdistance: 3, // distance to point]
-        grid: grid
+        // grid: grid
     }
 }
 
@@ -217,7 +239,7 @@ export const xLayout = (tsRange, mode) => {
             showspikes: true,
             showline: true,
             spikethickness: 1,
-            spikedash: 'dash',
+            spikedash: 'dot',
             spikemode: 'toaxis', // many options
             spikesnap: 'cursor',
             showgrid: true,
@@ -225,14 +247,23 @@ export const xLayout = (tsRange, mode) => {
             gridwidth: 1, //px
             zeroline: false,
             layer: 'below traces',
-            position: 0
+            position: 0,
+            hoverformat: '%d %b %H:%M:%S'
         }
     }
 }
 
 export const yLayout = (prop, isTempVisible, mode) => {
 
-    let axisNo, domain, title, rangemode, range, zeroline, fixedrange;
+    let axisNo, 
+        color,
+        title, 
+        rangemode, 
+        range, 
+        zeroline, 
+        fixedrange, 
+        side,
+        overlaying;
 
     if (mode === 'fresh') {
         fixedrange= true;
@@ -241,57 +272,63 @@ export const yLayout = (prop, isTempVisible, mode) => {
         fixedrange= false;
     }
 
-    domain = isTempVisible ? [0.25, 1] : [0, 1];
 
     if (prop === "F") {
         
-        title = "Тяжение, даН";
         axisNo = 'yaxis';
-        domain = isTempVisible ? [0.25, 1] : [0, 1];
+        title = `${PROP_STRINGS.get('F')}, ${UNITS.get('F')}`;
+        color = MAIN_AXIS_COLOR;
+        side = 'left';
         rangemode = "normal";
+        overlaying = null;
+        zeroline = false;
 
     } else if (prop === 'dF') {
         
         axisNo = 'yaxis';
+        title = `${PROP_STRINGS.get('dF')}, ${UNITS.get('dF')}`;
+        color = MAIN_AXIS_COLOR;
+        side = 'left';
         rangemode = "normal";
+        overlaying = null;
+        zeroline = true;
+
+    }  else if (prop === 'I') {
+        
+        axisNo = 'yaxis';
+        title = `${PROP_STRINGS.get('I')}, ${UNITS.get('I')}`;
+        color = MAIN_AXIS_COLOR;
+        side = 'left';
+        rangemode = "tozero";
+        overlaying = null;
+        zeroline = true;
+        
 
     } else if (prop === 'Tamb') {
         
-        title = "Т воздуха, С";
-        axisNo = 'yaxis3'; 
+        axisNo = 'yaxis2'; 
+        title = `${PROP_STRINGS.get('Tamb')}, ${UNITS.get('Tamb')}`;
+        color = TEMP_AXIS_COLOR;
+        side = 'right'
+        rangemode = "normal";
+        overlaying = 'y';
         zeroline = true;
-        domain = [0, 0.15];
-        rangemode = "normal";
-
-    } else if (prop === 'Frms') {
-        
-        title = "Вибрация";
-        axisNo = 'yaxis2';
-        rangemode = "normal";
-
-    } else if (prop === 'I') {
-        
-        title = "Стенка гололеда, мм";
-        axisNo = 'yaxis';
-        rangemode = "tozero";
 
     }
     
     return {
         [axisNo]: {
             title: title,
-            domain: domain,
             rangemode: rangemode,
-            zeroline: zeroline ? zeroline : null,
+            zeroline: zeroline,
             range: range ? range : null,
             visible: true,
             color: 'black',
-            type: "linear", 
+            type: "scatter", 
             autorange: true, // can be reversed 
             fixedrange: fixedrange,
             tickmode: 'auto', // can be array => ticks only on particualar values
             nticks: 0, // unllimited ticks
-            mirror: 'all', //Determines if the axis lines or/and ticks are mirrored to the opposite side of the plotting area. If "true", the axis lines are mirrored. If "ticks", the axis lines and ticks are mirrored. If "false", mirroring is disable. If "all", axis lines are mirrored on all shared-axes subplots. If "allticks", axis lines and ticks are mirrored on all shared-axes subplots.
             tick0: 1, // first tick
             ticklen: 4, // px
             tickwidth: 1, //px
@@ -300,14 +337,17 @@ export const yLayout = (prop, isTempVisible, mode) => {
             automargin: true, // enlarge margin from labels
             showspikes: true, // only for hovermode: closest
             spikethickness: 1,
-            spikedash: 'dash',
+            spikedash: 'dot', //Sets the dash style of lines. Set to a dash type string ("solid", "dot", "dash", "longdash", "dashdot", or "longdashdot") or a dash length list in px (eg "5px,10px,2px,2px").
             spikemode: 'toaxis', // many options
-            spikesnap: 'cursor', // cursor / data
+            spikesnap: 'data', // cursor / data
             showgrid: true,
+            showline:true,
             gridcolor: 'lightgray',
             gridwidth: 1, //px,
             layer: 'below traces',
-            position: 0
+            // position: 0,
+            side: side,
+            overlaying: overlaying
         }
     }
 
@@ -482,12 +522,14 @@ export const valueAnnotation = (tracesArr) => {
             // text: `<span class='ribbon critical-ice'>${name} ${yData} ${UNITS.get(propMode)}</span>`,
             font: {
                 size: 14,
-                // color
+                color: VALUE_ANNO_TEXT_COLOR
             },
             //startstandoff: 2, //Sets a distance, in pixels, to move the start arrowhead away from the position it is pointing at, for example to point at the edge of a marker independent of zoom. Note that this shortens the arrow from the `ax` / `ay` vector, in contrast to `xshift` / `yshift` which moves everything by this amount.
-            text: `<b>${name}</b><br>${yData} ${UNITS.get(propMode)}`,
-            bgcolor: 'rgba(170,170,170,0.9)' , //default: "rgba(0,0,0,0)"  
-            bordercolor: 'rgba(0,0,0,1)',//default: "rgba(0,0,0,0)" 
+            text: `<b>${name}</b>`+
+                   '<br>'+
+                    `${yData} ${UNITS.get(propMode)}`,
+            bgcolor: VALUE_ANNO_BG_COLOR,
+            bordercolor: VALUE_ANNO_BG_COLOR,
             borderpad: 2,
             borderwidth: 1,
             align: "left",
