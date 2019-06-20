@@ -16,6 +16,14 @@ import {DEFAULT_HISTORY_HRS, HISTORY_SPAN_SECS} from '../../APInHelpers/base';
 import { nowTS, minusHrs, plusHrs, date_UTS, uts_Date} from '../../APInHelpers/timeseries';
 import { schemaRangeObjects, schemaObjIDbyType, schemaAllObjectTypes, schemaRangeObjectTypes, schemaTypesbyObjIDs,schemaFirstRangeofLine, schemaFirstLineID, schemaObjIDs } from '../../APInHelpers/schema';
 
+//
+// DESIRED BEHAVIOUR
+//
+
+// 1) Изменение propMode и клики по выбору entity не приводят к ожиданию (нет обращений к БД)
+// 2) Изменение масштаба на графике по Х отражается на элементах управления графиком
+// 3) Изменение масштаба на графике по Y остаётся в силе при ререндерах
+
 
 // LoadingScreen is triggered when 
 
@@ -65,48 +73,6 @@ class History extends PureComponent {
         })
     }
 
-    handleStartDateChange(date) {
-        this.setState(prevState => {
-            
-            // Force startDate to be endDate - 24h if user tries to set startDate > endDate
-
-            let newStartTs;
-
-            if (date_UTS(date) >= prevState.endTS) {
-                newStartTs = minusHrs(prevState.endTS, 24);
-            } else {
-                newStartTs = date_UTS(date);
-            }
-        
-        
-            return {
-                startTS: newStartTs,
-                isExpectingData: true
-            }
-        })
-    }
-
-    handleEndDateChange(date) {
-        
-        this.setState( prevState => { 
-            
-            // Force startDate to be endDate - 24h if user tries to set startDate > endDate
-
-            let newEndTs;
-
-            if (date_UTS(date) <= prevState.startTS) {
-                newEndTs = plusHrs(prevState.startTS, 24);
-            } else {
-                newEndTs = date_UTS(date);
-            } 
-            
-            return {
-                endTS: newEndTs,
-                isExpectingData: true
-            }
-        })
-    }
-    
     handleEntitySelect(selectedType) {
         // console.log(selectedType, 'entity clicked');
         console.log('%c[CHART-CTRLS] Select entity clicked', 'color: blue');
@@ -154,6 +120,49 @@ class History extends PureComponent {
             }
         })
     }
+
+    handleStartDateChange(date) {
+        this.setState(prevState => {
+            
+            // Force startDate to be endDate - 24h if user tries to set startDate > endDate
+
+            let newStartTs;
+
+            if (date_UTS(date) >= prevState.endTS) {
+                newStartTs = minusHrs(prevState.endTS, 24);
+            } else {
+                newStartTs = date_UTS(date);
+            }
+        
+        
+            return {
+                startTS: newStartTs,
+                isExpectingData: true
+            }
+        })
+    }
+
+    handleEndDateChange(date) {
+        
+        this.setState( prevState => { 
+            
+            // Force startDate to be endDate - 24h if user tries to set startDate > endDate
+
+            let newEndTs;
+
+            if (date_UTS(date) <= prevState.startTS) {
+                newEndTs = plusHrs(prevState.startTS, 24);
+            } else {
+                newEndTs = date_UTS(date);
+            } 
+            
+            return {
+                endTS: newEndTs,
+                isExpectingData: true
+            }
+        })
+    }
+    
 
     handlePropModeChange(modeOption) {
         this.setState(prevState => {

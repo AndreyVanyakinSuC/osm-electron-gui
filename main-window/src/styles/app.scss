@@ -623,15 +623,13 @@ body, html {
                     height: 100%;
     
                     .current_chart {
+                        display: block !important;
                         width: calc(100% - 1rem);
                         padding: 0 0.5rem;
                         
-                        #chartId{
-                            // position: none;
-                            display: block;
-                        }
+                        
                     } // current_chart
-    
+
                 } // chart container
     
                 
@@ -737,9 +735,11 @@ body, html {
 
     .loading_screen {
         z-index: 1000;
-        position: fixed;
-        width: 100%;
-        height: 100%;
+        position: relative;
+        // top: 0;
+        // right:0;
+        // left: 0;
+        height: 0;
         text-align: center;
 
         div{

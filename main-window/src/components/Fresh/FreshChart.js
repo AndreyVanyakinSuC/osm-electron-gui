@@ -6,6 +6,7 @@ import ScopeSelector from '../Controls/ScopeSelector';
 import ModeSelector from '../Controls/ModeSelector';
 //
 import Chart from '../Chart/Chart';
+import LoadingScreen from '../History/LoadingScreen';
 
 import { schemaAllObjectTypes, schemaRangeObjectTypes, schemaLinebyRange, schemaRangeObjects, schemaFirstRangeofLine, schemaRangeByObjectIds, schemaObjIDbyType, schemaTypesbyObjIDs } from '../../APInHelpers/schema';
 import { minusHrs } from '../../APInHelpers/timeseries';
@@ -15,7 +16,7 @@ class FreshChart extends Component {
         scopedObjects: schemaRangeObjects(this.props.schema, this.props.scope), //[ids]
         rangeHours: 1, // 1,4,8
         isTempVisible: false, //bool
-        isVibroVisisble: false
+        isExpectingData: true
     }
 
     // select all wires of a range if range chaged
@@ -84,7 +85,7 @@ class FreshChart extends Component {
     handleRangeHoursChange(newRange) {
         this.setState(prevState => {
             if (prevState.rangeHours !== newRange) {
-                return { rangeHours: newRange }
+                return { rangeHours: newRange, isExpectingData: true }
             } else {
                 return null
             }
@@ -99,11 +100,13 @@ class FreshChart extends Component {
         const rangeID = schemaFirstRangeofLine(this.props.schema, lineID)
         const alreadySelectedLine = schemaLinebyRange(this.props.schema, this.props.scope)
         
-        console.log(lineOption, alreadySelectedLine);
+        // console.log(lineOption, alreadySelectedLine);
 
         // send up only if another range is selected, otherwise it will close chart
         if (lineID !== alreadySelectedLine) {
-            this.props.changeScope(rangeID)
+            this.props.changeScope(rangeID);
+            this.setState({isExpectingData: true});
+
         }
         
     }
@@ -113,7 +116,8 @@ class FreshChart extends Component {
 
         // send up only if another range is selected, otherwise it will close chart
         if (rangeID !== this.props.scope) {
-            this.props.changeScope(rangeID)
+            this.props.changeScope(rangeID);
+            this.setState({isExpectingData: true});
         }
         
     }
@@ -170,6 +174,10 @@ class FreshChart extends Component {
   
     }
 
+    handleDataReady() {
+        this.setState({isExpectingData: false})
+    }
+
     //
     //
     //
@@ -220,7 +228,7 @@ class FreshChart extends Component {
                  
                 </div>
 
-
+                {this.state.isExpectingData ?  <LoadingScreen/> : null}
             
 
                 <Chart
@@ -230,10 +238,10 @@ class FreshChart extends Component {
                     possibleWires={possibleWires} // for this range
                     propMode={propMode}
                     isTempVisible={this.state.isTempVisible}
-                    isVibroVisible={this.state.isVibroVisisble}
                     historyPKs={historyPKs}
                     onResize={() => null}
-                    onDataLoaded={() => null}
+                    onDataLoaded={()=>null}
+                    // onDataLoaded={this.handleDataReady.bind(this)}
                     mode='fresh' />
             </div>
         )
