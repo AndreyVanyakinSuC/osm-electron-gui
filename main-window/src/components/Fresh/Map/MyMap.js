@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Map, TileLayer, Polyline, FeatureGroup} from 'react-leaflet';
+import {Map, TileLayer, Polyline, FeatureGroup, ZoomControl} from 'react-leaflet';
 import MapLine from './MapLine';
 import Tower from './Tower/Tower';
 import _ from 'lodash';
@@ -25,19 +25,6 @@ export default class MyMap extends Component {
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     const {entityID, entityType} = nextProps.zoomTo;
-    //     const isZoomTo = (entityID !== null && entityType !== null);
-    //     const isNewSchema = !_.isEqual(this.props.schema, nextProps.schema);
-    //     const isNewFresh = !_.isEqual(this.props.fresh, nextProps.fresh);
-
-    //     if (isZoomTo || isNewSchema || isNewFresh) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-    
     componentDidMount() {
         // console.log('%c[MAP] Component did mount','color:blue');
         console.log('%c[MAP] Refs','color:blue', this.refs);
@@ -65,15 +52,6 @@ export default class MyMap extends Component {
             this.props.resetZoomTo();
 
         }
-        // // fit bounds
-        // const mapElement = this.refs.map.leafletElement;
-        // const focusElement = this.refs[this.props.focus].leafletElement;
-        // mapElement.fitBounds(focusElement.getBounds());
-
-        // // bind popups to Ranges if not bound yet
-
-        // const rangeElements = Object.keys(this.refs).filter(k => k.includes("range")).map(k => this.refs[k].leafletElement);
-        // rangeElements.forEach(el => el.bindPopup('yyaya'))
 
     }
 
@@ -165,10 +143,13 @@ export default class MyMap extends Component {
                 // onViewportChange = {this.handleViewportChange.bind(this)}
                 className={'map_cont'}
                 useFlyTo={true}
+                zoomControl={false}
                 animate={true}>
                 
                 <TileLayer url={tileUrl}/>
-                
+
+                <ZoomControl position='topright'/>
+
                 {renderDeps()}
 
             </Map>
