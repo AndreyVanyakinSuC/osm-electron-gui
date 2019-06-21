@@ -32,6 +32,8 @@ class Chart extends Component {
         dataArr: [], // [slices]
         revision: 0,
         isNormalVisible: wiresToState(this.props.possibleWires), // {"possibleWireID": true/false}
+        yMainRange: null, //[min, max]
+        yTempRange: null // default to null to enable autoscale
         // isReady: false,
     };
 
@@ -39,7 +41,7 @@ class Chart extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         const prevPossibleWireIDs = _.keys(prevState.isNormalVisible).map(id => parseInt(id));
         const nextPossibleWireIDs = nextProps.possibleWires; // to compare
-        console.log(prevPossibleWireIDs, nextPossibleWireIDs);
+        // console.log(prevPossibleWireIDs, nextPossibleWireIDs);
 
         if (_.isEqual(prevPossibleWireIDs, nextPossibleWireIDs)) {
             return null;
@@ -92,35 +94,50 @@ class Chart extends Component {
         
     }
     
-    // handleHover(info) {
-    //     // console.log('%c[CHART] Hover','color: darkgreen')
-    // }
+    yRangesToState(layout) {
+        // destructure changes
+        const yMainRange = [layout["yaxis.range[0]"], layout["yaxis.range[1]"]];
+        const yTempRange = [layout["yaxis2.range[0]"], layout["yaxis2.range[1]"]];
+         // Check if layout has the info
+         if (!_.includes(yMainRange, undefined)) {
+            // console.log('ran');
+            this.setState({ yMainRange: yMainRange})
+        } 
 
-    // handleUnhover(e) {
-    //     // console.log('%c[CHART] UnHover','color: darkgreen')
-    // }
+        if (!_.includes(yTempRange, undefined)) {
+            // console.log('ran');
+            this.setState({ yTempRange: yTempRange})
+        } 
+    }
 
     handleRelayout(layout) {
-        console.log('%c[CHART] Relayout','color: darkgreen');
-        
-        // destructure changes
-        const yStart = layout["yaxis.range[0]"];
-        const yEnd = layout["yaxis.range[1]"];
-        const xStart = layout["xaxis.range[0]"];
-        const xEnd = layout["xaxis.range[1]"];
+        console.log('%c[CHART] Relayout','color: darkgreen', layout);
 
-        if (xStart !== undefined && xEnd !== undefined) {
-            this.props.onResize({xStart, xEnd})
+        // https://plot.ly/javascript/plotlyjs-events/#update-data
+        
+        //
+        // Y axis to state
+        //
+        this.yRangesToState(layout);
+
+        //
+        // X axis up
+        //
+
+        const xRange = [layout["xaxis.range[0]"], layout["xaxis.range[1]"]];
+
+        if (!_.includes(xRange, undefined)) {
+            this.props.onResize(xRange)
         } 
 
         
     }
 
     handleClick(info) {
-        console.log('%c[CHART] Click','color: darkgreen');
+        // console.log('%c[CHART] Click','color: darkgreen');
 
         const displayName = info.points[0].fullData.name;
-        console.log(displayName);
+        // console.log(displayName);
        
         const clickedID = displayName_wireID(displayName, this.props.objData);
         
@@ -140,9 +157,11 @@ class Chart extends Component {
 
     }
 
-    // handleDblClick() {
-    //     console.log('%c[CHART] Dbl Click','color: darkgreen');
-    // }
+    // Double click on plot area enables autorange on y axis 
+    handleDblClick() {
+        console.log('%c[CHART] Double Click','color: darkgreen');
+        this.setState({yMainRange: null, yTempRange: null})
+    }
     
     render() {
 
@@ -152,14 +171,14 @@ class Chart extends Component {
 
         // Main
         const plotlyMainData = mainTraces(dataArr, props);
-        const plotlyYLayoutMain = yLayout(propMode, isTempVisible, mode);
+        const plotlyYLayoutMain = yLayout(propMode, mode, this.state.yMainRange);
 
         // Temperature
         const plotlyTempData = isTempVisible ? tempTraces(dataArr, props) : null;
-        const plotlyYLayoutTemp = isTempVisible ? yLayout('Tamb', isTempVisible, mode) : null;
+        const plotlyYLayoutTemp = isTempVisible ? yLayout('Tamb', mode, this.state.yTempRange) : null;
 
         // Layout
-        const plotlyGeneralLayout = generalLayout(isTempVisible, mode);
+        const plotlyGeneralLayout = generalLayout(mode);
         const plotlyXLayout = xLayout(tsRange, mode);
         
         //Shapes
@@ -204,7 +223,7 @@ class Chart extends Component {
                     // onHover={this.handleHover.bind(this)}
                     // onUnhover={this.handleUnhover.bind(this)}
                     onClick={this.handleClick.bind(this)}
-                    // onDoubleClick={this.handleDblClick.bind(this)}
+                    onDoubleClick={this.handleDblClick.bind(this)}
                     onRelayout={this.handleRelayout.bind(this)}
                     onError={err => console.log('[CHART] error', err)}
                     debug={true}

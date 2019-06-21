@@ -189,9 +189,9 @@ class History extends PureComponent {
     }
 
     handleChartResize(xLimits) {
-        console.log('[HISTORY] Updated');
+        // console.log('[HISTORY] Updated');
         // console.log(limits);
-        const {xStart, xEnd} = xLimits;
+        const [xStart, xEnd] = xLimits;
         // console.log(xStart, xEnd);
 
         // Don't let scroll to future

@@ -51,7 +51,8 @@ export const CONFIG = {
         showSendToCloud: false,
         locale: 'ru',
         displaylogo: false,
-        modeBarButtonsToRemove: ['zoom2d', 'pan2d','hoverCompareCartesian' ,'resetScale2d','toggleSpikelines','autoScale2d','hoverClosestCartesian', 'select2d','sendDataToCloud','lasso2d', 'zoomOut2d', 'zoomIn2d'], //['toImage']
+        // modeBarButtonsToRemove: ['zoom2d', 'pan2d','hoverCompareCartesian' ,'resetScale2d','toggleSpikelines','autoScale2d','hoverClosestCartesian', 'select2d','sendDataToCloud','lasso2d', 'zoomOut2d', 'zoomIn2d'], //
+        modeBarButtonsToRemove: ['hoverCompareCartesian' ,'toggleSpikelines','hoverClosestCartesian', 'select2d','sendDataToCloud','lasso2d'], //['toImage']
         responsive: true
     },
 }
@@ -175,7 +176,7 @@ export const tempTraces = (dataArr, props) => {
 // AXIS LAYOUTS
 //
 
-export const generalLayout = (tempVisible, mode) => {
+export const generalLayout = (mode) => {
     
     // To fit annotations in fresh mode
     const rightMargin = (mode === 'fresh') ? 80 : 10;
@@ -253,22 +254,25 @@ export const xLayout = (tsRange, mode) => {
     }
 }
 
-export const yLayout = (prop, isTempVisible, mode) => {
+export const yLayout = (prop, mode, yRange) => {
+
+    // Range === null will cause autorange, In history range is null in state by default but is chenged when user scrolls
+    // In fresh range is always null
+
+
 
     let axisNo, 
         color,
         title, 
         rangemode, 
-        range, 
         zeroline, 
         fixedrange, 
         side,
         overlaying;
 
     if (mode === 'fresh') {
-        fixedrange= true;
+        fixedrange= false;
     } else if (mode === 'history') {
-        // FIXME:
         fixedrange= false;
     }
 
@@ -321,11 +325,11 @@ export const yLayout = (prop, isTempVisible, mode) => {
             title: title,
             rangemode: rangemode,
             zeroline: zeroline,
-            range: range ? range : null,
+            autorange: yRange === null ? true : false, // enable autorange if no  range is provided 
+            range: yRange,
             visible: true,
             color: color,
             type: "scatter", 
-            autorange: true, // can be reversed 
             fixedrange: fixedrange,
             tickmode: 'auto', // can be array => ticks only on particualar values
             nticks: 0, // unllimited ticks
