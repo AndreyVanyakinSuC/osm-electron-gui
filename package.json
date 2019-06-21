@@ -74,6 +74,7 @@
     "react-image-lightbox": "^5.1.0",
     "react-images": "^0.5.19",
     "react-leaflet": "^2.2.1",
+    "react-leaflet-control": "^2.1.1",
     "react-network-diagrams": "^0.8.0",
     "react-plotly.js": "^2.3.0",
     "react-promise": "^2.0.3",

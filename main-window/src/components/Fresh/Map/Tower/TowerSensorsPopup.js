@@ -7,7 +7,7 @@ import { ENTITY_NAMES } from '../../../../APInHelpers/base';
 import { pickWorstMessage} from '../../../../APInHelpers/notification';
 import { ExpandToggle} from '../../../../APInHelpers/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowLeft, faCaretLeft, faCaretRight, faEye, faExclamationCircle, faSnowflake, faQuestion, faExclamation, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
+import { faCaretLeft, faCaretRight} from '@fortawesome/free-solid-svg-icons'
 
 class TowerSensorsPopup extends Component {
 

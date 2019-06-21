@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {Map, TileLayer, Polyline, FeatureGroup, ZoomControl} from 'react-leaflet';
+import Control from 'react-leaflet-control';
 import MapLine from './MapLine';
 import Tower from './Tower/Tower';
+import ZoomHomeBtn from './ZoomHomeBtn';
 import _ from 'lodash';
 import {geo_globalBounds, geo_Center} from '../../../APInHelpers/map';
 import { pickWorstMessage } from '../../../APInHelpers/notification';
@@ -55,6 +57,8 @@ export default class MyMap extends Component {
 
     }
 
+    // To use in handlers and in render
+    maxBounds =  L.latLngBounds(geo_globalBounds(this.props.schema)).pad(1);
 
     // 
     // HAMNDLERS
@@ -71,12 +75,17 @@ export default class MyMap extends Component {
         });
     }
 
+    handleZommHomeCLick() {
+        console.log('Zoom home clicked');
+        this.refs.map.leafletElement.fitBounds(this.maxBounds, {padding: [50,50]})
+    }
+
     // getMapRef = (node) => { this.map = node; }
 
     render() {
         console.log('%c[MAP] Render','color:blue');
         const { schema, fresh } = this.props;
-        const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
+        // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
         const tileUrl = TILE_URL;
 
         //
@@ -138,7 +147,7 @@ export default class MyMap extends Component {
                 // center={this.state.center}
                 // zoom={this.state.zoom}
                 viewport={this.state.viewport}
-                maxBounds={maxBounds}
+                maxBounds={this.maxBounds}
                 boundsOptions = {{padding: [50, 50]}}
                 // onViewportChange = {this.handleViewportChange.bind(this)}
                 className={'map_cont'}
@@ -149,6 +158,11 @@ export default class MyMap extends Component {
                 <TileLayer url={tileUrl}/>
 
                 <ZoomControl position='topright'/>
+
+                <Control position="topleft">
+                    <ZoomHomeBtn 
+                        onClick={this.handleZommHomeCLick.bind(this)}/>
+                </Control>
 
                 {renderDeps()}
 
