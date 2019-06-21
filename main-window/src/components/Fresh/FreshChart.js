@@ -4,6 +4,7 @@ import _ from 'lodash';
 import HoursPeriodSelector from '../Controls/HoursPeriodSelector';
 import ScopeSelector from '../Controls/ScopeSelector';
 import ModeSelector from '../Controls/ModeSelector';
+import CloseChartPane from '../Controls/CloseChartPane';
 //
 import Chart from '../Chart/Chart';
 import LoadingScreen from '../History/LoadingScreen';
@@ -173,6 +174,11 @@ class FreshChart extends Component {
         this.props.changePropMode(modeOption.value);
   
     }
+    
+    handleCloseChartClick() {
+        // Send current active range id to disable it in parent Fresh scope and close the chart automatically
+        this.props.changeScope(this.props.scope)
+    }
 
     handleDataReady() {
         this.setState({isExpectingData: false})
@@ -225,6 +231,9 @@ class FreshChart extends Component {
                         onPropModeChange={this.handlePropModeChange.bind(this)}
                         isTempVisible={this.state.isTempVisible}
                         onTempSwitchClick={this.handleTempSwitch.bind(this)}/>
+
+                    <CloseChartPane
+                        onClick={this.handleCloseChartClick.bind(this)}/>
                  
                 </div>
 
