@@ -146,6 +146,7 @@ export default class MyMap extends Component {
                 ref={'map'}
                 // center={this.state.center}
                 // zoom={this.state.zoom}
+                attributionControl={false}
                 viewport={this.state.viewport}
                 maxBounds={this.maxBounds}
                 boundsOptions = {{padding: [50, 50]}}
