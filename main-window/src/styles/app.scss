@@ -873,7 +873,11 @@ body, html {
 
         } //location-selector
 
-
+        .close-chart {
+            align-self: flex-start;
+            justify-self: right;
+            font-size: 0.6rem;
+        }
 
     } //chart_controls
 

@@ -5,7 +5,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 const CloseChartPane = ({onClick}) => {
     return (
         <div 
-            className='btn'
+            className='btn close-chart'
             onClick={onClick} 
             title='Закрыть график' 
             role='button'>
