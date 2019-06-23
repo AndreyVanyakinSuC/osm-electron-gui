@@ -149,25 +149,28 @@ class TowerSensorsPopup extends Component {
     
         
         return (<Popup className='tower-popup'>
-                  
-            {markup_towerNums}
-    
-            <div className='tower-details'>
-                
+            
+            <div className='tower-popup-header'>
+                {markup_towerNums}
+
                 <div className='details-expand-toggler' 
-                    onClick={this.handleToggleClick.bind(this)}>
-                    <ExpandToggle 
-                        isExpanded={this.state.isDetailsExpanded}/>
+                        onClick={this.handleToggleClick.bind(this)}>
+                        <ExpandToggle 
+                            isExpanded={this.state.isDetailsExpanded}/>
                 </div>
 
-                <TowerGallery 
-                    isExpanded={this.state.isDetailsExpanded}
-                    towerID = {towerID}/>
-                
             </div>
-    
-            {markup_status}
-    
+
+            <div className='tower-popup-body'>
+
+                    <TowerGallery 
+                        isExpanded={this.state.isDetailsExpanded}
+                        towerID = {towerID}/>
+                    
+        
+                {markup_status}
+
+            </div>
       
         </Popup>);
     }
