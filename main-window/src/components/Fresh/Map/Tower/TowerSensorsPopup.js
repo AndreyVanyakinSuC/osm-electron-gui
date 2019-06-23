@@ -6,6 +6,7 @@ import Ribbon from '../../../Ribbon';
 import { ENTITY_NAMES } from '../../../../APInHelpers/base';
 import { pickWorstMessage} from '../../../../APInHelpers/notification';
 import { ExpandToggle} from '../../../../APInHelpers/icons';
+import CopyCoordinatesBtn from './CopyCoordinatesBtn';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft, faCaretRight} from '@fortawesome/free-solid-svg-icons'
 
@@ -21,6 +22,7 @@ class TowerSensorsPopup extends Component {
             return { isDetailsExpanded: !prevState.isDetailsExpanded  };
         });
     }
+
 
     render() {
         // const FRESH_EMU = {
@@ -49,13 +51,18 @@ class TowerSensorsPopup extends Component {
     
         const markup_towerNum = (towerObject, position='' ) => {
             
-            const {number, Name} = towerObject;
+            const {number, Name, coordinates} = towerObject;
             const style = `tower-number ${position}`
+            
+            // '' position means center tower
             const nameField = position === '' ? Name : null;
+            const copyBtn = position === '' ? <CopyCoordinatesBtn coordinates={coordinates}/> : null;
+
     
             return <div className={style}>
                         <span className='unit'>№ </span>
                         <span>{number}</span>
+                        {copyBtn}
                         <div className='unit'>{nameField}</div>
                     </div>
         }

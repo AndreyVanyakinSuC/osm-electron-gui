@@ -60,6 +60,11 @@ $WHITE: #FFF;
     box-shadow:1px 1px 6px $SHADOW-COLOR;
 }
 
+@mixin icon-btn-hover() {
+    color: $BLUE;
+    transition: color 200ms ease-in;
+}
+
 @keyframes stroke-opacity-calm {
     0% {stroke-opacity: 0;}
     100% {stroke-opacity: 1;}
@@ -68,6 +73,13 @@ $WHITE: #FFF;
 @keyframes fa-opacity-calm {
     0% {opacity: 0;}
     100% {opacity: 1;}
+}
+
+@keyframes icon-jump {
+    0% {transform: translateY(0)}
+    70% {transform: translateY(-5px)}
+    90% {transform: translateY(1px)}
+    100% {transform: translateY(0)}
 }
 
 
@@ -168,8 +180,7 @@ body, html {
                 }
 
                 &.enabled {
-                    color: $BLUE;
-                    transition: color 200ms ease-in;
+                    @include icon-btn-hover();
                 }
             }
         }
@@ -223,8 +234,7 @@ body, html {
                         }
     
                         &:hover {
-                            color: $BLUE;
-                            transition: color 200ms ease-in;
+                            @include icon-btn-hover();
                         }
                     
                     } //map icon
@@ -467,6 +477,20 @@ body, html {
                                             margin: 0 auto;
                                             cursor: default;
                 
+                                            .icon {
+                                                cursor: pointer;
+                                                margin-left: 0.5rem;
+                                                
+                                                &:hover {
+                                                    @include icon-btn-hover();
+                                                }
+
+                                                &.animate {
+                                                    svg {animation: icon-jump 0.5s ease-in-out normal;
+                                                    animation-iteration-count: 1;}
+                                                }
+                                            } // copy coordinates icon
+
                                             &.from {
                                                 // cursor:none;
                                                 color:$TEXT-COLOR;
