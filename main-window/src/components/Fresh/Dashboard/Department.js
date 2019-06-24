@@ -17,7 +17,7 @@ const department = ({schema, fresh, depID, scope, changeScope, mapFocus, focusCh
         const maxIce = _.max(_.map(depFresh, f => f.I));
         const msgCode = (_.find(depFresh, f => f.I === maxIce)).msg[0];
         const wireId = _.find(depObjs, id => depFresh[id].I === maxIce && depFresh[id].msg[0] === msgCode)
-        console.log(maxIce, msgCode, wireId);
+        // console.log(maxIce, msgCode, wireId);
 
         const ribbonData = {
             value: maxIce, 
@@ -47,7 +47,7 @@ const department = ({schema, fresh, depID, scope, changeScope, mapFocus, focusCh
                 </AccordionItemButton>
             </AccordionItemHeading>
 
-            <AccordionItemPanel>
+            <AccordionItemPanel className='dep_body'>
                 <Accordion 
                     preExpanded={lines.map(lineID => `line${lineID}`)}
                     allowMultipleExpanded={true}

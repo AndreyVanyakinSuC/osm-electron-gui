@@ -17,7 +17,7 @@ const line = ({schema, fresh, lineID, scope, changeScope, mapFocus, focusChart})
         const maxIce = _.max(_.map(lineFresh, f => f.I));
         const msgCode = (_.find(lineFresh, f => f.I === maxIce)).msg[0];
         const wireId = _.find(lineObjs, id => lineFresh[id].I === maxIce && lineFresh[id].msg[0] === msgCode)
-        console.log(maxIce, msgCode, wireId);
+        // console.log(maxIce, msgCode, wireId);
 
         const ribbonData = {
             value: maxIce, 

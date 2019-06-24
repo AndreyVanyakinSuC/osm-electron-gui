@@ -82,6 +82,10 @@ $WHITE: #FFF;
     100% {transform: translateY(0)}
 }
 
+@keyframes fadein {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
 
 
 
@@ -261,6 +265,10 @@ body, html {
     
                             
                         } // deop header
+
+                        .dep_body {
+                            animation: fadein 0.35s ease-in;
+                        }
     
                     } // dep block
     
@@ -280,6 +288,7 @@ body, html {
     
                         .line_body {
                             background-color: $LINE-BG;
+                            animation: fadein 0.35s ease-in;
                             padding: 0.2rem 0.6rem;
     
                             .range_card {
@@ -367,7 +376,6 @@ body, html {
                         } // line body
     
                     } //line blokc
-    
                 } // dashboard
     
             } // left.pane
