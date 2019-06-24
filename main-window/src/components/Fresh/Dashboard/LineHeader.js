@@ -4,10 +4,10 @@ import MapIcon from './MapIcon';
 import Arrow from './Arrow';
 
 
-const lineHeader = ({lineID, lineName, ribbonData, isExpanded, rangesCount, mapFocus}) => {
+const lineHeader = ({lineID, lineName, ribbonData, isExpanded, focusChart, rangesCount, mapFocus}) => {
     
     const rangeString = 'уч.'
-    const {value, msgCode} = ribbonData;
+    const {value, msgCode, wireId} = ribbonData;
     
     // Don't show ribbon when expanded, even if dangerous
     let ribbonMarkup;
@@ -28,7 +28,11 @@ const lineHeader = ({lineID, lineName, ribbonData, isExpanded, rangesCount, mapF
             
 
             <span>
-                <span className='ribbon_container'>
+                <span 
+                    className='ribbon_container'
+                    title={`График максимального гололёда ${lineName}`}
+                    onClick={focusChart.bind(null, 'I', wireId)}
+                    role='button'>
                     {ribbonMarkup}
                 </span>
         

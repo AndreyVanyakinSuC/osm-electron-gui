@@ -143,7 +143,9 @@ export const checkHistory = (request, history) => {
 }
 
 // filter fresh by objids []
-export const filterFresh = (fresh, objIds) => ( _.filter(fresh, f => _.includes(objIds, f.obj)))
+// export const filterFresh = (fresh, objIds) => ( _.filter(fresh, f => _.includes(objIds, f.obj)))
+
+export const filterFresh = (fresh, objIds) => (_.pickBy(fresh, f => _.includes(objIds, f.obj)))
 
 
 

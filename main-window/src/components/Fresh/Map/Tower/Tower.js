@@ -4,7 +4,7 @@ import TowerIcon from './TowerIcon';
 import TowerEmptyPopup from './TowerEmptyPopup';
 import TowerSensorsPopup from './TowerSensorsPopup';
 
-const tower = ({towerID, schema, fresh}) => {
+const tower = ({towerID, schema, fresh, focusChart}) => {
     
     const {hasSensors, Type, coordinates} = schema.towers[towerID];
 
@@ -20,6 +20,7 @@ const tower = ({towerID, schema, fresh}) => {
         popup = <TowerSensorsPopup 
             towerID= {towerID}
             fresh = {fresh}
+            focusChart={focusChart}
             schema ={schema} />
 
     } else {

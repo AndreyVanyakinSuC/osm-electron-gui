@@ -144,6 +144,7 @@ class Fresh extends Component {
                     <Map 
                         schema ={schema}
                         zoomTo={this.state.mapFocus}
+                        focusChart={this.handleWireStripClick.bind(this)}
                         resetZoomTo= {this.handleResetFocus.bind(this)}
                         fresh ={fresh}/>
                 

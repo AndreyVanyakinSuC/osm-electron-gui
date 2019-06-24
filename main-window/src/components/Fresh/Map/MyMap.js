@@ -84,7 +84,7 @@ export default class MyMap extends Component {
 
     render() {
         console.log('%c[MAP] Render','color:blue');
-        const { schema, fresh } = this.props;
+        const { schema, fresh, focusChart } = this.props;
         // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
         const tileUrl = TILE_URL;
 
@@ -109,6 +109,7 @@ export default class MyMap extends Component {
                 return <Tower 
                     key={`tower_${tID}`}  
                     towerID={tID} 
+                    focusChart={focusChart}
                     schema={schema} 
                     fresh={freshSubset} />
         })

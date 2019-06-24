@@ -3,7 +3,7 @@ import Ribbon from '../../Ribbon';
 import Arrow from './Arrow';
 import MapIcon from './MapIcon';
 
-const departmentHeader = ({depName, depID, ribbonData, isExpanded, linesCount, mapFocus}) => {
+const departmentHeader = ({depName, depID, ribbonData, isExpanded, focusChart, linesCount, mapFocus}) => {
     
     let lineString;
 
@@ -17,12 +17,14 @@ const departmentHeader = ({depName, depID, ribbonData, isExpanded, linesCount, m
 
     // Don't show ribbon when expanded, even if dangerous
     let ribbonMarkup;
-    const {value, msgCode} = ribbonData;
+    const {value, msgCode, wireId} = ribbonData;
 
     if (isExpanded) {
         ribbonMarkup = null;
     } else {
-        ribbonMarkup = <Ribbon value={value} msgCode={msgCode}/>
+        ribbonMarkup =<Ribbon 
+            value={value} 
+            msgCode={msgCode}/>
     }
 
     return (
@@ -37,7 +39,11 @@ const departmentHeader = ({depName, depID, ribbonData, isExpanded, linesCount, m
 
             <span>
 
-                <span className='ribbon_container'>
+                <span 
+                    className='ribbon_container'
+                    title={`График максимального гололёда ${depName}`}
+                    onClick={focusChart.bind(null, 'I', wireId)}
+                    role='button'>
                     {ribbonMarkup}
                 </span>
                 

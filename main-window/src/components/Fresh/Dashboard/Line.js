@@ -13,12 +13,17 @@ const line = ({schema, fresh, lineID, scope, changeScope, mapFocus, focusChart})
         const lineFresh = filterFresh(fresh, lineObjs);
 
         // Combine value
-        // console.log(lineFresh);
-        const maxIce = _.max(lineFresh.map(f => f.I));
-        const msgCode = lineFresh.find(f => f.I === maxIce).msg[0];
-        // console.log(maxIce, msgCode);
+        // console.log('linefresh', lineFresh);
+        const maxIce = _.max(_.map(lineFresh, f => f.I));
+        const msgCode = (_.find(lineFresh, f => f.I === maxIce)).msg[0];
+        const wireId = _.find(lineObjs, id => lineFresh[id].I === maxIce && lineFresh[id].msg[0] === msgCode)
+        console.log(maxIce, msgCode, wireId);
 
-        const ribbonData = {value: maxIce, msgCode: msgCode}
+        const ribbonData = {
+            value: maxIce, 
+            msgCode: msgCode,
+            wireId: wireId
+        }
 
         return (
             <AccordionItem 
@@ -32,6 +37,7 @@ const line = ({schema, fresh, lineID, scope, changeScope, mapFocus, focusChart})
                                     lineName={lineName} 
                                     ribbonData ={ribbonData}
                                     mapFocus={mapFocus}
+                                    focusChart={focusChart}
                                     isExpanded = {state.expanded}
                                     rangesCount={ranges.length} />}
                         </AccordionItemState>

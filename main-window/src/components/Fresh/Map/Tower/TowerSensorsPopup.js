@@ -8,7 +8,7 @@ import { pickWorstMessage} from '../../../../APInHelpers/notification';
 import { ExpandToggle} from '../../../../APInHelpers/icons';
 import CopyCoordinatesBtn from './CopyCoordinatesBtn';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretLeft, faCaretRight} from '@fortawesome/free-solid-svg-icons'
+import { faCaretLeft, faCaretRight, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
 
 class TowerSensorsPopup extends Component {
 
@@ -32,7 +32,7 @@ class TowerSensorsPopup extends Component {
         //     "4014": {msg: []}
         // }
     
-        const {towerID, schema, fresh } = this.props;
+        const {towerID, schema, fresh, focusChart } = this.props;
 
         // const { Name, number, coordinates} = schema.towers[towerID];
     
@@ -84,23 +84,45 @@ class TowerSensorsPopup extends Component {
                 {sortedObjs.map(id => {
     
                     // console.log(id, rangeFresh[id]);
-                    const {I, msg} = rangeFresh[id];
-                    const msgCode = pickWorstMessage(msg);
                     const entityName = ENTITY_NAMES.get(schema.obj[id].Type);
 
+                    const {I, msg} = rangeFresh[id];
+                    const msgCode = pickWorstMessage(msg);
+
+                    let display;
+
+                    if (msgCode !== undefined) {
+                        display = <span 
+                                    className='status'
+                                    onClick={focusChart.bind(null, "I", id)}
+                                    role='button'
+                                    title={`График гололеда ${entityName}`}>
+                                    <Ribbon value={I} msgCode={msgCode}/>
+                                </span>
+                    } else {
+                        display = <span 
+                                    className='status'
+                                    title='Опасность не обнаружена'>
+                                    <FontAwesomeIcon icon={faCheckCircle} />
+                                </span>
+                    }
 
 
                     if (position ==='from') {
                         return (
                             <Fragment key={id}>
-                                <span className='status'><Ribbon value={I} msgCode={msgCode}/></span>
-                                <span className={position}>{entityName}</span>
+                                {display}
+                                <span className={position}>
+                                    {entityName}
+                                </span>
                             </Fragment>)
                     } else if (position === 'towards') {
                         return (
                             <Fragment key={id}>
-                                <span className={position}>{entityName}</span>
-                                <span className='status'><Ribbon value={I} msgCode={msgCode}/></span>
+                                <span className={position}>
+                                    {entityName}
+                                </span>
+                                {display}
                             </Fragment>)
                     } else {
                         console.error('Position is neither _from_ nor _towards_');

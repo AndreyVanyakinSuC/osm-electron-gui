@@ -622,6 +622,7 @@ body, html {
             
                                                     font-weight: normal;
                                                     justify-self: center;
+                                                    cursor: pointer;                                                    
                                                     
                                                     @mixin ribbon($color) {
                                                         padding: 0 0.2rem;
@@ -1034,6 +1035,7 @@ body, html {
 
     .ribbon_container {
         margin-right: 1rem;
+        cursor: pointer;
     }
 
     .ribbon {
