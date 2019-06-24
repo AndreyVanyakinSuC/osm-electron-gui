@@ -10,6 +10,7 @@ const iceBlock = ({wireID, I, trend, trendBounds, changeScope, VI, iceYellowThre
     return (
         <span 
             className='ice_block'
+            title='Показать график гололёда для участка'
             onClick={focusChart.bind(null, "I", wireID)}>
             <IceTrend 
                 data={trend}

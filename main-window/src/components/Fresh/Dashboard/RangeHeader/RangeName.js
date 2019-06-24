@@ -6,7 +6,9 @@ const rangeName = ({start, end}) => {
     const [endName, endHasSensors] = end;
 
     return (
-        <span className='header_feature'>
+        <span 
+            className='header_feature'
+            title='Границы участка'>
             <span className='unit'>№№</span>
             <span className={startHasSensors ? 'bold' : null}> {startName}</span>
             <span>-</span>

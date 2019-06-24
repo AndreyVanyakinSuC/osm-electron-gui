@@ -5,7 +5,8 @@ import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 const mapIcon = ({mapFocus, entityType, entityID}) => {
     return (
         <span 
-            className={'map_icon'}
+            className='map_icon'
+            title='Показать объект на карте'
             onClick={mapFocus.bind(null, entityType, entityID)}>
             <FontAwesomeIcon icon={faMapMarkerAlt} />
         </span>

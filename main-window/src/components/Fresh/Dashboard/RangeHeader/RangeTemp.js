@@ -5,7 +5,9 @@ import {UNITS} from '../../../../APInHelpers/base';
 
 const rangeTemp = ({temp}) => {
     return (
-        <span className={'header_feature'}>
+        <span 
+            className='header_feature'
+            title='Температура воздуха на участке'>
             <FontAwesomeIcon icon={faThermometerHalf} className={'therm_icon'}/>
             {temp.toFixed(1)}
             <span className={'unit'}>{UNITS.get('T')}</span>

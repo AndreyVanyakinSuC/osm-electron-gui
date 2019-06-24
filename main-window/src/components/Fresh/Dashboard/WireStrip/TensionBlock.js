@@ -6,7 +6,8 @@ import RMSTrend from './RMSTrend';
 const tensionBlock = ({wireID, F, FminTrend, FTrend, FmaxTrend, FrmsTrend, FYellowThreshold, FRedThreshold, focusChart}) => {
     return (
         <span
-            className={'tension_block'}
+            className='tension_block'
+            title='Показать график тяжения участка'
             onClick={focusChart.bind(null, "F", wireID)}>
             <TensionTrend 
                 FminTrend={FminTrend}

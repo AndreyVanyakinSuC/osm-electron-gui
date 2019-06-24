@@ -9,7 +9,9 @@ const rangeGeo = ({id, distance, mapFocus}) => {
                 mapFocus={mapFocus}
                 entityType={'range'}
                 entityID={id}/> 
-                {distance}
+                <span title='Протяженность участка'>
+                    {distance}
+                </span>
                 <span className={'unit'}>{UNITS.get('L')}</span>
         </span>
     );

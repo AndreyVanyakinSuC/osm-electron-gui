@@ -31,9 +31,11 @@ const rangeHeader = ({rangeID, lineID, isScoped, schema, fresh, changeScope, map
                 />
                 <RangeTemp 
                     temp={temp}
+                    title={`Температура воздуха на участке`}
                     />
                 <RangeChart 
                     rangeID={rangeID}
+                    title={`График для участка`}
                     isScoped ={isScoped}
                     changeScope ={changeScope}
                     />
