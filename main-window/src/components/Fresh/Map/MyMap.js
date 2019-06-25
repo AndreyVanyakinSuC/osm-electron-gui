@@ -36,8 +36,11 @@ export default class MyMap extends Component {
         
         console.log('%c[MAP] Component did update','color:blue');
 
-        // null are default
+        // Handle focusing on demand
         const {entityID, entityType} = this.props.zoomTo;
+        const mapElement = this.refs.map.leafletElement;
+        // Handle recenter map if container was resized
+        mapElement.invalidateSize(true)
         
         if (entityID !== null && entityType !== null) {
             const focusRef = `${entityType}_${entityID}`
@@ -53,7 +56,7 @@ export default class MyMap extends Component {
             // reset parent
             this.props.resetZoomTo();
 
-        }
+        } 
 
     }
 
@@ -145,14 +148,10 @@ export default class MyMap extends Component {
         return (
             <Map
                 ref={'map'}
-                onresize={() => console.log('Map resized')}
-                // center={this.state.center}
-                // zoom={this.state.zoom}
                 attributionControl={false}
                 viewport={this.state.viewport}
                 maxBounds={this.maxBounds}
                 boundsOptions = {{padding: [50, 50]}}
-                // onViewportChange = {this.handleViewportChange.bind(this)}
                 className='map_cont'
                 useFlyTo={true}
                 zoomControl={false}

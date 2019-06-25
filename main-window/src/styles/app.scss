@@ -394,9 +394,7 @@ body, html {
                 }
     
                 .map_cont {
-                       .map {
-                    height: 100%;
-                    width: 100%;
+
 
                     .centerline {
                         stroke: $BLACK;
@@ -699,15 +697,15 @@ body, html {
 
                 } // map cont
 
-                }
              
                
     
                 .chart_container{
                     
-                    // height: 100%;
                     background-color: $LINE-BG;
                     height: 100%;
+                    animation: fadein 0.35s ease-in;
+
     
                     .current_chart {
                         display: block !important;
@@ -749,7 +747,6 @@ body, html {
             height: 100%;
             background: radial-gradient(ellipse at center, $LINE-BG 0%, $BODY-COLOR 100%);
             vertical-align: middle;
-                      // margin: 50% auto;
 
 
 

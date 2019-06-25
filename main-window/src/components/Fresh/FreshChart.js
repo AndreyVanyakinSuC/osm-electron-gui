@@ -27,7 +27,7 @@ class FreshChart extends Component {
         const existingRange = schemaRangeByObjectIds(nextProps.schema, prevState.scopedObjects);
 
         const isSameRange = existingRange == incomingRange;
-        console.log(existingRange, incomingRange, isSameRange);
+        // console.log(existingRange, incomingRange, isSameRange);
 
         if (isSameRange) {
             // console.log('[GDS] Return null');
@@ -38,22 +38,6 @@ class FreshChart extends Component {
             return {scopedObjects: schemaRangeObjects(nextProps.schema, nextProps.scope)}
         }
 
-        // // don;t change state if matches
-        // const incomingTypes =  schemaRangeObjectTypes(nextProps.schema, nextProps.scope);
-        // const isSameTypes = _.isEqual(prevState.scopedObjectTypes, incomingTypes)
-
-        
-        // if (isSameTypes) {
-        //     console.log('Didnt update state in static as the result would be the same');
-
-        //     return null;
-
-        // } else {
-                  
-        //     return {
-        //         scopedObjectTypes : incomingTypes
-        //     };
-        // }
   
     }
 
