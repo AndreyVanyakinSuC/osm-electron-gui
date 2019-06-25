@@ -44,6 +44,7 @@ class FreshChart extends Component {
 
     componentDidMount() {
         console.log('[FRESH-CHART][CDM]');
+        this.setState({ isExpectingData: true })
     }
 
     componentDidUpdate(prevProps, prevState) {

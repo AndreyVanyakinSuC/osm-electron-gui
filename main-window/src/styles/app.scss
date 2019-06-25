@@ -827,16 +827,20 @@ body, html {
         text-align: center;
 
         div{
-            padding: 2rem 3rem;
-            border-radius: 1rem;
+            box-sizing: border-box;
+            padding: 1rem 2rem;
+            border-radius: 0.6rem;
+            border-color: $LABEL-BORDER;
+            border-width: 10px;            
             margin-top: 6rem;
             display: inline-block;
-            background-color: $LINE-BG;
-            color: $WHITE;
+            background-color: $LABEL-COLOR;
+            color: $TEXT-COLOR;
             box-shadow: 0px 0px 10px 2px $SHADOW-COLOR;
 
             span{
                 margin-right: 1rem;
+                color: $BLUE;
             }
         }
 

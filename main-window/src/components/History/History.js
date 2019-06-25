@@ -248,6 +248,7 @@ class History extends PureComponent {
     
     componentDidMount() {
         console.log('%c[H] Component did mount', 'color: magenta');
+        this.setState({isExpectingData: true})
     }
 
 
