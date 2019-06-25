@@ -470,9 +470,14 @@ body, html {
                                 .tower-popup-header {
                                     border-bottom: none;
                                     border-radius: 0.8rem 0.8rem 0 0;
-                                    padding: 1rem 0.8rem 0 0.8rem;
+                                    padding: 0.8rem 0.8rem 0 0.8rem;
                                     background-color: $LABEL-COLOR;
-                                    border-color: $LABEL-BORDER;
+                                    // border-color: $LABEL-BORDER;
+
+                                    &.empty {
+                                        padding:0.8rem;
+                                        border-radius: 0.8rem;
+                                    }
 
                                     .tower-nums {
                                         display: flex;
