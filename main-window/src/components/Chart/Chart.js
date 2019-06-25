@@ -82,12 +82,18 @@ class Chart extends Component {
         // write data to state as if everything is visible
         
 
-        const {tsRange, possibleWires, historyPKs} = this.props;
-        const isNewProps = !_.isEqual(prevProps.tsRange,tsRange) || !_.isEqual(prevProps.possibleWires, possibleWires);
+        const {tsRange, possibleWires, propMode, historyPKs} = this.props;
+        const isNewXRange = !_.isEqual(prevProps.tsRange,tsRange);
+        const isNewScope = !_.isEqual(prevProps.possibleWires, possibleWires)
+        const isNewPropMode = !_.isEqual(prevProps.propMode, propMode)
         const isNewHistory = !_.isEqual(prevProps.historyPKs, historyPKs);
 
         // console.log('[H] isNewProps',isNewProps, 'isNewHistory',isNewHistory );
-        isNewProps || isNewHistory ? await this.updateState(tsRange, possibleWires) : null;
+        isNewXRange || isNewScope || isNewHistory ? await this.updateState(tsRange, possibleWires) : null;
+
+        // Reset y axis ranges to null (autoscale) when new propmode or possible wires changed
+        isNewScope || isNewPropMode ? this.setState({ yMainRange: null, yTempRange: null}) : null;
+
     }
 
     componentWillUnmount() {
@@ -98,8 +104,21 @@ class Chart extends Component {
         // destructure changes
         const yMainRange = [layout["yaxis.range[0]"], layout["yaxis.range[1]"]];
         const yTempRange = [layout["yaxis2.range[0]"], layout["yaxis2.range[1]"]];
+        const yMainAutorange = layout["yaxis.autorange"];
+        const yTempAutorange = layout["yaxis2.autorange"];
+
+        // Check if autorange was clicked in modebar
+        if (yMainAutorange) {
+            this.setState({yMainRange: null})
+        }
+
+        if (yTempAutorange) {
+            this.setState({yTempRange: null})
+        }
+
+
          // Check if layout has the info
-         if (!_.includes(yMainRange, undefined)) {
+        if (!_.includes(yMainRange, undefined)) {
             // console.log('ran');
             this.setState({ yMainRange: yMainRange})
         } 

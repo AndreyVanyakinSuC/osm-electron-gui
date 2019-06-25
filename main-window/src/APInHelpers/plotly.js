@@ -36,7 +36,7 @@ export const CONFIG = {
         responsive: true
     },
     history: {
-        scrollZoom: false,
+        scrollZoom: true,
         editable: false,
         staticPlot: false,
         toImageButtonOptions: {
