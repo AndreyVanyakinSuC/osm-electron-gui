@@ -13,9 +13,10 @@ const CONNECT_OUTPUT_DIR = path.resolve(__dirname, 'connect-window/dist');
 const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
 
 module.exports = {
+  mode: "development",
   entry: {
-    main: MAIN_SRC_DIR + '/mainIndex.js',
-    connect: CONNECT_SRC_DIR + '/connectIndex.js'
+    main: path.resolve(__dirname, 'main-window/src/mainIndex.js'),
+    connect: path.resolve(__dirname, 'connect-window/src/connectIndex.js')
   },
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
@@ -85,12 +86,8 @@ module.exports = {
   devtool: 'cheap-source-map',
   devServer: {
     contentBase: OUTPUT_DIR,
-    stats: {
-      colors: true,
-      chunks: false,
-      children: false
-    },
-    setup() {
+    stats: 'minimal',
+    before: function() {
       spawn(
         'electron',
         ['.'],

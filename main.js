@@ -105,7 +105,11 @@ const createMainWindow = () => {
     width: 1024, 
     height: 768, 
     show: false,
-    darkTheme: true
+    darkTheme: true,
+    webPreferences: {
+      nodeIntegration: true,
+      devTools: dev
+    }
 
   });
   windows.push(mainWindow);
@@ -181,6 +185,11 @@ const createConnectWindow = () => {
     // maximizable:false,
     resizable: true,
     // movable: false
+    webPreferences: {
+      nodeIntegration: true,
+      devTools: dev
+    }
+
   });
 
   windows.push(connectWindow);
@@ -195,11 +204,6 @@ const createConnectWindow = () => {
     // if (isAutoConnect() && isConnectSettings()) {
     //   connect();
     // }
-
-    // dev menu
-    if ( dev ) {
-      connectWindow.webContents.openDevTools();
-    }
 
     // Listeners
     ipcMain.on('connectwindow:close', (e, args) => {
