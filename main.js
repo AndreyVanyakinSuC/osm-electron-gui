@@ -197,9 +197,9 @@ const createConnectWindow = () => {
     // }
 
     // dev menu
-    // if ( dev ) {
-    //   connectWindow.webContents.openDevTools();
-    // }
+    if ( dev ) {
+      connectWindow.webContents.openDevTools();
+    }
 
     // Listeners
     ipcMain.on('connectwindow:close', (e, args) => {

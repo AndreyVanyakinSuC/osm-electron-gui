@@ -9,6 +9,8 @@ import ConfirmationCheck from './controls/ConfirmationCheck';
 const { ipcRenderer } = require('electron')
 import { purgeSpaces, getIP, getPort } from './helpers';
 
+// Close window on ESC 
+window.addEventListener('keydown', e => e.keyCode == 27 ? ipcRenderer.send('connectwindow:close') : null)
 
 class Connect extends Component {
 
