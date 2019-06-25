@@ -145,6 +145,7 @@ export default class MyMap extends Component {
         return (
             <Map
                 ref={'map'}
+                onresize={() => console.log('Map resized')}
                 // center={this.state.center}
                 // zoom={this.state.zoom}
                 attributionControl={false}
@@ -152,7 +153,7 @@ export default class MyMap extends Component {
                 maxBounds={this.maxBounds}
                 boundsOptions = {{padding: [50, 50]}}
                 // onViewportChange = {this.handleViewportChange.bind(this)}
-                className={'map_cont'}
+                className='map_cont'
                 useFlyTo={true}
                 zoomControl={false}
                 animate={true}>

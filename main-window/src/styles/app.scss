@@ -381,12 +381,20 @@ body, html {
             } // left.pane
     
             .right_pane {
-                display: flex;
-                flex-direction: column;
+                // display: flex;
+                // flex-direction: column;
+                display: grid;
+                grid-template-columns: 100%;
+                grid-template-rows: 100%;
                 height: 100%;
-                // width: 100%;
+                width: 100%;
+
+                &.two_rows {
+                    grid-template-rows: 50% 50%;
+                }
     
                 .map_cont {
+                       .map {
                     height: 100%;
                     width: 100%;
 
@@ -691,6 +699,8 @@ body, html {
 
                 } // map cont
 
+                }
+             
                
     
                 .chart_container{

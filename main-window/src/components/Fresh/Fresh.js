@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactResizeDetector from 'react-resize-detector';
 import Dashboard from './Dashboard/Dashboard';
 import Map from './Map/MyMap';
 import FreshChart from './FreshChart';
@@ -66,35 +67,9 @@ class Fresh extends Component {
     // OUT = RANGE ID AND PROP TO STATE
     handleWireStripClick(prop, wireID, event) {
         // event.stopPropagation();
-
         const clickedWireRange = this.props.schema.obj[wireID].parentRange;
-
         this.handlePropModeChange(prop);
         this.handleScopeRangeChange(clickedWireRange)
-
-
-        // return only changed
-        // this.setState(prevState => {
-        //     // chart is closed, no scope
-        //     if (!prevState.isChartVisible) {
-        //         // turn on and show
-        //         return { scopedRange: clickedWireRange, chartPropMode: mode, isChartVisible: true}
-        //     } else { // is visible
-        //         if (prevState.scopedRange === clickedWireRange) {
-        //             if (prevState.chartPropMode === prop) {
-        //                 return {scopedRange: null, isChartVisible: false}; // cliced the same turn off
-        //             } else {
-        //                 return { chartPropMode: prop}
-        //             }
-        //         } else {
-        //             if (prevState.chartPropMode === prop) {
-        //                 return {scopedRange: clickedWireRange}
-        //             } else {
-        //                 return {scopedRange: clickedWireRange, chartPropMode: prop}
-        //             }
-        //         }
-        //     }
-        // })
     }
     // entity and id to scope
     handleMapFocusClick(entityType, entityID, event) {
@@ -140,13 +115,22 @@ class Fresh extends Component {
                         focusChart={this.handleWireStripClick.bind(this)}
                         mapFocus={this.handleMapFocusClick.bind(this)}/>
                 </div>
-                <div className='right_pane'>
-                    <Map 
-                        schema ={schema}
-                        zoomTo={this.state.mapFocus}
-                        focusChart={this.handleWireStripClick.bind(this)}
-                        resetZoomTo= {this.handleResetFocus.bind(this)}
-                        fresh ={fresh}/>
+                <div className={isChartVisible ? 'right_pane two_rows' : 'right_pane'}>
+                    <ReactResizeDetector 
+                        handleHeight
+                        handleWidth
+                        render = {
+                            ({width, height}) =>  <Map 
+                                schema ={schema}
+                                containerSize = {{width: width, height: height}}
+                                zoomTo={this.state.mapFocus}
+                                focusChart={this.handleWireStripClick.bind(this)}
+                                resetZoomTo= {this.handleResetFocus.bind(this)}
+                                fresh ={fresh}/>
+                        }
+                    />
+                    
+                   
                 
                 {
                     isChartVisible ? 
