@@ -86,7 +86,9 @@ $WHITE: #FFF;
     0% {opacity: 0;}
     100% {opacity: 1;}
 }
-
+@mixin fadein-animation() {
+    animation: fadein 0.35s ease-in;
+}
 
 
 body, html {
@@ -267,7 +269,7 @@ body, html {
                         } // deop header
 
                         .dep_body {
-                            animation: fadein 0.35s ease-in;
+                            @include fadein-animation();
                         }
     
                     } // dep block
@@ -287,8 +289,8 @@ body, html {
                         } // line header
     
                         .line_body {
+                            @include fadein-animation();
                             background-color: $LINE-BG;
-                            animation: fadein 0.35s ease-in;
                             padding: 0.2rem 0.6rem;
     
                             .range_card {
@@ -558,43 +560,44 @@ body, html {
                                 } // tower-popup-header
 
                                 .tower-popup-body {
+                                    
                                     border-top-: none;
                                     border-radius: 0 0 0.8rem 0.8rem;
                                     padding: 0.25rem 0.8rem 0.25rem 0.8rem;
 
                                     .details-gallery {
             
-                                            // transition: all 1000ms ease-in;   
-                                            overflow:hidden;
-                                            display: grid;
-                                            grid-template-columns: 50% 50%;
-                                            grid-template-rows: 4rem 4rem;
-                                            grid-gap: 0.25rem;
-            
-            
-                                            .thumbnail {
-                                                cursor: pointer;
-                                                transition: all 200ms ease-in;
-                                                opacity: 0.7;
-                                                
-                                                &:hover{
-                                                    // background-blend-mode: lighten;
-                                                    opacity: 1;
-                                                }
+                                        @include fadein-animation();
+                                        overflow:hidden;
+                                        display: grid;
+                                        grid-template-columns: 50% 50%;
+                                        grid-template-rows: 4rem 4rem;
+                                        grid-gap: 0.25rem;
+        
+        
+                                        .thumbnail {
+                                            cursor: pointer;
+                                            transition: all 200ms ease-in;
+                                            opacity: 0.7;
+                                            
+                                            &:hover{
+                                                // background-blend-mode: lighten;
+                                                opacity: 1;
                                             }
-            
-                                            &.hidden {
-                                                // transition: all 200ms ease-in;      
-                                                max-height: 0;
-                                                // display: none;
-                                            }
-            
-                                            &::after{
-                                                @include horizontal-line();
-                                                content: "";
-                                                display: block;
-                                                width: 200%;
-                                            }
+                                        }
+        
+                                        &.hidden {
+                                            // transition: all 200ms ease-in;      
+                                            // max-height: 0;
+                                            display: none;
+                                        }
+        
+                                        &::after{
+                                            @include horizontal-line();
+                                            content: "";
+                                            display: block;
+                                            width: 200%;
+                                        }
             
             
                                            
@@ -707,9 +710,9 @@ body, html {
     
                 .chart_container{
                     
+                    @include fadein-animation();
                     background-color: $LINE-BG;
                     height: 100%;
-                    animation: fadein 0.35s ease-in;
 
     
                     .current_chart {

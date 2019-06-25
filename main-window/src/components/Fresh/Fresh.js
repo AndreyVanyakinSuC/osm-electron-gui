@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactResizeDetector from 'react-resize-detector';
 import Dashboard from './Dashboard/Dashboard';
 import Map from './Map/MyMap';
 import FreshChart from './FreshChart';
@@ -116,21 +115,12 @@ class Fresh extends Component {
                         mapFocus={this.handleMapFocusClick.bind(this)}/>
                 </div>
                 <div className={isChartVisible ? 'right_pane two_rows' : 'right_pane'}>
-                    <ReactResizeDetector 
-                        handleHeight
-                        handleWidth
-                        render = {
-                            ({width, height}) =>  <Map 
-                                schema ={schema}
-                                containerSize = {{width: width, height: height}}
-                                zoomTo={this.state.mapFocus}
-                                focusChart={this.handleWireStripClick.bind(this)}
-                                resetZoomTo= {this.handleResetFocus.bind(this)}
-                                fresh ={fresh}/>
-                        }
-                    />
-                    
-                   
+                        <Map 
+                            schema ={schema}
+                            zoomTo={this.state.mapFocus}
+                            focusChart={this.handleWireStripClick.bind(this)}
+                            resetZoomTo= {this.handleResetFocus.bind(this)}
+                            fresh ={fresh}/>
                 
                 {
                     isChartVisible ? 
