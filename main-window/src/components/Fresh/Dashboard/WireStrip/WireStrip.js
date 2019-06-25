@@ -19,7 +19,8 @@ const wireStrip = ({ wireID, schema, fresh, focusChart }) => {
             return (  
                 <div className={'strip'}>
     
-                    <span>
+                    <span
+                        title={schema.obj[wireID].sensorID}>
                         {ENTITY_NAMES.get(schema.obj[wireID].Type)}
                     </span>
     

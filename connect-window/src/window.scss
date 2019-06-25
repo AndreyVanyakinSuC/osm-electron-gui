@@ -7,8 +7,8 @@ $BLUE: #5DA1FF;
 }
 
 body {
-    height: auto;
-    width: auto;
+    max-height: 15rem;
+    max-width: 20rem;
     background-color:whitesmoke;
     user-select: none;
     overflow: hidden;

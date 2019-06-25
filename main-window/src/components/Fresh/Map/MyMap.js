@@ -122,9 +122,11 @@ export default class MyMap extends Component {
 
                 // Get messages for all objects within range and take the most dangerous one to style the range
 
+                console.log(schema.ranges[rID].obj);
+                console.log(fresh);
                 const messages = schema.ranges[rID].obj.map(o => fresh[o].msg);
                 const worstMsg = pickWorstMessage(messages);
-                const rangeClasses = worstMsg === null ? 'range' : `range ${MSGS.get(worstMsg).class}`
+                const rangeClasses = worstMsg === null || worstMsg === undefined ? 'range' : `range ${MSGS.get(worstMsg).class}`
 
                 //FIXME: set styles based on [msg]
 

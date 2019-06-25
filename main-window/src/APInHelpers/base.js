@@ -8,8 +8,8 @@ export const DATA_PROP_NAMES = ["ts", "obj", "F", "Fmn", "Fmx", "Frms", "I", "VI
 
 export const ENTITY_NAMES = new Map ([
     ['1_phaseA', 'фаза А'],
-    ['2_phaseA', 'фаза B'],
-    ['3_phaseA', 'фаза C'],
+    ['2_phaseB', 'фаза B'],
+    ['3_phaseC', 'фаза C'],
     ['4_OPGW', 'ОКГТ'],
 ]);
 
