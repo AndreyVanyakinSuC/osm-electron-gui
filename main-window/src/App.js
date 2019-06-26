@@ -24,12 +24,14 @@ class App extends Component {
   state = {
     isConnected: false, // is the connection to Source ON
     isConnecting: false, // is connecting
+    ip: '', // server ip string
     isWaitingHistory: false, // some data request was sent to server and neither error nor result have returned
     isSchemaAvailable: false, // app has some schema
     mode: 'fresh', // 'history / 'fresh'
     schema: {}, // schema
     //fresh
     fresh: {},
+    lastFreshMessageTS: '', // timestamp of moment of last fresh message arrival
     isFreshAvailable: false, //if fresh is available to show
     // history
     historyPKs: [],
@@ -146,9 +148,10 @@ class App extends Component {
       this.setState(() => ({isConnecting: true}))
     })
 
-    ipcRenderer.on('connection:established', () => {
+    ipcRenderer.on('connection:established', (e, url) => {
+      const serverIP = _.split(url,'/')[2]
       console.log('%c[IPC]connection:established', 'color: darkgreen');
-      this.setState(()=>({isConnected: true, isConnecting: false}))
+      this.setState(()=>({isConnected: true, isConnecting: false, ip: serverIP}))
     })
 
     ipcRenderer.on('connection:closed', () => {
@@ -213,7 +216,15 @@ class App extends Component {
       
       writeDataToDB(verified)
         // will only update state if some new fresh was actually written to db
-        .then(PKs => PKs !== null ? this.fillStateWithFresh(PKs) : null);
+        .then(PKs => {
+          
+          // if some fresh were written - update the last fresh message TS in state
+          this.setState( {lastFreshMessageTS: nowTS()} )
+
+
+          // feed state with fresh data
+          PKs !== null ? this.fillStateWithFresh(PKs) : null
+        });
     })
 
     
@@ -365,6 +376,9 @@ class App extends Component {
     return (
       <div className="App">
         <Header 
+          ip={this.state.ip}
+          lastFreshMessageTS={this.state.lastFreshMessageTS}
+          onConnectClick={this.handleConnectClick.bind(this)}
           isConnected = {this.state.isConnected}
           isConnecting = {this.state.isConnecting}
           isWaitingHistory={this.state.isWaitingHistory}

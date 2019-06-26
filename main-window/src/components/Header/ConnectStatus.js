@@ -1,15 +1,19 @@
 import React from 'react';
+import {displayHuman} from '../../APInHelpers/timeseries';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faCircleNotch, faTimesCircle,  } from '@fortawesome/free-solid-svg-icons' 
 
 const ConnectStatus = ({
+    ip,
+    lastFreshMessageTS,
+    onConnectClick,
     isConnected, 
     isConnecting, 
     isWaitingHistory,
     isSchemaAvailable,
     isFreshAvailable }) => {
 
-    let icon, classes, message, stage;
+    let icon, classes, message, stage, title;
 
     if (isConnected) {
 
@@ -17,11 +21,13 @@ const ConnectStatus = ({
             icon = <FontAwesomeIcon icon = {faCircleNotch} spin/>
             classes = 'connect-icon connected';
             message = 'Соединено';
+            title = `IP сервера ${ip}`
             stage = 'Запрашиваем архивные данные с сервера..';
         } else {
             icon = <FontAwesomeIcon icon = {faCircle}/>
             classes = 'connect-icon connected';
             message = 'Соединено';
+            title = `IP сервера ${ip}   Последнее сообщение получено в ${displayHuman(lastFreshMessageTS)}`
             stage = '';
         }
         
@@ -31,6 +37,7 @@ const ConnectStatus = ({
             icon = <FontAwesomeIcon icon = {faCircleNotch} spin />
             classes = 'connect-icon connecting';
             message = 'Соединяемся..';
+            title = `IP сервера ${ip}`
     
             if (!isSchemaAvailable) {
                 stage= 'получаем описание..'            
@@ -53,7 +60,10 @@ const ConnectStatus = ({
 
 
     return (
-        <div className='connect-status-container'>
+        <div 
+            className='connect-status-container'
+            title={title}
+            onClick={onConnectClick}>
             <span className={classes}>
                 {icon}
             </span>

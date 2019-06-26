@@ -5,6 +5,9 @@ import ConnectStatus from './ConnectStatus';
 const Header = (props) => {
 
     const {
+        ip,
+        lastFreshMessageTS,
+        onConnectClick,
         isConnected,
         isConnecting,
         isWaitingHistory,
@@ -21,6 +24,9 @@ const Header = (props) => {
         <div className='app_header'>
             
             <ConnectStatus 
+                ip={ip}
+                lastFreshMessageTS={lastFreshMessageTS}
+                onConnectClick={onConnectClick}
                 isConnected = {isConnected}
                 isConnecting ={isConnecting}
                 isWaitingHistory={isWaitingHistory}

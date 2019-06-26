@@ -231,7 +231,7 @@ const createConnectWindow = () => {
     console.log('Connect window show', printConnectionStatus());
 
     isConnecting() ? connectWindow.webContents.send('connection:connecting..') : null;
-    isConnected() ? connectWindow.webContents.send('connection:established') : null;
+    isConnected() ? connectWindow.webContents.send('connection:established', es.url) : null;
     isAutoConnect() ? connectWindow.webContents.send('connection:settings-available', loadConnectSettings()) : null;
   })
  
