@@ -177,9 +177,9 @@ const createConnectWindow = () => {
     darkTheme: true,
     center: true,
     alwaysOnTop: true,
-    // width: 310, 
-    // height: 250, 
-    useContentSize: true,
+    width: 210, 
+    height: 300, 
+    // useContentSize: true,
     show: false, 
     modal: true,
     minimizable: false,
@@ -204,6 +204,10 @@ const createConnectWindow = () => {
     //     // Connect if autoconnect setting is on
     // if (isAutoConnect() && isConnectSettings()) {
     //   connect();
+    // }
+
+    // if ( dev ) {
+    //   connectWindow.webContents.openDevTools();
     // }
 
     // Listeners
