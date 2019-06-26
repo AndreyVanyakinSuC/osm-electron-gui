@@ -281,11 +281,9 @@ const connect = () => {
   // Connect to event source only when not connected to the same URL OR is now disconnected 
   // const isSameUrl = es.url === url;
   // const isShouldConnect = !isSameUrl || isDisconnected();
-  const isShouldConnect = true;
   
   console.log('Connect() ran');
   
-  if (isShouldConnect) {
 
     es = new EventSource(`${loadConnectSettings().url}/sse`)
     
@@ -320,9 +318,6 @@ const connect = () => {
       }, 1000);
     }
 
-  } else {
-    throw `Already connected to ${loadConnectSettings.url}`  
-  }
 
 }
 

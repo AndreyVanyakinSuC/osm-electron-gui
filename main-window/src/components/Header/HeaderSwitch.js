@@ -38,6 +38,7 @@ const headerSwitch = ({mode, onModeChange, isCanShowFresh, isCanShowHistory, rib
             {/* Клавиfi current */}
             <span 
                 className={freshKeyClasses.join(' ')}
+                title='Показать последние измерения'
                 onClick={onModeChange.bind(null, 'fresh')}> 
                     {ribbon}                   
                     <input type='radio' id='current-mode' value='fresh' />
@@ -48,6 +49,7 @@ const headerSwitch = ({mode, onModeChange, isCanShowFresh, isCanShowHistory, rib
             {/* Клавиша history */}
             <span 
                 className={historyKeyClasses.join(' ')}
+                title='Показать историю измерений'
                 onClick={onModeChange.bind(null, 'history')}>  
                 <input type='radio' id='history-mode' value='history' />
                 <label> История </label>
