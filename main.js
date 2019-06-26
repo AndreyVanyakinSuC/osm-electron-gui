@@ -172,13 +172,13 @@ const createConnectWindow = () => {
   // Create the browser window.
   connectWindow = new BrowserWindow({
     parent: mainWindow,
-    title: 'Соединение с сервером',
+    title: 'Соединение',
     // frame: false,
     darkTheme: true,
     center: true,
     alwaysOnTop: true,
-    width: 210, 
-    height: 300, 
+    width: 285, 
+    height: 271, 
     // useContentSize: true,
     show: false, 
     modal: true,

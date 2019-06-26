@@ -141,12 +141,13 @@ class Connect extends Component {
             <div className='connect-window-container'> 
                
                 
+               <div className='connect-window-text'>
+                    Введите IP-адрес сервера и номера порт 
+                </div>
 
                 <div className='inputs-container'>
 
-                    <div className='connect-window-text'>
-                        Введите IP-адрес сервера и номера порт 
-                    </div>
+                  
 
                     <IpInput 
                         value = {this.state.ip}
@@ -156,18 +157,13 @@ class Connect extends Component {
                         changed = {this.handlePortChange.bind(this)}/>
                 </div>
          
-                <div className='inputs-container'>
-
-                    <div className='connect-window-text'>
+                <div className='connect-window-text'>
                         Введите пароль
-                    </div>
-
-                    <PassInput 
-                        value = {this.state.pass}
-                        changed = {this.handlePassChange.bind(this)}/>
                 </div>
 
-
+                <PassInput 
+                    value = {this.state.pass}
+                    changed = {this.handlePassChange.bind(this)}/>
                 
                 <ConfirmationCheck 
                     isActive={this.state.isAutoconnect}

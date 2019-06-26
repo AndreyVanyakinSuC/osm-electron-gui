@@ -10,18 +10,14 @@ body {
     background-color:whitesmoke;
     user-select: none;
     overflow: hidden;
-    padding: 0.25rem;
 }
 
+
 .connect-window-container {
-
-    span {
-        margin: 0 0.5rem 0 0;
-    }
-
+    margin: 0.5rem;
 
     input {
-        // font-size: 0.9em;
+        width: 100%;
         font-family: inherit;
         font-weight: normal;
         text-align: center;
@@ -31,21 +27,34 @@ body {
         }
     }
 
+
+    .connect-window-text{
+        margin: 1.5rem 0 0.25rem 0;
+    }
+
     .inputs-container {
-
         margin: 0.5rem 0;
-        #ip input { width: 8rem;}
-        #port input { width: 4rem;}
-        #pass input {width: 14rem;}
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: 60% 40%;
+        // grid-column-gap: 1rem;
 
-
-        .connect-window-text{
-            margin: 0.25rem 0;
+        span {
+            &:first-child {
+                margin-right: 1rem;
+            }
         }
 
     }
 
+    #pass {
+        margin: 0.5rem 0;
+    }
+
     .confirmation-check {
+
+        margin-top: 1.5rem;
+
         cursor: pointer;
         
         input {
@@ -54,6 +63,7 @@ body {
 
         label {
             cursor: inherit;
+            margin-left: .5rem;
         }
 
         .checked {
