@@ -98,7 +98,7 @@ const installReactDEvTools = () => {
     });
 }
 const createMainWindow = () => {
-
+  
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: 'Система ОАИСКГН',

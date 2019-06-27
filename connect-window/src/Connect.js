@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-// import IpInput from './controls/IpInput';
+import log from 'electron-log';
+log.variables.label = 'CW';
+import {
+    CONNECTWINDOW__CLOSE,
+    CONNECTWINDOW__SETTINGS,
+    SOURCE__CONNECT,
+    SOURCE__DISCONNECT,
+    SOURCE__ISCONNECTING,
+    SOURCE__ISCONNECTED,
+    SOURCE__ISERROR,
+    SOURCE__ISDISCONNECTED
+} from '../../Electron/IPC';
 import IpInput from './controls/IpInput';
 import PortInput from './controls/PortInput';
 import PassInput from './controls/PassInput';
@@ -10,7 +21,13 @@ const { ipcRenderer } = require('electron')
 import { purgeSpaces, getIP, getPort } from './helpers';
 
 // Close window on ESC 
-window.addEventListener('keydown', e => e.keyCode == 27 ? ipcRenderer.send('connectwindow:close') : null)
+window.addEventListener('keydown', e => {
+        if (e.keyCode == 27) {
+            log.verbose('[UI] ESC pressed')
+            ipcRenderer.send(CONNECTWINDOW__CLOSE);
+        }
+    }
+)
 
 class Connect extends Component {
 
@@ -40,8 +57,8 @@ class Connect extends Component {
    
     handleCancelBtnClick() {
         // 1) contact Electron main process
-
-        ipcRenderer.send('connectwindow:close')
+        log.verbose('[UI] CANCEL clicked')
+        ipcRenderer.send(CONNECTWINDOW__CLOSE)
 
         // if clicked when connecting => disconnect, else => close the window
         // if (this.state.isConnecting) {
@@ -54,7 +71,7 @@ class Connect extends Component {
     }
 
     handleConnectClick() {
-
+        log.verbose('[UI] CONNECT clicked')
         // 1) combine ip+port, purge whitespaces, pass and autoconnect instructions
         const parcel =  {
             url: purgeSpaces(`http://${(this.state.ip)}:${this.state.port}`),
@@ -66,22 +83,25 @@ class Connect extends Component {
         // console.log(parcel.url);
         // console.table(parcel);
         // 3) contact Electron main process
-        ipcRenderer.send('connection:connect', parcel)
+        ipcRenderer.send(SOURCE__CONNECT, parcel)
 
     }
 
     handleDisconnectClick() {
-        
-        ipcRenderer.send('connection:disconnect')
+        log.verbose('[UI] DISCONNECT clicked')
+        ipcRenderer.send(SOURCE__DISCONNECT)
     }
 
     handleAutoConnectToggle() {
-        this.setState(prevState => ({isAutoconnect: !prevState.isAutoconnect}))
+        this.setState(prevState => {
+            log.verbose(`[UI] AUTOCONNECT set to ${!prevState.isAutoconnect}`)
+            return {isAutoconnect: !prevState.isAutoconnect}
+        })
     }
 
     componentDidMount() {
-        ipcRenderer.on('connection:settings-available', (e, args) => {
-
+        ipcRenderer.on(CONNECTWINDOW__SETTINGS, (e, args) => {
+            log.info('[IPC] Received _CONNECTWINDOW__SETTINGS_', args)
             const {url, pass, isAutoconnect} = args;
 
             this.setState(() => ({
@@ -93,21 +113,21 @@ class Connect extends Component {
 
         });
 
-        ipcRenderer.on('connection:established', e => {
-            console.log('Connection established');
+        ipcRenderer.on(SOURCE__ISCONNECTED, e => {
+            log.info('[IPC] Received _SOURCE__ISCONNECTED_')
             this.setState(() =>({
                     isConnected: true,
                     isConnecting:false
                 }))
         });
 
-        ipcRenderer.on('connection:connecting..', e => {
-            console.log('Connecting..');
+        ipcRenderer.on(SOURCE__ISCONNECTING, e => {
+            log.info('[IPC] Received _SOURCE__ISCONNECTING_')
             this.setState(() => ({isConnecting: true}))
         })
 
-        ipcRenderer.on('connection:closed', e => {
-            console.log('Connection closed');
+        ipcRenderer.on(SOURCE__ISDISCONNECTED, e => {
+            log.info('[IPC] Received _SOURCE__ISDISCONNECTED_')
             this.setState(() =>({
                 isConnected: false,
                 isConnecting: false
@@ -115,25 +135,12 @@ class Connect extends Component {
         });
     }
 
-    // componentDidUpdate() {
-    //     ipcRenderer.on('connection:established', e => {
-    //         console.log('Connection established');
-    //         this.setState(() =>({
-    //                 isConnected: true,
-    //                 isConnecting:false
-    //             }))
-    //     });
-
-    //     ipcRenderer.on('connection:closed', e => {
-    //         console.log('Connection closed');
-    //         this.setState(() =>({isConnected: false}))
-    //     });
-    // }
 
     componentWillUnmount() {
-        ipcRenderer.removeAllListeners('connection:settings-available')
-        ipcRenderer.removeAllListeners('connection:established')
-        ipcRenderer.removeAllListeners('connection:closed')
+        ipcRenderer.removeAllListeners(CONNECTWINDOW__SETTINGS)
+        ipcRenderer.removeAllListeners(SOURCE__ISCONNECTED)
+        ipcRenderer.removeAllListeners(SOURCE__ISCONNECTING)
+        ipcRenderer.removeAllListeners(SOURCE__ISDISCONNECTED)
     }
 
     render() {

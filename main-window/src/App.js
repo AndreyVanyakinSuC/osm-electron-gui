@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-
+import {
+  CONNECTWINDOW__CREATE,
+  ELECTRON_HISTORYREQ
+} from '../../Electron/IPC';
 import { ipcRenderer } from 'electron';
 import { TREND_HRS, HISTORY_SPAN_SECS } from './APInHelpers/base';
 import { writeSchemaToDB, compareSchemas, readSchemaFromDB, writeDataToDB, readByPKs, outObjIDs, readDataByTSRanges, freshestPKs } from './APInHelpers/database';
@@ -305,7 +308,7 @@ class App extends Component {
 
   // handle connect click in falback
   handleConnectClick() {
-    ipcRenderer.send('connectWindow:create')
+    ipcRenderer.send(CONNECTWINDOW__CREATE)
   }
 
   
