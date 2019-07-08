@@ -23,7 +23,8 @@ const createConnectWindow = function(mainWindow) {
     // movable: false
     webPreferences: {
       nodeIntegration: true,
-      devTools: dev
+      devTools: dev,
+      allowRunningInsecureContent: true
     }
   });
 

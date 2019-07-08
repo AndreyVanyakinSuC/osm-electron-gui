@@ -1,3 +1,5 @@
+@import '../../../main-window/src/styles/fonts/fonts.css';
+
 @function strip-unit($value) {
     @return $value / ($value * 0 + 1);
   }
@@ -28,27 +30,7 @@
   $min_font:14px; // МЕНЯЙ МЕНЯ
   $max_font:17px; // МЕНЯЙ МЕНЯ
 
-
-@font-face {
-  font-family: 'Roboto Condensed';
-  src: url('/font/RobotoCondensed-Regular.ttf') format('truetype');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Roboto Condensed';
-  src: url('/font/RobotoCondensed-Bold.ttf') format('truetype');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: 'Roboto Condensed';
-  src: url('/font/RobotoCondensed-Bolder.ttf') format('truetype');
-  font-weight: 900;
-}
-
 html {
-
   font-family: "Roboto Condensed", serif;
   @include fluid-type($min_width, $max_width, $min_font, $max_font);
 	-webkit-font-smoothing: antialiased;

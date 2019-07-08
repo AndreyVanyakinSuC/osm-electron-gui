@@ -68,7 +68,7 @@ module.exports = {
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        loader: 'file-loader?name=font/[name].[ext]'
+        loader: 'file-loader?name=fonts/[name].[ext]'
       }
     ]
   },
@@ -93,7 +93,17 @@ module.exports = {
   devtool: 'cheap-source-map',
   devServer: {
     contentBase: OUTPUT_DIR,
-    stats: 'minimal',
+    stats: {
+      assets: true,
+      colors: true,
+      entrypoints: true
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization'
+    },
     before: function() {
       spawn('electron', ['.'], {
         shell: true,

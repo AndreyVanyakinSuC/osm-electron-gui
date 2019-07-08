@@ -1,4 +1,4 @@
-const { app, ipcMain } = require('electron');
+const { app, ipcMain, Menu, dialog } = require('electron');
 const _ = require('lodash');
 const log = require('electron-log');
 const {
@@ -44,6 +44,8 @@ app.on('ready', () => {
   // Both windows are created at startup but connect is not displayed until request
 
   mainWindow = createMainWindow();
+  //   Enable custom menu
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 
   mainWindow.on('show', () => {
     log.info('[MainWindow] _on show_');
@@ -62,7 +64,7 @@ app.on('ready', () => {
   // USER WANTS TO OPEN CONNECT WINDOW
   ipcMain.on(CONNECTWINDOW__CREATE, () => {
     log.info('[IPC] _on CONNECTWINDOW__CREATE_');
-    connectWindow = createConnectWindow();
+    connectWindow = createConnectWindow(mainWindow);
     windows.push(connectWindow);
 
     connectWindow.on('show', () => {
@@ -120,3 +122,70 @@ app.on('ready', () => {
       });
   });
 });
+
+const menuTemplate = [
+  {
+    label: 'Файл',
+    submenu: [
+      {
+        label: 'Соединение..',
+        click() {
+          createConnectWindow();
+        }
+      },
+      {
+        label: 'Выйти',
+        accelerator: 'Alt+Q',
+        click() {
+          app.quit();
+        }
+      }
+    ]
+  },
+  {
+    label: 'Окно',
+    submenu: [{ label: 'Свернуть', accelerator: 'Ctrl+M', click() {} }]
+  },
+  {
+    label: 'Помощь',
+    submenu: [
+      {
+        label: 'О программе..',
+        accelerator: 'F1',
+        click() {
+          dialog.showMessageBox({
+            title: 'О программе',
+            type: 'info',
+            message: 'Программа ОСМ ВЛ версия 1',
+            detail: 'Очень очень хорощий программа'
+          });
+        }
+      },
+      {
+        label: 'Сообщить об ошибке',
+        click() {
+          console.log('[MENU] Сообщить об ошибке was сlicked');
+        }
+      }
+    ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        label: 'DevTools',
+        accelerator: 'Ctrl+Shift+I',
+        click() {
+          mainWindow.webContents.openDevTools();
+        }
+      },
+      {
+        label: 'Refresh',
+        accelerator: 'F5',
+        click() {
+          mainWindow.reload();
+        }
+      }
+    ]
+  }
+];
