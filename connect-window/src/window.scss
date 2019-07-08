@@ -1,5 +1,6 @@
 //  adaptive font
-@import 'main-window/src/styles/responsive-font-size.scss';
+// @import 'main-window/src/styles/responsive-font-size.scss';
+@import '../../main-window/src/styles/responsive-font-size.scss';
 
 $BLUE: #5DA1FF;
 @mixin color-transition() {
@@ -87,9 +88,9 @@ body {
             margin: 0.25rem 0.5rem;
             cursor: pointer;
 
-            #cancel {
+            // #cancel {
 
-            }
+            // }
 
             #connect {
                 .spinner { color: $BLUE; }

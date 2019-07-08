@@ -49,8 +49,8 @@ app.on('ready', () => {
     log.info('[MainWindow] _on show_');
     windows.push(mainWindow);
 
-    // Autoconenct if set to true
-    if (readSettings().isAutoconnect) {
+    // Autoconenct if set to true and has settings
+    if (readSettings() !== undefined && readSettings().isAutoconnect) {
       connect();
     }
   });
