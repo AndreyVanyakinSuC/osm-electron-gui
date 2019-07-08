@@ -13,7 +13,7 @@ const CONNECT_OUTPUT_DIR = path.resolve(__dirname, 'connect-window/dist');
 const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
 
 module.exports = {
-  mode: "development",
+  mode: 'development',
   entry: {
     main: path.resolve(__dirname, 'main-window/src/mainIndex.js'),
     connect: path.resolve(__dirname, 'connect-window/src/connectIndex.js')
@@ -21,10 +21,13 @@ module.exports = {
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
     alias: {
-        leaflet_css: __dirname + "/node_modules/leaflet/dist/leaflet.css",
-        leaflet_marker: __dirname + "/node_modules/leaflet/dist/images/marker-icon.png",
-        leaflet_marker_2x: __dirname + "/node_modules/leaflet/dist/images/marker-icon-2x.png",
-        leaflet_marker_shadow: __dirname + "/node_modules/leaflet/dist/images/marker-shadow.png"
+      leaflet_css: __dirname + '/node_modules/leaflet/dist/leaflet.css',
+      leaflet_marker:
+        __dirname + '/node_modules/leaflet/dist/images/marker-icon.png',
+      leaflet_marker_2x:
+        __dirname + '/node_modules/leaflet/dist/images/marker-icon-2x.png',
+      leaflet_marker_shadow:
+        __dirname + '/node_modules/leaflet/dist/images/marker-shadow.png'
     }
   },
   output: {
@@ -36,7 +39,11 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader'}],
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ],
         include: defaultInclude
       },
       {
@@ -46,8 +53,8 @@ module.exports = {
       {
         test: /\.jsx?$/,
         use: [
-          { 
-            loader: 'babel-loader', 
+          {
+            loader: 'babel-loader',
             options: {
               presets: ['react']
             }
@@ -57,11 +64,11 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif)$/,
-        use: [{ loader: 'file-loader?name=img/[name].[ext]' }],
+        use: [{ loader: 'file-loader?name=img/[name].[ext]' }]
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [{ loader: 'file-loader?name=font/[name].[ext]' }],
+        use: [{ loader: 'file-loader?name=font/[name].[ext]' }]
       }
     ]
   },
@@ -71,13 +78,13 @@ module.exports = {
       // inject: false,
       title: 'Система ОАИСКГН',
       chunks: ['main'],
-      filename: OUTPUT_DIR + '/mainIndex.html',
+      filename: OUTPUT_DIR + '/mainIndex.html'
     }),
     new HtmlWebpackPlugin({
       // inject: false,
       title: 'Соедниние с сервером',
       chunks: ['connect'],
-      filename: OUTPUT_DIR + '/connectIndex.html',
+      filename: OUTPUT_DIR + '/connectIndex.html'
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
@@ -88,13 +95,13 @@ module.exports = {
     contentBase: OUTPUT_DIR,
     stats: 'minimal',
     before: function() {
-      spawn(
-        'electron',
-        ['.'],
-        { shell: true, env: process.env, stdio: 'inherit' }
-      )
-      .on('close', code => process.exit(0))
-      .on('error', spawnError => console.error(spawnError));
+      spawn('electron', ['.'], {
+        shell: true,
+        env: process.env,
+        stdio: 'inherit'
+      })
+        .on('close', code => process.exit(0))
+        .on('error', spawnError => console.error(spawnError));
     }
   }
 };

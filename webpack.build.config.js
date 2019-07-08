@@ -22,7 +22,11 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader'}],
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ],
         include: defaultInclude
       },
       {
@@ -36,11 +40,11 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|JPG|png|gif)$/,
-        use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }],
+        use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }]
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }],
+        use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }]
       }
     ]
   },

@@ -1,48 +1,43 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle, faDotCircle } from '@fortawesome/free-solid-svg-icons' 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle, faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
-const radioGroup = ({currentValue, valueChanged, isIcon, options}) => {
+const radioGroup = ({ currentValue, valueChanged, isIcon, options }) => {
+  return (
+    <div className={'btn-group'}>
+      {options.map(o => {
+        let classes, icon;
 
-    return (
-        <div className={'btn-group'}>
-       
-            {options.map(o => {
+        const isActive = currentValue === o.value;
 
-                let classes, icon;
+        if (isActive) {
+          icon = <FontAwesomeIcon icon={faDotCircle} />;
+          classes = 'item active';
+        } else {
+          icon = <FontAwesomeIcon icon={faCircle} />;
+          classes = 'item';
+        }
 
-                const isActive = currentValue === o.value;
+        if (!isIcon) {
+          icon = null;
+        }
 
-                if (isActive) {
-                    icon = <FontAwesomeIcon icon={faDotCircle} />
-                    classes = 'item active'
-                } else {
-                    icon = <FontAwesomeIcon icon={faCircle} />
-                    classes = 'item'
-                }
+        return (
+          <div
+            key={o.value}
+            className={classes}
+            onClick={valueChanged.bind(null, o.value)}
+          >
+            <input type="radio" id={o.value} value={o.value} />
 
-                if (!isIcon) {
-                    icon = null;
-                }
+            <span>{icon}</span>
 
+            <label>{o.label}</label>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
-                return (
-                <div 
-                    key={o.value}
-                    className= {classes}
-                    onClick={valueChanged.bind(null, o.value)}> 
-
-                    <input type="radio" id={o.value} value={o.value}/>
-                    
-                    <span>{icon}</span>
-
-                    <label>{o.label}</label>
-
-                </div>)
-            })}
-            
-        </div>
-    );
-}
- 
 export default radioGroup;

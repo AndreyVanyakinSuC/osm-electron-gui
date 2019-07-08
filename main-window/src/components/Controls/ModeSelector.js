@@ -2,32 +2,29 @@ import React from 'react';
 import PropertySelector from './PropertySelector';
 import Button from './Button';
 
-const ModeSelector = (props) => {
-    
-    const {propMode, onPropModeChange, isTempVisible, onTempSwitchClick} = props;
-    
-    return (
+const ModeSelector = props => {
+  const {
+    propMode,
+    onPropModeChange,
+    isTempVisible,
+    onTempSwitchClick
+  } = props;
 
-        <div className='selector-card'>
-            <div className='selector-header'> 
-                Выберите режим 
-            </div>
-            <div className='selector-body'> 
-                <PropertySelector 
-                    value={propMode}
-                    changed={onPropModeChange}/>
+  return (
+    <div className="selector-card">
+      <div className="selector-header">Выберите режим</div>
+      <div className="selector-body">
+        <PropertySelector value={propMode} changed={onPropModeChange} />
 
-                <Button 
-                    isActive={isTempVisible}
-                    isIcon={true}
-                    label={'Температура'}
-                    clicked={onTempSwitchClick}/>
-            </div>
-        </div>
+        <Button
+          isActive={isTempVisible}
+          isIcon={true}
+          label={'Температура'}
+          clicked={onTempSwitchClick}
+        />
+      </div>
+    </div>
+  );
+};
 
-
-
-    );
-}
- 
 export default ModeSelector;
