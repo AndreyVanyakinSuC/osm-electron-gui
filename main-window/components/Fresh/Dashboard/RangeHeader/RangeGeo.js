@@ -1,5 +1,5 @@
 import React from 'react';
-import MapIcon from '../../Dashboard/MapIcon';
+import MapIcon from '../MapIcon';
 import { UNITS } from '../../../../APInHelpers/base';
 
 const rangeGeo = ({ id, distance, mapFocus }) => {

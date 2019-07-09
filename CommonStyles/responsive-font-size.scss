@@ -1,5 +1,3 @@
-@import '../../../main-window/src/styles/fonts/fonts.css';
-
 @function strip-unit($value) {
     @return $value / ($value * 0 + 1);
   }

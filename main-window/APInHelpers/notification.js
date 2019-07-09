@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { MSGS } from '../APInHelpers/base';
+import { MSGS } from './base';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowRight,

@@ -10,7 +10,7 @@ import {
   SOURCE__ISCONNECTED,
   SOURCE__ISERROR,
   SOURCE__ISDISCONNECTED
-} from '../../Electron/IPC';
+} from '../Electron/IPC';
 import IpInput from './controls/IpInput';
 import PortInput from './controls/PortInput';
 import PassInput from './controls/PassInput';

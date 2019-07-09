@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { CONNECTWINDOW__CREATE, ELECTRON_HISTORYREQ } from '../../Electron/IPC';
+import { CONNECTWINDOW__CREATE, ELECTRON_HISTORYREQ } from '../Electron/IPC';
 import { ipcRenderer } from 'electron';
 import { TREND_HRS, HISTORY_SPAN_SECS } from './APInHelpers/base';
 import {

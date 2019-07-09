@@ -1,6 +1,7 @@
 //  adaptive font
 // @import 'main-window/src/styles/responsive-font-size.scss';
-@import '../../main-window/src/styles/responsive-font-size.scss';
+@import '../../CommonStyles/responsive-font-size.scss';
+@import '../../CommonStyles/fonts/fonts.css';
 
 $BLUE: #5DA1FF;
 @mixin color-transition() {

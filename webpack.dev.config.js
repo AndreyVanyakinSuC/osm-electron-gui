@@ -4,10 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { spawn } = require('child_process');
 
 // Config directories
-const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/src');
-const OUTPUT_DIR = path.resolve(__dirname, '/dist');
-const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/src');
-const CONNECT_OUTPUT_DIR = path.resolve(__dirname, 'connect-window/dist');
+const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
+const OUTPUT_DIR = path.resolve(__dirname, 'dist/');
+const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/');
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
 const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
@@ -15,8 +14,8 @@ const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
 module.exports = {
   mode: 'development',
   entry: {
-    main: path.resolve(__dirname, 'main-window/src/mainIndex.js'),
-    connect: path.resolve(__dirname, 'connect-window/src/connectIndex.js')
+    main: MAIN_SRC_DIR + '/mainIndex.js',
+    connect: CONNECT_SRC_DIR + '/connectIndex.js'
   },
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
@@ -48,7 +47,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }]
       },
       {
         test: /\.jsx?$/,
@@ -64,11 +63,28 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif)$/,
-        loader: 'file-loader?name=img/[name].[ext]'
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'img',
+              name: '[name].[ext]'
+            }
+          }
+        ]
+        // loader: 'file-loader?name=img/[name].[ext]'
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]'
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'fonts',
+              name: '[name].[ext]'
+            }
+          }
+        ]
       }
     ]
   },
