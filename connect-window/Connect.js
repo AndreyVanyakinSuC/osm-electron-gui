@@ -45,16 +45,18 @@ class Connect extends Component {
   handleIPChange(event) {
     // Verify
     const input = event.target.value;
-    log.verbose(`[UI] IP input = ${input}`);
-    if (ip.isV4Format(input)) {
-      this.setState({ ip: input, isValidIPInput: true });
-    } else {
-      this.setState({ ip: input, isValidIPInput: false });
-    }
-    // Write to state
-    // console.log('IP changed');
-    // const ip = event.target.value;
-    // this.setState(() => ({ ip: ip }));
+
+    // Save every non old ip
+    this.setState(prevState => {
+      if (prevState.ip !== input) {
+        log.silly(`[UI] IP input = ${input}`);
+        return { ip: input };
+      } else {
+        return null;
+      }
+    });
+
+    this.setState({ isValidIPInput: ip.isV4Format(input) });
   }
 
   handlePortChange(event) {
@@ -71,38 +73,25 @@ class Connect extends Component {
     // 1) contact Electron main process
     log.verbose('[UI] CANCEL clicked');
     ipcRenderer.send(CONNECTWINDOW__CLOSE);
-
-    // if clicked when connecting => disconnect, else => close the window
-    // if (this.state.isConnecting) {
-    //     ipcRenderer.send('connection:disconnect')
-    // } else {
-    //     ipcRenderer.send('connectwindow:close')
-    // }
   }
 
   handleConnectClick() {
     log.verbose('[UI] CONNECT clicked');
-    // 1) combine ip+port, purge whitespaces, pass and autoconnect instructions
-    const address = url.format({
-      protocol: 'http',
-      hostname: url.parse(this.state.ip),
-      port: this.state.port,
-      username: 'user',
-      password: this.state.password
+
+    // 1) URL
+    const serverURL = new URL('http://google.com');
+    serverURL.protocol = 'http';
+    serverURL.hostname = this.state.ip;
+    serverURL.port = this.state.port;
+    serverURL.username = 'user';
+    serverURL.password = this.state.pass;
+    log.verbose(serverURL.href);
+
+    // 2) Send
+    ipcRenderer.send(SOURCE__CONNECT, {
+      isAutoconnect: this.state.isAutoconnect,
+      url: serverURL.href
     });
-    log.verbose(address);
-
-    const parcel = {
-      url: purgeSpaces(`http://${this.state.ip}:${this.state.port}`),
-      pass: this.state.pass,
-      isAutoconnect: this.state.isAutoconnect
-    };
-
-    // 2) FIXME: checking
-    // console.log(parcel.url);
-    // console.table(parcel);
-    // 3) contact Electron main process
-    ipcRenderer.send(SOURCE__CONNECT, parcel);
   }
 
   handleDisconnectClick() {
@@ -120,12 +109,12 @@ class Connect extends Component {
   componentDidMount() {
     ipcRenderer.on(CONNECTWINDOW__SETTINGS, (e, args) => {
       log.info('[IPC] Received _CONNECTWINDOW__SETTINGS_', args);
-      const { url, pass, isAutoconnect } = args;
+      const { url, isAutoconnect } = args; //url object
 
       this.setState(() => ({
-        ip: getIP(url),
-        port: getPort(url),
-        pass: pass,
+        ip: url.hostname,
+        port: url.port,
+        pass: url.password,
         isAutoconnect: isAutoconnect
       }));
     });

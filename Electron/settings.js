@@ -2,13 +2,12 @@ const settings = require('electron-settings');
 const log = require('electron-log');
 
 const writeSettings = args => {
-  const { url, pass, isAutoconnect } = args;
+  const { url, isAutoconnect } = args;
 
-  log.info('[SET] Writing', args);
+  log.info('[SET] Writing settings', args);
   //  write dem to storage
   settings.set('connectSettings', {
-    url: url,
-    pass: pass,
+    url: url, // url object
     isAutoconnect: isAutoconnect
   });
 };

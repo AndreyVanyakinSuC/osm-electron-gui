@@ -1,4 +1,7 @@
 const { app, ipcMain, Menu, dialog } = require('electron');
+// Emitter
+const notifier = require('./notifier');
+//
 const _ = require('lodash');
 const log = require('electron-log');
 const {
@@ -11,6 +14,7 @@ const {
   MAINWINDOW__HISTORYRES,
   MAINWINDOW__HISTORYERR
 } = require('./IPC');
+const { PING_NOT_OK, PING_OK } = require('./events');
 
 const { dev, installReactDEvTools } = require('./base');
 const { writeSettings, readSettings } = require('./settings.js');
@@ -120,6 +124,18 @@ app.on('ready', () => {
         log.error('[AXIOS] Error requesting history', err);
         mainWindow.webContents.send(MAINWINDOW__HISTORYERR, err);
       });
+  });
+
+  //
+  // EVENTS
+  //
+
+  // FAILED TO PING SERVER WHEN CONNECTING
+  notifier.on(NO_PING, host => {
+    dialog.showErrorBox(
+      'Ошибка подключения',
+      `Не удалось пропинговать ${host}, проверьте правильность введенных данных.`
+    );
   });
 });
 

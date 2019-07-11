@@ -80,6 +80,7 @@
     "react-plotly.js": "^2.3.0",
     "react-sparklines": "^1.7.0",
     "react-text-mask": "^5.4.3",
+    "tcp-ping": "^0.1.1",
     "url-exists": "^1.0.3",
     "url-loader": "^1.0.1"
   }
