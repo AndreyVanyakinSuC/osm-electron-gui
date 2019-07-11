@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+const url = require('url');
+const ip = require('ip');
+
 import log from 'electron-log';
 log.variables.label = 'CW';
 import {
@@ -33,14 +36,25 @@ class Connect extends Component {
     ip: '',
     port: '',
     pass: '',
+    isValidIPInput: false,
     isAutoconnect: false,
     isConnected: false,
     isConnecting: false
   };
 
   handleIPChange(event) {
-    const ip = event.target.value;
-    this.setState(() => ({ ip: ip }));
+    // Verify
+    const input = event.target.value;
+    log.verbose(`[UI] IP input = ${input}`);
+    if (ip.isV4Format(input)) {
+      this.setState({ ip: input, isValidIPInput: true });
+    } else {
+      this.setState({ ip: input, isValidIPInput: false });
+    }
+    // Write to state
+    // console.log('IP changed');
+    // const ip = event.target.value;
+    // this.setState(() => ({ ip: ip }));
   }
 
   handlePortChange(event) {
@@ -69,6 +83,15 @@ class Connect extends Component {
   handleConnectClick() {
     log.verbose('[UI] CONNECT clicked');
     // 1) combine ip+port, purge whitespaces, pass and autoconnect instructions
+    const address = url.format({
+      protocol: 'http',
+      hostname: url.parse(this.state.ip),
+      port: this.state.port,
+      username: 'user',
+      password: this.state.password
+    });
+    log.verbose(address);
+
     const parcel = {
       url: purgeSpaces(`http://${this.state.ip}:${this.state.port}`),
       pass: this.state.pass,
@@ -146,6 +169,7 @@ class Connect extends Component {
         <div className="inputs-container">
           <IpInput
             value={this.state.ip}
+            isValidIPInput={this.state.isValidIPInput}
             changed={this.handleIPChange.bind(this)}
           />
           <PortInput
@@ -169,6 +193,7 @@ class Connect extends Component {
         <div className="btn-strip">
           <CancelBtn clicked={this.handleCancelBtnClick} />
           <ConnectBtn
+            isValidIPInput={this.state.isValidIPInput}
             isConnecting={this.state.isConnecting}
             isConnected={this.state.isConnected}
             clickedDisconnected={this.handleConnectClick.bind(this)}

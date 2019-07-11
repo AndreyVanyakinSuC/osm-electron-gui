@@ -5,7 +5,7 @@ const portMask = [/[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
 
 const PortInput = ({ value, changed }) => {
   return (
-    <span id="port">
+    <span id="port" title="Введите номер порта сервера">
       <MaskedInput
         placeholder="5000"
         value={value}

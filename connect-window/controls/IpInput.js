@@ -1,41 +1,40 @@
 import React from 'react';
 import MaskedInput from 'react-text-mask';
+import _ from 'lodash';
 
-const ipMask = [
-  /[0-2]?/,
-  /[0-9]/,
-  /[0-9]/,
-  '.',
-  /[1-2]/,
-  /[0-9]/,
-  /[0-9]/,
-  '.',
-  /[1-2]/,
-  /[0-9]/,
-  /[0-9]/,
-  '.',
-  /[1-2]/,
-  /[0-9]/,
-  /[0-9]/
-];
-
-const IpInput = ({ value, changed }) => {
+const IpInput = ({ value, changed, isValidIPInput }) => {
   return (
-    <span id="ip">
+    <span
+      id="ip"
+      title="Введите IP-адрес сервера"
+      className={!isValidIPInput ? 'invalid' : null}
+    >
       <MaskedInput
         placeholder="255.255.255.255"
-        value={value}
-        guide
-        mask={ipMask}
+        mask={value => Array(value.length).fill(/[\d.]/)}
         pipe={value => {
-          const subips = value.split('.');
-          const invalidSubips = subips.filter(ip => {
-            ip = parseInt(ip);
-            return ip < 0 || ip > 255;
-          });
-          return invalidSubips.length > 0 ? false : value;
+          if (value === '.' || value.endsWith('..')) return false;
+
+          const parts = value.split('.');
+
+          if (
+            parts.length > 4 ||
+            parts.some(part => part === '00' || part < 0 || part > 255)
+          ) {
+            return false;
+          }
+
+          // Remove non dots or integers
+          const filtered = _.filter(
+            value,
+            v =>
+              ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(v) ||
+              v === '.'
+          ).join('');
+
+          return filtered;
         }}
-        placeholderChar={'\u2000'}
+        value={value}
         onChange={changed}
       />
     </span>

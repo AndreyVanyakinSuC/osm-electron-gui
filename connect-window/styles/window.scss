@@ -4,6 +4,8 @@
 @import '../../CommonStyles/fonts/fonts.css';
 
 $BLUE: #5DA1FF;
+$ALERT-COLOR: #ff3333;
+
 @mixin color-transition() {
     transition: color 200ms ease-in;
 }
@@ -42,6 +44,12 @@ body {
         // grid-column-gap: 1rem;
 
         span {
+            input {outline-color: $BLUE;}
+
+            &.invalid {
+                input {outline-color: $ALERT-COLOR;}
+            }
+
             &:first-child {
                 margin-right: 1rem;
             }
@@ -89,12 +97,12 @@ body {
             margin: 0.25rem 0.5rem;
             cursor: pointer;
 
-            // #cancel {
-
-            // }
-
             #connect {
                 .spinner { color: $BLUE; }
+            }
+
+            &.disabled {
+                cursor: not-allowed;
             }
         }
     }

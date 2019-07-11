@@ -18,7 +18,11 @@ const ConfirmationCheck = ({ isActive, changed }) => {
   }
 
   return (
-    <div className="confirmation-check" onClick={changed}>
+    <div
+      className="confirmation-check"
+      onClick={changed}
+      title="Сохранить настройки и подключаться автоматически при запуске программы"
+    >
       <input type="checkbox" checked={isActive} />
 
       <span className={style}>{icon}</span>

@@ -50,15 +50,18 @@ module.exports = {
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }]
       },
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         use: [
           {
             loader: 'babel-loader',
+
             options: {
-              presets: ['react']
+              presets: ['@babel/react'],
+              plugins: ['@babel/plugin-proposal-class-properties']
             }
           }
         ],
+        exclude: '/node_modules/',
         include: defaultInclude
       },
       {

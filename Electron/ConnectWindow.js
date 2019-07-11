@@ -32,9 +32,9 @@ const createConnectWindow = function(mainWindow) {
   connectWindow.setMenu(null);
 
   connectWindow.once('ready-to-show', () => {
-    // if ( dev ) {
-    //   connectWindow.webContents.openDevTools();
-    // }
+    if (dev) {
+      connectWindow.webContents.openDevTools();
+    }
     connectWindow.show();
   });
 
