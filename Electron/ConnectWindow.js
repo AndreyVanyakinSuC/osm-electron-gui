@@ -33,7 +33,7 @@ const createConnectWindow = function(mainWindow) {
 
   connectWindow.once('ready-to-show', () => {
     if (dev) {
-      connectWindow.webContents.openDevTools();
+      // connectWindow.webContents.openDevTools();
     }
     connectWindow.show();
   });

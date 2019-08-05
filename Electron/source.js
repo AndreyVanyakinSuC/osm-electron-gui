@@ -1,15 +1,17 @@
-const { BrowserWindow } = require('electron');
+const pify = require('pify');
 const EventSource = require('eventsource');
 
 const url = require('url');
 const tcpp = require('tcp-ping');
-const { PING_NOT_OK, PING_OK } = require('./events');
 const {
-  SOURCE__ISCONNECTING,
-  SOURCE__ISCONNECTED,
-  SOURCE__ISDISCONNECTED,
-  SOURCE__ISERROR
-} = require('./IPC');
+  PING_NOT_OK,
+  PING_OK,
+  CONNECTING,
+  CONNECTED,
+  ISERROR,
+  ISDISCONNECTED,
+  RECONNECTING
+} = require('./events');
 const { readSettings } = require('./settings');
 const log = require('electron-log');
 const notifier = require('./notifier');
@@ -21,84 +23,91 @@ let es;
 let errCount = 0;
 
 // Connect to server
-const connect = () => {
+const connect = async () => {
   // 1) Read settings
-  const serverHref = new URL(readSettings().url);
+  const server = new URL(readSettings().url);
 
-  // 2) Ping host ip:port
-  const isPingOk = isPing(serverHref.hostname, parseInt(serverHref.port));
+  // 2) TCP ping ip:port
+  log.info(
+    `[COM] Will check if ${server.hostname}:${server.port} responds to TCP pings`
+  );
+  const isAvailable = await tcpPing(server.hostname, parseInt(server.port));
 
-  if (!isPingOk) {
-    log.info('[SSE] Server ping unsuccessful');
-    notifier.emit(PING_NOT_OK, `${serverHref.host}`);
-    return null;
-  }
+  if (isAvailable) {
+    // 3) Establish sse connection
+    log.info(`[SSE] TCP ping @ ${server.hostname} suceeded`);
+    notifier.emit(PING_OK);
+    server.pathname = '/sse';
 
-  // 3) Establish sse
-  notifier.emit(PING_OK);
-  serverHref.pathname = '/sse';
+    es = new EventSource(server.href);
 
-  es = new EventSource(serverHref.href);
-  if (es.readyState === 0) {
-    log.info(`[SSE] Connecting to ${es.url}..`);
-    winsSend(SOURCE__ISCONNECTING);
+    if (es.readyState === 0) {
+      log.info(`[SSE] Connecting to ${es.url}..`);
+      notifier.emit(CONNECTING, es.url);
+    }
+
+    es.onopen = () => {
+      errCount = 0;
+      log.info(`[SSE] Connected to ${es.url}`);
+      notifier.emit(CONNECTED, es.url);
+    };
+
+    es.onmessage = event => {
+      // log.info(`[SSE] Connected to ${es.url}`)
+      // MANAGE
+    };
+
+    es.onerror = err => {
+      log.error(`[SSE] Error #${errCount} occured` + err.stack);
+      notifier.emit(ISERROR, err.stack);
+
+      const isShouldReconnect = await tcpPing(server.hostname, parseInt(server.port));
+
+      if (isShouldReconnect) {
+        
+        errCount = errCount + 1;
+
+      } else {
+        disconnect();
+      }
+
+
+
+      // errCount = errCount + 1;
+      // // If it tries to reconenct
+      // if (es.readyState === 0) {
+      //   log.info(`[SSE] Reconnecting..`);
+      //   notifier.emit(RECONNECTING);
+      // }
+
+      // // if it does not
+      // if (es.readyState === 2) {
+      //   log.info(`[SSE] Disconnected`);
+      //   errCount = 0;
+      //   notifier.emit(ISDISCONNECTED);
+      // }
+    };
+  } else {
+    // Inform log and index
+    log.info(`[SSE] TCP ping @ ${server.hostname} failed`);
+    notifier.emit(PING_NOT_OK, `${server.hostname}`);
   }
 };
-
-if (es !== undefined) {
-  es.onopen = function() {
-    log.info(`[SSE] Connected to ${es.url}`);
-    errCount = 0;
-    winsSend(SOURCE__ISCONNECTED);
-  };
-
-  es.onmessage = function(event) {
-    // log.info(`[SSE] Connected to ${es.url}`)
-    // MANAGE
-  };
-
-  es.onerror = function(err) {
-    errCount = +1;
-    log.error(`[SSE] Error #${errCount} occured` + err);
-    winsSend.send(SOURCE__ISERROR);
-
-    // If it tries to reconenct
-    if (es.readyState === 0) {
-      log.info(`[SSE] Reconnecting..`);
-      winsSend.send(SOURCE__ISCONNECTING);
-    }
-
-    // if it does not
-    if (es.readyState === 2) {
-      log.info(`[SSE] Disconnected`);
-      errCount = 0;
-      winsSend.send(SOURCE__ISDISCONNECTED);
-    }
-  };
-}
 
 const disconnect = function() {
   es.close();
   if (es.readyState === 2) {
     log.info(`[SSE] Disconnected`);
     errCount = 0;
-    winsSend.send(SOURCE__ISDISCONNECTED);
+    notifier.emit(ISDISCONNECTED);
   }
 };
 
-const winsSend = function(IPC) {
-  BrowserWindow.getAllWindows().forEach(win => {
-    win.webContents.send(IPC);
-  });
-};
+// TCP PING
 
-// Ping server bool
-const isPing = (ip, portInt) => {
-  log.verbose(`[SSE] Checking if ${ip}:${portInt} responds to pings`);
-  return tcpp.probe(ip, portInt, (err, available) => {
-    if (err) log.error(`[SSE] Ping @ ${ip}:${portInt} failed`, err);
-    return available;
-  });
-};
+const tcpPing = (ip, portInt) =>
+  pify(tcpp.probe)(ip, portInt)
+    .then(isAvailable => isAvailable)
+    .catch(err => log.error(`[COM] Check failed`, err.stack));
 
 module.exports = { es, connect, disconnect };

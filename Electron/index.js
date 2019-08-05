@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu, dialog } = require('electron');
+const { app, ipcMain, Menu, dialog, BrowserWindow } = require('electron');
 // Emitter
 const notifier = require('./notifier');
 //
@@ -10,11 +10,12 @@ const {
   CONNECTWINDOW__SETTINGS,
   SOURCE__CONNECT,
   SOURCE__DISCONNECT,
+  SOURCE__ISCONNECTING,
   ELECTRON_HISTORYREQ,
   MAINWINDOW__HISTORYRES,
   MAINWINDOW__HISTORYERR
 } = require('./IPC');
-const { PING_NOT_OK, PING_OK } = require('./events');
+const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 
 const { dev, installReactDEvTools } = require('./base');
 const { writeSettings, readSettings } = require('./settings.js');
@@ -131,13 +132,24 @@ app.on('ready', () => {
   //
 
   // FAILED TO PING SERVER WHEN CONNECTING
-  notifier.on(NO_PING, host => {
+  notifier.on(PING_NOT_OK, host => {
     dialog.showErrorBox(
       'Ошибка подключения',
       `Не удалось пропинговать ${host}, проверьте правильность введенных данных.`
     );
   });
+
+  // TELL ALL WINDOWS WE ARE CONNECTING
+  notifier.on(CONNECTING, url => {
+    ipcRadio(SOURCE__ISCONNECTING, url);
+  });
 });
+
+const ipcRadio = function(IPC, args) {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send(IPC, args);
+  });
+};
 
 const menuTemplate = [
   {

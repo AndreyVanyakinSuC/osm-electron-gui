@@ -83,8 +83,8 @@ class Connect extends Component {
     serverURL.protocol = 'http';
     serverURL.hostname = this.state.ip;
     serverURL.port = this.state.port;
-    serverURL.username = 'user';
-    serverURL.password = this.state.pass;
+    // serverURL.password = this.state.pass;
+    // serverURL.username = this.state.pass === '' ? null : 'user';
     log.verbose(serverURL.href);
 
     // 2) Send
@@ -110,11 +110,12 @@ class Connect extends Component {
     ipcRenderer.on(CONNECTWINDOW__SETTINGS, (e, args) => {
       log.info('[IPC] Received _CONNECTWINDOW__SETTINGS_', args);
       const { url, isAutoconnect } = args; //url object
+      const serverURL = new URL(url);
 
       this.setState(() => ({
-        ip: url.hostname,
-        port: url.port,
-        pass: url.password,
+        ip: serverURL.hostname,
+        port: serverURL.port,
+        pass: serverURL.password,
         isAutoconnect: isAutoconnect
       }));
     });
