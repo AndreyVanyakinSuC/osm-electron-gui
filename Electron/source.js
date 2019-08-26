@@ -1,4 +1,4 @@
-const { BrowserWindow, webContents } = require('electron');
+const { BrowserWindow } = require('electron');
 
 const pify = require('pify');
 const EventSource = require('eventsource');
@@ -78,7 +78,6 @@ const connect = async () => {
 
       es.onerror = err => {
         log.error('[SSE] Error occured', err);
-        // notifier.emit(ISERROR, err.stack);
       };
     } else {
       // Inform log and index
@@ -125,6 +124,7 @@ const ipcRadio = (IPC, args) => {
   });
 };
 
+// RETURNS AN IPC CORRESPONDING TO CURRENT ES STATUS
 const connectStatusIPC = () => {
   if (es === undefined || es === null || es.readyState === 2) {
     return SOURCE__ISDISCONNECTED;

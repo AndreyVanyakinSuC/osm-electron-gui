@@ -21,7 +21,6 @@ import CancelBtn from './controls/CancelBtn';
 import ConnectBtn from './controls/ConnectBtn';
 import ConfirmationCheck from './controls/ConfirmationCheck';
 const { ipcRenderer } = require('electron');
-import { purgeSpaces, getIP, getPort } from './helpers';
 
 // Close window on ESC
 window.addEventListener('keydown', e => {
@@ -116,7 +115,8 @@ class Connect extends Component {
         ip: serverURL.hostname,
         port: serverURL.port,
         pass: serverURL.password,
-        isAutoconnect: isAutoconnect
+        isAutoconnect: isAutoconnect,
+        isValidIPInput: ip.isV4Format(serverURL.hostname)
       }));
     });
 
