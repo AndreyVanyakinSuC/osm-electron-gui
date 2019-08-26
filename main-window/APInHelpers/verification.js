@@ -1,5 +1,8 @@
 import _ from 'lodash';
 import { SCHEMA_1ST_LEVEL_NAMES, DATA_PROP_NAMES } from './base';
+import log from 'electron-log';
+const url = require('url');
+log.variables.label = 'MW';
 
 // check if schema is ok
 // 1) schema is an {}
@@ -26,18 +29,20 @@ export const verifySchema = schemaJson => {
         .every(b => b === true);
 
       if (entitiesHaveUniqueIDs) {
-        console.log('Schema verified');
+        log.info('[Schema] FSchema verified ');
         return schema;
       } else {
-        throw `[SCHEMA CHECKER] Some entities IDS are not unique`;
+        log.error('[Schema] Some entities IDS are not unique');
       }
     } else {
-      throw `[SCHEMA CHECKER] First level names in schema do not match ${SCHEMA_1ST_LEVEL_NAMES.join(
-        ', '
-      )}`;
+      log.error(
+        `[Schema] First level names in schema do not match ${SCHEMA_1ST_LEVEL_NAMES.join(
+          ', '
+        )}`
+      );
     }
   } else {
-    throw '[SCHEMA CHECKER] Schema is not an object';
+    log.error('[Schema] Schema is not an object');
   }
 };
 
@@ -64,18 +69,19 @@ export const verifyData = dataJSON => {
 
         if (allPropNamesAreOk) {
           // console.log('data verified');
+          log.info('[Data] Fresh/history verified ');
           return data;
         } else {
-          throw '[data CHECKER] Some of the data have wrong propnames';
+          log.error('[Data] Some of the data have wrong propnames');
         }
       } else {
-        throw '[data CHECKER] Some of data are not objects';
+        log.error('[Data] Some of data are not objects');
       }
     } else {
-      throw '[data CHECKER] data is an empty array';
+      log.error('[Data] data is an empty array');
     }
   } else {
-    throw '[data CHECKER] data is not an array';
+    log.error('[Data] data is not an array');
   }
 };
 

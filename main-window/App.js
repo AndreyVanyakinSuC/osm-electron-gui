@@ -1,5 +1,18 @@
 import React, { Component } from 'react';
-import { CONNECTWINDOW__CREATE, ELECTRON_HISTORYREQ } from '../Electron/IPC';
+import log from 'electron-log';
+const url = require('url');
+log.variables.label = 'MW';
+import {
+  CONNECTWINDOW__CREATE,
+  SOURCE__ISDISCONNECTED,
+  SOURCE__ISCONNECTING,
+  SOURCE__ISCONNECTED,
+  MAINWINDOW__SCHEMA,
+  MAINWINDOW__FRESH,
+  ELECTRON_HISTORYREQ,
+  MAINWINDOW__HISTORYRES,
+  MAINWINDOW__HISTORYRES
+} from '../Electron/IPC';
 import { ipcRenderer } from 'electron';
 import { TREND_HRS, HISTORY_SPAN_SECS } from './APInHelpers/base';
 import {
@@ -56,8 +69,8 @@ class App extends Component {
     const isEmpty = JSON.parse(historyJson).length === 0;
 
     if (isEmpty) {
-      console.log(
-        '%c[H] Server returned an empty arr => no history for the requested timespans'
+      log.info(
+        '[History] Server returned an empty arr => no history for the requested timespans'
       );
       return;
     }
@@ -74,10 +87,12 @@ class App extends Component {
     // 3) Write to db and clear the last history request
     writeDataToDB(history).then(PKs => {
       if (PKs === null) {
-        console.log('%c[H] No new history was written to db');
+        log.info('[History] No new history was written to dbs');
       } else {
         this.setState({ historyPKs: PKs });
-        console.log(`%c[H] Have just written ${PKs.length} slices to database`);
+        log.info(
+          `[History] Have just written ${PKs.length} slices to database`
+        );
       }
     });
   }
@@ -140,50 +155,51 @@ class App extends Component {
     // returns undefined if no schema available
     readSchemaFromDB().then(res => {
       if (res !== undefined) {
-        console.log('Using available schema from db');
+        log.info('[Schema] Preloading schema from db');
         this.fillStateWithSchema(res);
       } else {
-        console.log('No schema in db available');
+        log.info('[Schema] No schema available in db');
       }
     });
 
     // connection handlers
-    ipcRenderer.on('connection:connecting..', () => {
-      console.log('%c[IPC] connection:connecting..', 'color: darkgreen');
+    ipcRenderer.on(SOURCE__ISCONNECTING, () => {
+      log.info('[IPC] Received _SOURCE__ISCONNECTING_');
       this.setState(() => ({ isConnecting: true }));
     });
 
-    ipcRenderer.on('connection:established', (e, url) => {
-      const serverIP = _.split(url, '/')[2];
-      console.log('%c[IPC]connection:established', 'color: darkgreen');
+    ipcRenderer.on(SOURCE__ISCONNECTED, (e, url) => {
+      const serverURL = new URL(url);
+      log.info('[IPC] Received _SOURCE__ISCONNECTED');
       this.setState(() => ({
         isConnected: true,
         isConnecting: false,
-        ip: serverIP
+        ip: serverURL.hostname
       }));
     });
 
-    ipcRenderer.on('connection:closed', () => {
-      console.log('%c[IPC] connection:closed', 'color: darkgreen');
+    ipcRenderer.on(SOURCE__ISDISCONNECTED, () => {
+      log.info('[IPC] Received SOURCE__ISDISCONNECTED');
       this.setState(() => ({ isConnected: false }));
     });
 
-    ipcRenderer.on('connection:error', () => {
-      console.log('%c[IPC] connection:error', 'color: darkgreen');
+    // ipcRenderer.on('connection:error', () => {
+    //   console.log('%c[IPC] connection:error', 'color: darkgreen');
 
-      this.setState(prevState => {
-        if (prevState.isConnecting) {
-          return { isConnected: false, isConnecting: false };
-        } else {
-          return null;
-        }
-      });
-    });
+    //   this.setState(prevState => {
+    //     if (prevState.isConnecting) {
+    //       return { isConnected: false, isConnecting: false };
+    //     } else {
+    //       return null;
+    //     }
+    //   });
+    // });
 
-    ipcRenderer.on('schema:new', (e, schemaJson) => {
-      console.log('%c[IPC] schema:new', 'color: darkgreen');
+    ipcRenderer.on(MAINWINDOW__SCHEMA, (e, schemaJson) => {
+      log.info('[IPC] Received MAINWINDOW__SCHEMA');
 
       if (this.state.isSchemaAvailable) {
+        log.info('[Schema] Some schema was available');
         // compare schemas, if same schema => not update it, else cl
         this.setState(prevState => {
           const isSameSchema = compareSchemas(
@@ -192,11 +208,13 @@ class App extends Component {
           );
 
           if (isSameSchema) {
-            console.log('Incoming schema is the same thats already in state');
+            log.info(
+              '[Schema] Incoming schema is the same thats already in state, will not update state'
+            );
             return null;
           } else {
-            console.log(
-              'Some schema was available but the received one is different, applyong it'
+            log.info(
+              '[Schema] New schema is different, will use it instead of old'
             );
             writeSchemaToDB(schemaJson).then(() => {
               this.fillStateWithSchema(schemaJson);
@@ -207,16 +225,18 @@ class App extends Component {
         // write schema to idb
         // set schame availability flag ON
         // put schema obj to state
-
+        log.info(
+          '[Schema] No schema was in state, applying the newly received schema'
+        );
         writeSchemaToDB(schemaJson).then(() => {
           this.fillStateWithSchema(schemaJson);
         });
       }
     });
 
-    ipcRenderer.on('fresh:new', (e, freshJson) => {
+    ipcRenderer.on(MAINWINDOW__FRESH, (e, freshJson) => {
+      log.info('[IPC] Received MAINWINDOW__FRESH');
       const verified = verifyData(freshJson);
-      console.log('%c[IPC] fresh:new', 'color: darkgreen');
 
       writeDataToDB(verified)
         // will only update state if some new fresh was actually written to db
@@ -229,20 +249,20 @@ class App extends Component {
         });
     });
 
-    ipcRenderer.on('history:request-fired', () =>
-      console.log('%c[IPC] history:request-fired', 'color: darkgreen')
-    );
+    // ipcRenderer.on('history:request-fired', () =>
+    //   console.log('%c[IPC] history:request-fired', 'color: darkgreen')
+    // );
 
-    ipcRenderer.on('history:new', (e, historyJson) => {
-      console.log('%c[IPC] history:new', 'color: darkgreen');
+    ipcRenderer.on(MAINWINDOW__HISTORYRES, (e, historyJson) => {
+      log.info('[IPC] _MAINWINDOW__HISTORYRES_ new history received');
       // stop waiting in state
       this.setState({ isWaitingHistory: false });
 
       this.parseHistory(historyJson);
     });
 
-    ipcRenderer.on('history:request-failed', (e, err) => {
-      console.log('%c[IPC] history:request-failed', 'color: darkgreen', err);
+    ipcRenderer.on(MAINWINDOW__HISTORYERR, e => {
+      log.info('[IPC] MAINWINDOW__HISTORYERR history request failed');
 
       // stop waiting in state
       this.setState({ isWaitingHistory: false });
@@ -271,8 +291,8 @@ class App extends Component {
     // const isWaitingHistory = this.state.isWaitingHistory;
 
     if (isEmptyRequest) {
-      console.log(
-        '%c[h] The formed request was empty, i.e. no need to fetch data'
+      log.info(
+        '[History] The formed request was empty, i.e. no need to fetch data from server'
       );
       return null;
     }
@@ -282,7 +302,7 @@ class App extends Component {
     //   return null;
     // }
 
-    await ipcRenderer.send('history:new-request', request);
+    await ipcRenderer.send(ELECTRON_HISTORYREQ, request);
 
     this.setState({
       isWaitingHistory: true,

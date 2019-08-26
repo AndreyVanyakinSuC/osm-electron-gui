@@ -10,7 +10,6 @@ const {
   CONNECTWINDOW__SETTINGS,
   SOURCE__CONNECT,
   SOURCE__DISCONNECT,
-  SOURCE__ISCONNECTING,
   ELECTRON_HISTORYREQ,
   MAINWINDOW__HISTORYRES,
   MAINWINDOW__HISTORYERR
@@ -127,7 +126,7 @@ app.on('ready', () => {
       })
       .catch(err => {
         log.error('[AXIOS] Error requesting history', err);
-        mainWindow.webContents.send(MAINWINDOW__HISTORYERR, err);
+        mainWindow.webContents.send(MAINWINDOW__HISTORYERR);
       });
   });
 

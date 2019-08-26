@@ -12,7 +12,7 @@ module.exports = (URL, request) => {
 
   axiosInterceptor = axios.interceptors.request.use(req => {
     log.info('[AXIOS] Sent history request', req);
-    console.log(`Outbound POST request to ${URL}`);
+    // console.log(`Outbound POST request to ${URL}`);
     // log.info('%cGreen Main отправляет запрос истории по POST');
     return req;
   });
