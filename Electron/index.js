@@ -66,6 +66,7 @@ app.on('ready', () => {
   //
 
   // USER WANTS TO OPEN CONNECT WINDOW
+
   ipcMain.on(CONNECTWINDOW__CREATE, () => {
     log.info('[IPC] _on CONNECTWINDOW__CREATE_');
     connectWindow = createConnectWindow(mainWindow);
@@ -152,7 +153,7 @@ const menuTemplate = [
       {
         label: 'Соединение..',
         click() {
-          createConnectWindow();
+          createConnectWindow(mainWindow);
         }
       },
       {
@@ -166,7 +167,15 @@ const menuTemplate = [
   },
   {
     label: 'Окно',
-    submenu: [{ label: 'Свернуть', accelerator: 'Ctrl+M', click() {} }]
+    submenu: [
+      {
+        label: 'Свернуть',
+        accelerator: 'Ctrl+M',
+        click() {
+          mainWindow.minimize();
+        }
+      }
+    ]
   },
   {
     label: 'Помощь',

@@ -77,7 +77,13 @@ const connect = async () => {
       };
 
       es.onerror = err => {
-        log.error('[SSE] Error occured', err);
+        if (errCount <= 5) {
+          log.error('[SSE] Error occured', err);
+          errCount = errCount + 1;
+        } else {
+          disconnect();
+        }
+        
       };
     } else {
       // Inform log and index

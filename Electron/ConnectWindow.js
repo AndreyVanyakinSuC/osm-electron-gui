@@ -31,9 +31,9 @@ const createConnectWindow = function(mainWindow) {
   connectWindow.loadURL(winIndexpath('connectIndex.html'));
   connectWindow.setMenu(null);
 
-  connectWindow.once('ready-to-show', () => {
+  connectWindow.on('ready-to-show', () => {
     if (dev) {
-      // connectWindow.webContents.openDevTools();
+      connectWindow.webContents.openDevTools();
     }
     connectWindow.show();
   });
