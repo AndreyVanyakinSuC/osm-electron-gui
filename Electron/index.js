@@ -23,7 +23,7 @@ const { connectStatusIPC, connect, disconnect, esUrl } = require('./source');
 const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
 
-let windows = [];
+// let windows = [];
 let mainWindow, connectWindow;
 
 //
@@ -53,7 +53,6 @@ app.on('ready', () => {
 
   mainWindow.on('show', () => {
     log.info('[MainWindow] _on show_');
-    windows.push(mainWindow);
 
     // Autoconenct if set to true and has settings
     if (readSettings() !== undefined && readSettings().isAutoconnect) {
@@ -69,24 +68,7 @@ app.on('ready', () => {
 
   ipcMain.on(CONNECTWINDOW__CREATE, () => {
     log.info('[IPC] _on CONNECTWINDOW__CREATE_');
-    connectWindow = createConnectWindow(mainWindow);
-    windows.push(connectWindow);
-  });
-  
-  connectWindow.on('show', () => {
-    log.info('[connectWindow] _on show_');
-
-    // SEND SETTINGS TO CONNECTWINDOW
-    connectWindow.webContents.send(CONNECTWINDOW__SETTINGS, readSettings());
-
-    // SEND CURRENT STATUS TO CONNECTWINDOW
-    const status = connectStatusIPC();
-    status !== null ? connectWindow.webContents.send(status) : null;
-  });
-
-  connectWindow.on('close', () => {
-    log.info('[connectWindow] _on close_');
-    windows = _.without(windows, connectWindow);
+    enableConnectWindow();
   });
 
   // USER WANTS TO CLOSE CONNECT WINDOW
@@ -146,6 +128,26 @@ app.on('ready', () => {
   });
 });
 
+// CONNECT WINDOW ROUTINE
+const enableConnectWindow = () => {
+  connectWindow = createConnectWindow(mainWindow);
+  connectWindow.on('show', () => {
+    log.info('[connectWindow] _on show_');
+
+    // SEND SETTINGS TO CONNECTWINDOW
+    connectWindow.webContents.send(CONNECTWINDOW__SETTINGS, readSettings());
+
+    // SEND CURRENT STATUS TO CONNECTWINDOW
+    const status = connectStatusIPC();
+    status !== null ? connectWindow.webContents.send(status) : null;
+  });
+
+  connectWindow.on('close', () => {
+    log.info('[connectWindow] _on close_');
+  });
+};
+
+// MENU
 const menuTemplate = [
   {
     label: 'Файл',
@@ -153,7 +155,7 @@ const menuTemplate = [
       {
         label: 'Соединение..',
         click() {
-          createConnectWindow(mainWindow);
+          enableConnectWindow();
         }
       },
       {
