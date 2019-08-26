@@ -71,22 +71,22 @@ app.on('ready', () => {
     log.info('[IPC] _on CONNECTWINDOW__CREATE_');
     connectWindow = createConnectWindow(mainWindow);
     windows.push(connectWindow);
+  });
+  
+  connectWindow.on('show', () => {
+    log.info('[connectWindow] _on show_');
 
-    connectWindow.on('show', () => {
-      log.info('[connectWindow] _on show_');
+    // SEND SETTINGS TO CONNECTWINDOW
+    connectWindow.webContents.send(CONNECTWINDOW__SETTINGS, readSettings());
 
-      // SEND SETTINGS TO CONNECTWINDOW
-      connectWindow.webContents.send(CONNECTWINDOW__SETTINGS, readSettings());
+    // SEND CURRENT STATUS TO CONNECTWINDOW
+    const status = connectStatusIPC();
+    status !== null ? connectWindow.webContents.send(status) : null;
+  });
 
-      // SEND CURRENT STATUS TO CONNECTWINDOW
-      const status = connectStatusIPC();
-      status !== null ? connectWindow.webContents.send(status) : null;
-    });
-
-    connectWindow.on('close', () => {
-      log.info('[connectWindow] _on close_');
-      windows = _.without(windows, connectWindow);
-    });
+  connectWindow.on('close', () => {
+    log.info('[connectWindow] _on close_');
+    windows = _.without(windows, connectWindow);
   });
 
   // USER WANTS TO CLOSE CONNECT WINDOW
