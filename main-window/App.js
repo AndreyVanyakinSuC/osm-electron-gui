@@ -11,7 +11,7 @@ import {
   MAINWINDOW__FRESH,
   ELECTRON_HISTORYREQ,
   MAINWINDOW__HISTORYRES,
-  MAINWINDOW__HISTORYRES
+  MAINWINDOW__HISTORYERR
 } from '../Electron/IPC';
 import { ipcRenderer } from 'electron';
 import { TREND_HRS, HISTORY_SPAN_SECS } from './APInHelpers/base';
@@ -163,9 +163,14 @@ class App extends Component {
     });
 
     // connection handlers
-    ipcRenderer.on(SOURCE__ISCONNECTING, () => {
+    ipcRenderer.on(SOURCE__ISCONNECTING, (e, url) => {
+      const serverURL = new URL(url);
       log.info('[IPC] Received _SOURCE__ISCONNECTING_');
-      this.setState(() => ({ isConnecting: true }));
+      this.setState(() => ({
+        isConnecting: true,
+        isConnecting: false,
+        ip: serverURL.hostname
+      }));
     });
 
     ipcRenderer.on(SOURCE__ISCONNECTED, (e, url) => {
@@ -180,7 +185,7 @@ class App extends Component {
 
     ipcRenderer.on(SOURCE__ISDISCONNECTED, () => {
       log.info('[IPC] Received SOURCE__ISDISCONNECTED');
-      this.setState(() => ({ isConnected: false }));
+      this.setState(() => ({ isConnected: false, isConnecting: false }));
     });
 
     // ipcRenderer.on('connection:error', () => {

@@ -19,7 +19,7 @@ const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 const { dev, installReactDEvTools } = require('./base');
 const { writeSettings, readSettings } = require('./settings.js');
 const reqHistory = require('./history.js');
-const { connectStatusIPC, connect, disconnect } = require('./source');
+const { connectStatusIPC, connect, disconnect, esUrl } = require('./source');
 const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
 
@@ -112,11 +112,13 @@ app.on('ready', () => {
   });
 
   // MAIN RENDERER SENT A HISTORY REQUEST
-  ipcMain.on(ELECTRON_HISTORYREQ, () => {
+  ipcMain.on(ELECTRON_HISTORYREQ, request => {
     log.info('[IPC] _on ELECTRON_HISTORYREQ_');
 
     // REQUEST HISTORY AND RESPONSE WITH EITHER DATA OR ERROR
-    return reqHistory()
+    const historyUrl = new URL(esUrl());
+
+    return reqHistory(historyUrl.href, request)
       .then(res => {
         log.info('[AXIOS] Incoming history', res);
         mainWindow.webContents.send(

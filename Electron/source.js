@@ -58,16 +58,16 @@ const connect = async () => {
         log.info(`[SSE] Connected to ${es.url}`);
         ipcRadio(SOURCE__ISCONNECTED, es.url);
 
-        es.addEventListener('schema', schemaJSON => {
+        es.addEventListener('schema', message => {
           gotActivity();
           log.info(`[SSE] Received schema`);
-          ipcRadio(MAINWINDOW__SCHEMA, schemaJSON);
+          ipcRadio(MAINWINDOW__SCHEMA, message.data);
         });
 
-        es.addEventListener('fresh', freshJSON => {
+        es.addEventListener('fresh', message => {
           gotActivity();
           log.info(`[SSE] Received fresh`);
-          ipcRadio(MAINWINDOW__FRESH, freshJSON);
+          ipcRadio(MAINWINDOW__FRESH, message.data);
         });
 
         es.addEventListener('ping', () => {
@@ -138,4 +138,7 @@ const connectStatusIPC = () => {
   }
 };
 
-module.exports = { connect, disconnect, connectStatusIPC };
+// RETURNS THE ES.URL
+const esUrl = () => es.url;
+
+module.exports = { connect, disconnect, connectStatusIPC, esUrl };
