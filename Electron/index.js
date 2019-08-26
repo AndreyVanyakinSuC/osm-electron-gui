@@ -20,7 +20,7 @@ const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 const { dev, installReactDEvTools } = require('./base');
 const { writeSettings, readSettings } = require('./settings.js');
 const reqHistory = require('./history.js');
-const { es, connect, disconnect } = require('./source');
+const { connectStatusIPC, connect, disconnect } = require('./source');
 const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
 
@@ -77,6 +77,10 @@ app.on('ready', () => {
 
       // SEND SETTINGS TO CONNECTWINDOW
       connectWindow.webContents.send(CONNECTWINDOW__SETTINGS, readSettings());
+
+      // SEND CURRENT STATUS TO CONNECTWINDOW
+      const status = connectStatusIPC();
+      status !== null ? connectWindow.webContents.send(status) : null;
     });
 
     connectWindow.on('close', () => {
@@ -138,18 +142,7 @@ app.on('ready', () => {
       `Не удалось пропинговать ${host}, проверьте правильность введенных данных.`
     );
   });
-
-  // TELL ALL WINDOWS WE ARE CONNECTING
-  notifier.on(CONNECTING, url => {
-    ipcRadio(SOURCE__ISCONNECTING, url);
-  });
 });
-
-const ipcRadio = function(IPC, args) {
-  BrowserWindow.getAllWindows().forEach(win => {
-    win.webContents.send(IPC, args);
-  });
-};
 
 const menuTemplate = [
   {

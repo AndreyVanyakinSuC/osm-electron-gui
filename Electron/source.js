@@ -1,17 +1,18 @@
+const { BrowserWindow, webContents } = require('electron');
+
 const pify = require('pify');
 const EventSource = require('eventsource');
 
 const url = require('url');
 const tcpp = require('tcp-ping');
+const { PING_NOT_OK, PING_OK } = require('./events');
 const {
-  PING_NOT_OK,
-  PING_OK,
-  CONNECTING,
-  CONNECTED,
-  ISERROR,
-  ISDISCONNECTED,
-  RECONNECTING
-} = require('./events');
+  SOURCE__ISCONNECTING,
+  SOURCE__ISCONNECTED,
+  SOURCE__ISDISCONNECTED,
+  MAINWINDOW__SCHEMA,
+  MAINWINDOW__FRESH
+} = require('./IPC');
 const { readSettings } = require('./settings');
 const log = require('electron-log');
 const notifier = require('./notifier');
@@ -47,23 +48,26 @@ const connect = async () => {
 
       if (es.readyState === 0) {
         log.info(`[SSE] Connecting to ${es.url}..`);
-        notifier.emit(CONNECTING, es.url);
+        // notifier.emit(CONNECTING, es.url);
+        ipcRadio(SOURCE__ISCONNECTING, es.url);
       }
 
       es.onopen = () => {
         errCount = 0;
         gotActivity();
         log.info(`[SSE] Connected to ${es.url}`);
-        notifier.emit(CONNECTED, es.url);
+        ipcRadio(SOURCE__ISCONNECTED, es.url);
 
         es.addEventListener('schema', schemaJSON => {
           gotActivity();
           log.info(`[SSE] Received schema`);
+          ipcRadio(MAINWINDOW__SCHEMA, schemaJSON);
         });
 
         es.addEventListener('fresh', freshJSON => {
           gotActivity();
           log.info(`[SSE] Received fresh`);
+          ipcRadio(MAINWINDOW__FRESH, freshJSON);
         });
 
         es.addEventListener('ping', () => {
@@ -73,8 +77,8 @@ const connect = async () => {
       };
 
       es.onerror = err => {
-        log.error(`[SSE] Error #${errCount} occured` + err.stack);
-        notifier.emit(ISERROR, err.stack);
+        log.error('[SSE] Error occured', err);
+        // notifier.emit(ISERROR, err.stack);
       };
     } else {
       // Inform log and index
@@ -91,7 +95,7 @@ const disconnect = function() {
   if (es.readyState === 2) {
     log.info(`[SSE] Disconnected`);
     errCount = 0;
-    notifier.emit(ISDISCONNECTED);
+    ipcRadio(SOURCE__ISDISCONNECTED, es.url);
   }
 };
 
@@ -114,4 +118,24 @@ const gotActivity = () => {
   }
 };
 
-module.exports = { es, connect, disconnect };
+const ipcRadio = (IPC, args) => {
+  // console.log(BrowserWindow.getAllWindows().length);
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send(IPC, args);
+  });
+};
+
+const connectStatusIPC = () => {
+  if (es === undefined || es === null || es.readyState === 2) {
+    return SOURCE__ISDISCONNECTED;
+  } else if (es.readyState === 1) {
+    return SOURCE__ISCONNECTED;
+  } else if (es.readyState === 0) {
+    return SOURCE__ISCONNECTING;
+  } else {
+    console.error('Unknown scenario');
+    return null;
+  }
+};
+
+module.exports = { connect, disconnect, connectStatusIPC };
