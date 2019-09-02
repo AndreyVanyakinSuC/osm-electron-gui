@@ -1,6 +1,7 @@
 const { BrowserWindow } = require('electron');
 const { dev, winIndexpath } = require('./base');
 const log = require('electron-log');
+const path = require('path');
 
 const createMainWindow = function() {
   log.info('[MainWindow] Creating..');
@@ -11,6 +12,7 @@ const createMainWindow = function() {
     height: 768,
     show: false,
     darkTheme: true,
+    icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
     webPreferences: {
       nodeIntegration: true,
       devTools: dev,

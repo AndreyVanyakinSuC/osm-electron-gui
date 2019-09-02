@@ -9,6 +9,12 @@
     "url": ""
   },
   "license": "MIT",
+  "build": {
+    "appId": "your.id",
+    "win": {
+      "target": "portable"
+    }
+  },
   "main": "./Electron/index.js",
   "scripts": {
     "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",

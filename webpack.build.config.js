@@ -1,22 +1,40 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BabiliPlugin = require('babili-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const { spawn } = require('child_process');
 
 // Config directories
-const SRC_DIR = path.resolve(__dirname, 'src');
-const OUTPUT_DIR = path.resolve(__dirname, 'dist');
+const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
+const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/');
+const ELECTRON_SRC_DIR = path.resolve(__dirname, 'Electron/');
+const OUTPUT_DIR = path.resolve(__dirname, 'dist/');
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
-const defaultInclude = [SRC_DIR];
+const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
 
 module.exports = {
-  entry: SRC_DIR + '/index.js',
+  mode: 'production',
+  entry: {
+    electron: ELECTRON_SRC_DIR + '/index.js',
+    main: MAIN_SRC_DIR + '/mainIndex.js',
+    connect: CONNECT_SRC_DIR + '/connectIndex.js'
+  },
+  resolve: {
+    extensions: ['.html', '.js', '.json', '.scss', '.css'],
+    alias: {
+      leaflet_css: __dirname + '/node_modules/leaflet/dist/leaflet.css',
+      leaflet_marker:
+        __dirname + '/node_modules/leaflet/dist/images/marker-icon.png',
+      leaflet_marker_2x:
+        __dirname + '/node_modules/leaflet/dist/images/marker-icon-2x.png',
+      leaflet_marker_shadow:
+        __dirname + '/node_modules/leaflet/dist/images/marker-shadow.png'
+    }
+  },
   output: {
     path: OUTPUT_DIR,
-    publicPath: './',
-    filename: 'bundle.js'
+    publicPath: '/',
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -31,31 +49,67 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }]
       },
       {
-        test: /\.jsx?$/,
-        use: [{ loader: 'babel-loader' }],
+        test: /\.(js|jsx)$/,
+        use: [
+          {
+            loader: 'babel-loader',
+
+            options: {
+              presets: ['@babel/react'],
+              plugins: ['@babel/plugin-proposal-class-properties']
+            }
+          }
+        ],
+        exclude: '/node_modules/',
         include: defaultInclude
       },
       {
-        test: /\.(jpe?g|JPG|png|gif)$/,
-        use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }]
+        test: /\.(jpe?g|png|gif|ico)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'img',
+              name: '[name].[ext]'
+            }
+          }
+        ]
+        // loader: 'file-loader?name=img/[name].[ext]'
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }]
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'fonts',
+              name: '[name].[ext]'
+            }
+          }
+        ]
       }
     ]
   },
   target: 'electron-renderer',
   plugins: [
-    new HtmlWebpackPlugin(),
-    new ExtractTextPlugin('bundle.css'),
+    new HtmlWebpackPlugin({
+      // inject: false,
+      title: 'Система ОАИСКГН',
+      chunks: ['main'],
+      filename: OUTPUT_DIR + '/mainIndex.html'
+    }),
+    new HtmlWebpackPlugin({
+      // inject: false,
+      title: 'Соедниние с сервером',
+      chunks: ['connect'],
+      filename: OUTPUT_DIR + '/connectIndex.html'
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new BabiliPlugin()
+    })
   ],
   stats: {
     colors: true,

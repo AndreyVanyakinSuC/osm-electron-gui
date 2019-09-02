@@ -1,6 +1,7 @@
 const { BrowserWindow } = require('electron');
 const { dev, winIndexpath } = require('./base');
 const log = require('electron-log');
+const path = require('path');
 
 const createConnectWindow = function(mainWindow) {
   log.info('[ConnectWindow] Creating..');
@@ -19,8 +20,9 @@ const createConnectWindow = function(mainWindow) {
     modal: true,
     minimizable: false,
     // maximizable:false,
-    resizable: true,
+    resizable: false,
     // movable: false
+    icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
     webPreferences: {
       nodeIntegration: true,
       devTools: dev,
