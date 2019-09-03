@@ -391,7 +391,7 @@ body, html {
                 display: grid;
                 grid-template-columns: 100%;
                 grid-template-rows: 100%;
-                height: 100%;
+                // height: 100%;
                 width: 100%;
 
                 &.two_rows {
@@ -709,10 +709,10 @@ body, html {
                 } // map cont
 
              
-               
-    
                 .chart_container{
                     
+                    display: flex;
+                    flex-direction: column;
                     @include fadein-animation();
                     background-color: $LINE-BG;
                     height: 100%;
@@ -722,7 +722,13 @@ body, html {
                         display: block !important;
                         width: calc(100% - 1rem);
                         padding: 0 0.5rem;
+                        height: 100%;
+
+                        @media screen and (max-width: 1400px) {
+                            height: 40vh;
+                        }
                         
+                  
                         
                     } // current_chart
 
@@ -902,7 +908,7 @@ body, html {
                     display: flex;
                     flex-direction: column;
 
-                    @media screen and (min-width: 1350px) {
+                    @media screen and (min-width: 1400px) {
                         flex-direction: row;
                     }
                 }
@@ -913,7 +919,7 @@ body, html {
                     grid-template-columns: auto auto;   
                     // grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
 
-                    @media screen and (min-width: 1350px) {
+                    @media screen and (min-width: 1400px) {
                         grid-template-columns: auto auto auto auto auto auto;
                     }
                 }
