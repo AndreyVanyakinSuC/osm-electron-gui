@@ -1,9 +1,9 @@
 const { BrowserWindow } = require('electron');
-const { dev, winIndexpath } = require('./base');
+const { winIndexpath } = require('./base');
 const log = require('electron-log');
 const path = require('path');
 
-const createConnectWindow = function(mainWindow) {
+const createConnectWindow = function(mainWindow, dev) {
   log.info('[ConnectWindow] Creating..');
 
   const connectWindow = new BrowserWindow({
@@ -24,18 +24,20 @@ const createConnectWindow = function(mainWindow) {
     // movable: false
     icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: true,
-      devTools: dev,
+      devTools: true,
       allowRunningInsecureContent: true
     }
   });
 
-  connectWindow.loadURL(winIndexpath('connectIndex.html'));
+  connectWindow.loadURL(winIndexpath('connectIndex.html',dev));
   connectWindow.setMenu(null);
 
   connectWindow.once('ready-to-show', () => {
+    //FIX<E:
     if (dev) {
-      // connectWindow.webContents.openDevTools();
+      connectWindow.webContents.openDevTools();
     }
     connectWindow.show();
   });

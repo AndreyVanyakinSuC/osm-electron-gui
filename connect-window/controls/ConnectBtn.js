@@ -7,6 +7,7 @@ const CancelBtn = ({
   isConnecting,
   isConnected,
   clickedDisconnected,
+  clickedConnecting,
   clickedConnected
 }) => {
   let onClick, btnContent, classes, title;
@@ -18,7 +19,7 @@ const CancelBtn = ({
   } else if (!isConnected) {
     if (isConnecting) {
       title = 'Соединение в процессе..';
-      onClick = null;
+      onClick = clickedConnecting;
       btnContent = (
         <div>
           <span className="spinner">

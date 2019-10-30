@@ -2,7 +2,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
-import { declareDB, destroyDB, thinDB } from './APInHelpers/database';
+import { declareDB, thinDB } from './APInHelpers/database';
 import { HISTORY_SPAN_SECS } from './APInHelpers/base';
 
 // import setupSSEListeners from './API/LiveData';
@@ -17,7 +17,6 @@ document.body.appendChild(root);
 // setupDexie();
 
 declareDB();
-// destroyDB();
 
 // thinDB(HISTORY_SPAN_SECS).then(console.log(`%c[DB] Have successfully thinned data`, 'color: purple'));
 

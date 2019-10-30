@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { spawn } = require('child_process');
 
 // Config directories
 const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
@@ -14,10 +13,14 @@ const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
 
 module.exports = {
   mode: 'production',
+  node: {
+    __dirname: false,
+    __filename: false
+  },
   entry: {
-    electron: ELECTRON_SRC_DIR + '/index.js',
-    main: MAIN_SRC_DIR + '/mainIndex.js',
-    connect: CONNECT_SRC_DIR + '/connectIndex.js'
+    main: ELECTRON_SRC_DIR + '/index.js',
+    bigWindow: MAIN_SRC_DIR + '/mainIndex.js',
+    connectWindow: CONNECT_SRC_DIR + '/connectIndex.js'
   },
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
@@ -33,7 +36,7 @@ module.exports = {
   },
   output: {
     path: OUTPUT_DIR,
-    publicPath: '/',
+    publicPath: './',
     filename: '[name].js'
   },
   module: {
@@ -93,18 +96,18 @@ module.exports = {
       }
     ]
   },
-  target: 'electron-renderer',
+  target: 'electron-main',
   plugins: [
     new HtmlWebpackPlugin({
       // inject: false,
       title: 'Система ОАИСКГН',
-      chunks: ['main'],
+      chunks: ['bigWindow'],
       filename: OUTPUT_DIR + '/mainIndex.html'
     }),
     new HtmlWebpackPlugin({
       // inject: false,
       title: 'Соедниние с сервером',
-      chunks: ['connect'],
+      chunks: ['connectWindow'],
       filename: OUTPUT_DIR + '/connectIndex.html'
     }),
     new webpack.DefinePlugin({

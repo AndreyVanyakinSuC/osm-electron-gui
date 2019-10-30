@@ -5,6 +5,16 @@ import _ from 'lodash';
 // pick all pks (ts+obj) in range
 // IN [ts start, ts end], [objids]
 
+
+// Will not account for the data already present in idb
+export const prepareSimpleHistoryRequest = async (
+  needMin,
+  needMax,
+  objIDs,
+  secsSpan
+) => (objIDs.map(o => ({[o]: [[needMin, needMax, secsSpan]]})))
+
+// will request only the data thta is missing in the idb
 export const prepareHistoryRequest = async (
   needMin,
   needMax,

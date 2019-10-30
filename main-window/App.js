@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import log from 'electron-log';
+const crypto = require('crypto');
 const url = require('url');
-log.variables.label = 'MW';
+const path = require('path');
+
+
 import {
   CONNECTWINDOW__CREATE,
   SOURCE__ISDISCONNECTED,
@@ -11,10 +14,13 @@ import {
   MAINWINDOW__FRESH,
   ELECTRON_HISTORYREQ,
   MAINWINDOW__HISTORYRES,
-  MAINWINDOW__HISTORYERR
+  MAINWINDOW__HISTORYERR,
+  MAINWINDOW_CLEARIDB,
+  ELECTRON__HISTORYCLEARED,
+  ELECTRON__CLEARERR
 } from '../Electron/IPC';
 import { ipcRenderer } from 'electron';
-import { TREND_HRS, HISTORY_SPAN_SECS } from './APInHelpers/base';
+import { TREND_HRS } from './APInHelpers/base';
 import {
   writeSchemaToDB,
   compareSchemas,
@@ -23,6 +29,7 @@ import {
   readByPKs,
   outObjIDs,
   readDataByTSRanges,
+  clearDataDB,
   freshestPKs
 } from './APInHelpers/database';
 import {
@@ -32,7 +39,7 @@ import {
   addTrends,
   displayHuman
 } from './APInHelpers/timeseries';
-import { prepareHistoryRequest, checkHistory } from './APInHelpers/history';
+import { prepareHistoryRequest, prepareSimpleHistoryRequest,checkHistory } from './APInHelpers/history';
 import { verifySchema, verifyData } from './APInHelpers/verification';
 import { worstCaseRibbon } from './APInHelpers/notification';
 import { schemaObjIDs } from './APInHelpers/schema';
@@ -44,6 +51,12 @@ import Header from './components/Header/Header';
 import Fresh from './components/Fresh/Fresh';
 import History from './components/History/History';
 import Fallback from './components/Fallback';
+
+// ### LOGGING INIT ###
+log.variables.label = 'MW';
+log.transports.file.file = path.resolve('./') + '/osm-gui.log';
+log.transports.file.init()
+
 
 class App extends Component {
   state = {
@@ -69,7 +82,7 @@ class App extends Component {
     const isEmpty = JSON.parse(historyJson).length === 0;
 
     if (isEmpty) {
-      log.info(
+      log.silly(
         '[History] Server returned an empty arr => no history for the requested timespans'
       );
       return;
@@ -85,15 +98,16 @@ class App extends Component {
     );
 
     // 3) Write to db and clear the last history request
-    writeDataToDB(history).then(PKs => {
-      if (PKs === null) {
-        log.info('[History] No new history was written to dbs');
-      } else {
-        this.setState({ historyPKs: PKs });
-        log.info(
-          `[History] Have just written ${PKs.length} slices to database`
-        );
-      }
+    writeDataToDB(history).then(() => {
+      this.setState( {historyPKs: crypto.randomBytes(16)})
+      // if (PKs === null) {
+      //   log.silly('[History] No new history was written to dbs');
+      // } else {
+      //   this.setState({ historyPKs: PKs });
+      //   log.silly(
+      //     `[History] Have just written ${PKs.length} slices to database`
+      //   );
+      // }
     });
   }
 
@@ -155,27 +169,27 @@ class App extends Component {
     // returns undefined if no schema available
     readSchemaFromDB().then(res => {
       if (res !== undefined) {
-        log.info('[Schema] Preloading schema from db');
+        log.silly('[Schema] Preloading schema from db');
         this.fillStateWithSchema(res);
       } else {
-        log.info('[Schema] No schema available in db');
+        log.silly('[Schema] No schema available in db');
       }
     });
 
     // connection handlers
     ipcRenderer.on(SOURCE__ISCONNECTING, (e, url) => {
       const serverURL = new URL(url);
-      log.info('[IPC] Received _SOURCE__ISCONNECTING_');
+      log.silly('[IPC] Received _SOURCE__ISCONNECTING_');
       this.setState(() => ({
         isConnecting: true,
-        isConnecting: false,
+        isConnected: false,
         ip: serverURL.hostname
       }));
     });
 
     ipcRenderer.on(SOURCE__ISCONNECTED, (e, url) => {
       const serverURL = new URL(url);
-      log.info('[IPC] Received _SOURCE__ISCONNECTED');
+      log.silly('[IPC] Received _SOURCE__ISCONNECTED');
       this.setState(() => ({
         isConnected: true,
         isConnecting: false,
@@ -184,7 +198,7 @@ class App extends Component {
     });
 
     ipcRenderer.on(SOURCE__ISDISCONNECTED, () => {
-      log.info('[IPC] Received SOURCE__ISDISCONNECTED');
+      log.silly('[IPC] Received SOURCE__ISDISCONNECTED');
       this.setState(() => ({ isConnected: false, isConnecting: false }));
     });
 
@@ -201,10 +215,10 @@ class App extends Component {
     // });
 
     ipcRenderer.on(MAINWINDOW__SCHEMA, (e, schemaJson) => {
-      log.info('[IPC] Received MAINWINDOW__SCHEMA');
+      log.silly('[IPC] Received MAINWINDOW__SCHEMA');
 
       if (this.state.isSchemaAvailable) {
-        log.info('[Schema] Some schema was available');
+        log.silly('[Schema] Some schema was available');
         // compare schemas, if same schema => not update it, else cl
         this.setState(prevState => {
           const isSameSchema = compareSchemas(
@@ -213,12 +227,12 @@ class App extends Component {
           );
 
           if (isSameSchema) {
-            log.info(
+            log.silly(
               '[Schema] Incoming schema is the same thats already in state, will not update state'
             );
             return null;
           } else {
-            log.info(
+            log.silly(
               '[Schema] New schema is different, will use it instead of old'
             );
             writeSchemaToDB(schemaJson).then(() => {
@@ -230,7 +244,7 @@ class App extends Component {
         // write schema to idb
         // set schame availability flag ON
         // put schema obj to state
-        log.info(
+        log.silly(
           '[Schema] No schema was in state, applying the newly received schema'
         );
         writeSchemaToDB(schemaJson).then(() => {
@@ -240,7 +254,7 @@ class App extends Component {
     });
 
     ipcRenderer.on(MAINWINDOW__FRESH, (e, freshJson) => {
-      log.info('[IPC] Received MAINWINDOW__FRESH');
+      log.silly('[IPC] Received MAINWINDOW__FRESH');
       const verified = verifyData(freshJson);
 
       writeDataToDB(verified)
@@ -254,23 +268,44 @@ class App extends Component {
         });
     });
 
+
+    // Clear history on user request
+    ipcRenderer.on(MAINWINDOW_CLEARIDB, async () => {
+      try {
+        log.silly('[IPC] Received MAINWINDOW_CLEARIDB');
+        await clearDataDB();
+        this.setState( {
+          isWaitingHistory: false,  
+          historyPKs: crypto.randomBytes(16)
+        })
+        ipcRenderer.send(ELECTRON__HISTORYCLEARED);
+      } catch (error) {
+        log.error(error);
+        ipcRenderer.send(ELECTRON__CLEARERR, err);
+      }
+    })
+
     // ipcRenderer.on('history:request-fired', () =>
     //   console.log('%c[IPC] history:request-fired', 'color: darkgreen')
     // );
 
     ipcRenderer.on(MAINWINDOW__HISTORYRES, (e, historyJson) => {
-      log.info('[IPC] _MAINWINDOW__HISTORYRES_ new history received');
+      log.silly('[IPC] _MAINWINDOW__HISTORYRES_ new history received by main window');
       // stop waiting in state
       this.setState({ isWaitingHistory: false });
 
+      // Parse it 
       this.parseHistory(historyJson);
     });
 
     ipcRenderer.on(MAINWINDOW__HISTORYERR, e => {
-      log.info('[IPC] MAINWINDOW__HISTORYERR history request failed');
+      log.silly('[IPC] MAINWINDOW__HISTORYERR history request failed');
 
       // stop waiting in state
-      this.setState({ isWaitingHistory: false });
+      this.setState({ 
+        isWaitingHistory: false,  
+        historyPKs: crypto.randomBytes(16)
+      });
     });
   }
 
@@ -283,12 +318,14 @@ class App extends Component {
     // const objIDs = [4013,4014];
     // const spanSecs = 600;
 
-    const request = await prepareHistoryRequest(
-      needMin,
-      needMax,
-      objIDs,
-      spanSecs
-    );
+    // #### TESTING SIMPLE HISTORY REQUEST ####
+    const request = await prepareSimpleHistoryRequest(needMin,needMax,objIDs,spanSecs)
+    // const request = await prepareHistoryRequest(
+    //   needMin,
+    //   needMax,
+    //   objIDs,
+    //   spanSecs
+    // );
 
     const isEmptyRequest = request.length === 0;
 
@@ -296,7 +333,7 @@ class App extends Component {
     // const isWaitingHistory = this.state.isWaitingHistory;
 
     if (isEmptyRequest) {
-      log.info(
+      log.silly(
         '[History] The formed request was empty, i.e. no need to fetch data from server'
       );
       return null;
@@ -306,7 +343,7 @@ class App extends Component {
     //   console.log('[H] Request was prepared, but already expecting history');
     //   return null;
     // }
-
+    // console.log(request)
     await ipcRenderer.send(ELECTRON_HISTORYREQ, request);
 
     this.setState({

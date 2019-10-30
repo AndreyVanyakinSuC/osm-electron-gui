@@ -1,11 +1,21 @@
 import Dexie from 'dexie';
 import _ from 'lodash';
+import log from 'electron-log';
+log.variables.label = 'MW';
+const crypto = require('crypto');
+
 
 let db = new Dexie('osm');
 
-export const destroyDB = () => {
-  db.schema.clear();
-};
+export const clearDataDB = () => {
+  db.data.clear()
+    .then(() => log.info('[DB] Data has been cleared'))
+    .catch(err => log.error(err))
+}
+
+// export const destroyDB = () => {
+//   db.schema.clear();
+// };
 
 export const declareDB = () => {
   db.version(1).stores({
@@ -79,64 +89,83 @@ export const readSchemaFromDB = () => {
 };
 
 // input => dataArr
+// Will overwrite existing records having the same PKs and return a hash of the written array
 export const writeDataToDB = dataArr => {
-  return db.transaction('rw', db.data, async () => {
-    //
-    // FILTER OUT REPEATS
-    //
 
-    // find out which objects are incomming and filter records by those objects
-    const objsArr = outObjIDs(dataArr);
-    const incomingPKs = outPKs(dataArr); // primary keys of incoming data slices
-    const dbPKs = await db.data
-      .where('[ts+obj]') // primary keys existing in db
-      .anyOf(incomingPKs)
-      .primaryKeys(); // get all matching [obj+ts]
-    // .then(res=> console.log(res)) // [ [ts, obj], [ts, obj] .. [ts, obj]]
-    const repeatedPKs = _.intersectionWith(dbPKs, incomingPKs, _.isEqual); // primary keys we should not add
-    const missingPKs = _.differenceWith(incomingPKs, repeatedPKs, _.isEqual); // should add
-    // console.log('incoming', incomingPKs);
-    // console.log('db pk', dbPKs);
-    // console.log('repeated', repeatedPKs);
-    // console.log('missing', missingPKs);
-    // console.log('incoming', incomingPKs.length);
-    // console.log('available', dbPKs.length);
-    // console.log('repeatedPKs', repeatedPKs.length);
-    // console.log('will add', missingPKs.length);
-    const dataToWrite = filterSlices(missingPKs, dataArr); // data we will write to db
-    // console.log('what to write',dataToWrite);
-    if (repeatedPKs.length > 0) {
-      console.log(
-        `%c[DB] Will not write ${repeatedPKs.length} slices`,
-        'color: purple'
+  const incomingPKs = outPKs(dataArr); // primary keys of incoming data slices
+  
+  return db.data.bulkPut(dataArr)
+    .then(() => {
+      log.silly(
+        `[DB] Data was successfully put to IDB, ${incomingPKs.length} slices were put`
       );
-    }
+      return incomingPKs;
+    })
+    .catch(Dexie.BulkError, err => {
+      console.error(
+        `${err.failures.length} items were not added successfully`
+      );
+    })
+}
 
-    //
-    // WRITE
-    //
+// export const writeDataToDB = dataArr => {
+//   return db.transaction('rw', db.data, async () => {
+//     //
+//     // FILTER OUT REPEATS
+//     //
 
-    // write only if have smth to write
-    if (missingPKs.length > 0) {
-      return db.data
-        .bulkAdd(dataToWrite)
-        .then(() => {
-          console.log(
-            `%c[DB] Have written ${missingPKs.length} slices`,
-            'color: purple'
-          );
-          return missingPKs;
-        }) // make transaction return all written PKs
-        .catch(Dexie.BulkError, err => {
-          console.error(
-            `${err.failures.length} items were not added successfully`
-          );
-        });
-    } else {
-      return null;
-    }
-  });
-};
+//     // find out which objects are incomming and filter records by those objects
+//     const objsArr = outObjIDs(dataArr);
+//     const incomingPKs = outPKs(dataArr); // primary keys of incoming data slices
+//     const dbPKs = await db.data
+//       .where('[ts+obj]') // primary keys existing in db
+//       .anyOf(incomingPKs)
+//       .primaryKeys(); // get all matching [obj+ts]
+//     // .then(res=> console.log(res)) // [ [ts, obj], [ts, obj] .. [ts, obj]]
+//     const repeatedPKs = _.intersectionWith(dbPKs, incomingPKs, _.isEqual); // primary keys we should not add
+//     const missingPKs = _.differenceWith(incomingPKs, repeatedPKs, _.isEqual); // should add
+//     // console.log('incoming', incomingPKs);
+//     // console.log('db pk', dbPKs);
+//     // console.log('repeated', repeatedPKs);
+//     // console.log('missing', missingPKs);
+//     // console.log('incoming', incomingPKs.length);
+//     // console.log('available', dbPKs.length);
+//     // console.log('repeatedPKs', repeatedPKs.length);
+//     // console.log('will add', missingPKs.length);
+//     const dataToWrite = filterSlices(missingPKs, dataArr); // data we will write to db
+//     // console.log('what to write',dataToWrite);
+//     if (repeatedPKs.length > 0) {
+//       console.log(
+//         `%c[DB] Will not write ${repeatedPKs.length} slices`,
+//         'color: purple'
+//       );
+//     }
+
+//     //
+//     // WRITE
+//     //
+
+//     // write only if have smth to write
+//     if (missingPKs.length > 0) {
+//       return db.data
+//         .bulkAdd(dataToWrite)
+//         .then(() => {
+//           console.log(
+//             `%c[DB] Have written ${missingPKs.length} slices`,
+//             'color: purple'
+//           );
+//           return missingPKs;
+//         }) // make transaction return all written PKs
+//         .catch(Dexie.BulkError, err => {
+//           console.error(
+//             `${err.failures.length} items were not added successfully`
+//           );
+//         });
+//     } else {
+//       return null;
+//     }
+//   });
+// };
 
 // objArr = [obj, obj, obj], tsRamge = [ts1, ts121]
 // OUT [tss for obj 1, tss for obj 2 ... , tss for obj n]

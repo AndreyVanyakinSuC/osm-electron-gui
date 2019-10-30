@@ -33,14 +33,14 @@ const connect = async () => {
     const server = new URL(readSettings().url);
 
     // 2) TCP ping ip:port
-    log.info(
+    log.silly(
       `[COM] Will check if ${server.hostname}:${server.port} responds to TCP pings`
     );
     const isAvailable = await tcpPing(server.hostname, parseInt(server.port));
 
     if (isAvailable) {
       // 3) Establish sse connection
-      log.info(`[SSE] TCP ping @ ${server.hostname} suceeded`);
+      log.silly(`[SSE] TCP ping @ ${server.hostname} suceeded`);
       notifier.emit(PING_OK);
       server.pathname = '/sse';
 
@@ -58,27 +58,17 @@ const connect = async () => {
         log.info(`[SSE] Connected to ${es.url}`);
         ipcRadio(SOURCE__ISCONNECTED, es.url);
 
-        es.addEventListener('schema', message => {
-          gotActivity();
-          log.info(`[SSE] Received schema`);
-          ipcRadio(MAINWINDOW__SCHEMA, message.data);
-        });
-
-        es.addEventListener('fresh', message => {
-          gotActivity();
-          log.info(`[SSE] Received fresh`);
-          ipcRadio(MAINWINDOW__FRESH, message.data);
-        });
-
-        es.addEventListener('ping', () => {
-          gotActivity();
-          log.info(`[SSE] Received ping`);
-        });
+        es.addEventListener('schema',schemaAction);
+        es.addEventListener('fresh',freshAction);
+        es.addEventListener('ping', pingAction);
       };
 
       es.onerror = err => {
         if (errCount <= 5) {
           log.error('[SSE] Error occured', err);
+          es.removeListener('schema',schemaAction);
+          es.removeListener('fresh',freshAction);
+          es.removeListener('ping', pingAction);
           errCount = errCount + 1;
         } else {
           disconnect();
@@ -87,7 +77,7 @@ const connect = async () => {
       };
     } else {
       // Inform log and index
-      log.info(`[SSE] TCP ping @ ${server.hostname} failed`);
+      log.silly(`[SSE] TCP ping @ ${server.hostname} failed`);
       notifier.emit(PING_NOT_OK, `${server.hostname}`);
     }
   } catch (error) {
@@ -97,12 +87,32 @@ const connect = async () => {
 
 const disconnect = function() {
   es.close();
+  
   if (es.readyState === 2) {
     log.info(`[SSE] Disconnected`);
     errCount = 0;
     ipcRadio(SOURCE__ISDISCONNECTED, es.url);
   }
 };
+
+// SSE MESSAGE ACTIONS
+
+const schemaAction = message => {
+  gotActivity();
+  log.silly(`[SSE] Received schema`);
+  ipcRadio(MAINWINDOW__SCHEMA, message.data);
+}
+
+const freshAction = message => {
+  gotActivity();
+  log.silly(`[SSE] Received fresh`);
+  ipcRadio(MAINWINDOW__FRESH, message.data);
+}
+
+const pingAction = () => {
+  gotActivity();
+  log.silly(`[SSE] Received ping`);
+}
 
 // TCP PING
 
@@ -113,14 +123,19 @@ const tcpPing = (ip, portInt) =>
 
 // ACTIVITY TIMER, START EACH TIME A MESSAGE FROM SERVER IS RECEIVED AND LASTS FOR X SECONDS, IF NO MESSAGES DURING SPAN => RECONNECT
 const gotActivity = () => {
-  if (keepaliveTimer != null) {
+  
+  if (keepaliveTimer !== null) {
+    // log.verbose('[TIMER] Cleared')
     clearTimeout(keepaliveTimer);
-  } else {
-    keepaliveTimer = setTimeout(() => {
-      disconnect();
-      connect();
-    }, keepaliveSecs * 1000);
   }
+   
+  keepaliveTimer = setTimeout(() => {
+    log.verbose('[TIMER] Expired')
+    disconnect();
+    connect();
+  }, keepaliveSecs * 1000);
+
+  // log.verbose('[TIMER] set')
 };
 
 const ipcRadio = (IPC, args) => {

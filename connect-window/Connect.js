@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 const url = require('url');
 const ip = require('ip');
-
 import log from 'electron-log';
+
 log.variables.label = 'CW';
+
 import {
   CONNECTWINDOW__CLOSE,
   CONNECTWINDOW__SETTINGS,
@@ -189,6 +190,7 @@ class Connect extends Component {
             isConnecting={this.state.isConnecting}
             isConnected={this.state.isConnected}
             clickedDisconnected={this.handleConnectClick.bind(this)}
+            clickedConnecting={this.handleDisconnectClick.bind(this)}
             clickedConnected={this.handleDisconnectClick.bind(this)}
           />
         </div>

@@ -1,9 +1,9 @@
 const { BrowserWindow } = require('electron');
-const { dev, winIndexpath } = require('./base');
+const { winIndexpath } = require('./base');
 const log = require('electron-log');
 const path = require('path');
 
-const createMainWindow = function() {
+const createMainWindow = function(dev) {
   log.info('[MainWindow] Creating..');
 
   const mainWindow = new BrowserWindow({
@@ -14,14 +14,19 @@ const createMainWindow = function() {
     darkTheme: true,
     icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: true,
-      devTools: dev,
+      devTools: true,
       allowRunningInsecureContent: true
     }
   });
 
-  mainWindow.loadURL(winIndexpath('mainIndex.html'));
+  const htmlPath = winIndexpath('mainIndex.html', dev);
+  // const htmlPath = `file://C:/_Demo/osm-electron-gui/dist/mainIndex.html`
+  log.silly('Main HTML path', htmlPath);
+  mainWindow.loadURL(htmlPath);
 
+  // log.info('Main window', winIndexpath('mainIndex.html'), __dirname)
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {
     // Open the DevTools automatically if developing

@@ -11,7 +11,7 @@ module.exports = (URL, request) => {
   }
 
   axiosInterceptor = axios.interceptors.request.use(req => {
-    log.info('[AXIOS] Sent history request', req.data);
+    log.info('[AXIOS] Sending history request', req.data);
     // console.log(`Outbound POST request to ${URL}`);
     // log.info('%cGreen Main отправляет запрос истории по POST');
     return req;

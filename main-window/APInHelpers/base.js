@@ -1,7 +1,7 @@
 export const TREND_HRS = 8;
 export const TREND_PTS = 40;
-export const DEFAULT_HISTORY_HRS = 8;
-export const HISTORY_SPAN_SECS = 600;
+export const DEFAULT_HISTORY_HRS = 24;
+export const HISTORY_SPAN_SECS = 300;
 
 export const SCHEMA_1ST_LEVEL_NAMES = [
   'deps',
