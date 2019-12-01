@@ -80,6 +80,24 @@ export const schema_towerObjs = (schema, towerID) => {
   return sensors;
 };
 
+//  Sort range ids "4043-4033" by corresponging tower numbers in ascending order, closer to SS first
+export const sortRangeIdsbyNo = (lineID, schema) => {
+  const unsortedIds = schema.lines[lineID].ranges;
+  const withClosestTowerNumber = unsortedIds
+    .map(rangeId => [ 
+      rangeId, 
+      _.min(schema.ranges[rangeId].towers.map(towerID => parseInt(schema.towers[towerID].number)))
+    ])
+  // console.log(eachRangeTowers);
+  
+  // Второй елемент содержит номер ближайшей опоры, первый - id
+  const sortedIds = _.sortBy(withClosestTowerNumber, pair => pair[1])
+    .map(pair => pair[0])
+  // console.log(sortedIds)
+  return sortedIds;
+
+}
+
 // IN unsorted objs OUT sorted objs
 // export const schema_sortFresh = (schema, fresh) => {
 //     return _.sortBy(fresh, f => f.)

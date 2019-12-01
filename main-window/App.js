@@ -132,7 +132,7 @@ class App extends Component {
       }     
     });
 
-    console.log(this.state.fresh)
+    // console.log(this.state.fresh)
 
 
   }

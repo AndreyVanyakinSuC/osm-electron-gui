@@ -8,6 +8,7 @@ import {
 } from 'react-accessible-accordion';
 import _ from 'lodash';
 import { filterFresh } from '../../../APInHelpers/history';
+import { sortRangeIdsbyNo } from "../../../APInHelpers/schema";
 import LineHeader from './LineHeader';
 import RangeCard from './RangeCard';
 
@@ -21,12 +22,12 @@ const line = ({
   focusChart
 }) => {
   const lineName = schema.lines[lineID].Name;
-  const ranges = schema.lines[lineID].ranges;
+  const ranges = sortRangeIdsbyNo(lineID,schema);
   const lineObjs = _.flatten(ranges.map(rID => schema.ranges[rID].obj));
   const lineFresh = filterFresh(fresh, lineObjs);
 
-  // Combine value
-  console.log('linefresh', lineFresh, 'all fresh', fresh);
+  // // Combine value
+  // console.log('linefresh', lineFresh, 'all fresh', fresh);
   const maxIce = _.max(_.map(lineFresh, f => f.I));
   const msgCode = _.find(lineFresh, f => f.I === maxIce).msg[0];
   const wireId = _.find(
