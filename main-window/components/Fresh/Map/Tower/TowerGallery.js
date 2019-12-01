@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import { IMAGE_PATHS } from "../../../../APInHelpers/base";
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import twr1 from '../../../../assets/twr1.png';
-import twr2 from '../../../../assets/twr2.png';
-import twr3 from '../../../../assets/twr3.png';
-import twr4 from '../../../../assets/twr4.png';
+// import twr1 from '../../../../assets/twr1.png';
+// import twr2 from '../../../../assets/twr2.png';
+// import twr3 from '../../../../assets/twr3.png';
+// import twr4 from '../../../../assets/twr4.png';
 
 class TowerGallery extends Component {
   state = {
@@ -27,8 +28,11 @@ class TowerGallery extends Component {
   render() {
     const { photoIndex, isOpen } = this.state;
     // const { images } = this.props;
-    const imagePaths = [twr1, twr2, twr3, twr4];
-    const { isExpanded } = this.props;
+    
+    const { isExpanded, towerID } = this.props;
+
+    
+    const imagePaths = IMAGE_PATHS.has(towerID) ? IMAGE_PATHS.get(towerID) : IMAGE_PATHS.get("default")
     const classes = isExpanded ? 'details-gallery' : 'details-gallery hidden';
     const images = imagePaths.map((path, i) => (
       <div
