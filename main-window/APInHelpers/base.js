@@ -10,6 +10,25 @@ export const SCHEMA_1ST_LEVEL_NAMES = [
   'towers',
   'obj'
 ];
+
+export const FRESH_DUMMY = (objID, ts) => ({
+  ts: ts,
+  obj: objID,
+  F: 0,
+  Fmn: 0,
+  Fmx: 0,
+  Frms: 0,
+  I: 0,
+  VI: 0,
+  Tamb: 0,
+  msg: [],
+  ITrend:(new Array(10)).fill(0),
+  FTrend:(new Array(10)).fill(0), 
+  FmnTrend:(new Array(10)).fill(0),
+  FmxTrend:(new Array(10)).fill(0),
+  FrmsTrend: (new Array(10)).fill(0)
+})
+
 export const DATA_PROP_NAMES = [
   'ts',
   'obj',
@@ -27,7 +46,8 @@ export const ENTITY_NAMES = new Map([
   ['1_phaseA', 'фаза А'],
   ['2_phaseB', 'фаза B'],
   ['3_phaseC', 'фаза C'],
-  ['4_OPGW', 'ОКГТ']
+  ['4_OPGW', 'ОКГТ'],
+  ['ОКГТ', 'ОКГТ']
 ]);
 
 export const UNITS = new Map([

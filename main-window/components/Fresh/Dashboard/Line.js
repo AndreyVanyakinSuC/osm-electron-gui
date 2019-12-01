@@ -26,7 +26,7 @@ const line = ({
   const lineFresh = filterFresh(fresh, lineObjs);
 
   // Combine value
-  // console.log('linefresh', lineFresh);
+  console.log('linefresh', lineFresh, 'all fresh', fresh);
   const maxIce = _.max(_.map(lineFresh, f => f.I));
   const msgCode = _.find(lineFresh, f => f.I === maxIce).msg[0];
   const wireId = _.find(

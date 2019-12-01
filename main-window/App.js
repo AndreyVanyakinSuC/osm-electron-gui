@@ -42,7 +42,7 @@ import {
 import { prepareHistoryRequest, prepareSimpleHistoryRequest,checkHistory } from './APInHelpers/history';
 import { verifySchema, verifyData } from './APInHelpers/verification';
 import { worstCaseRibbon } from './APInHelpers/notification';
-import { schemaObjIDs } from './APInHelpers/schema';
+import { freshDummy } from './APInHelpers/schema';
 //FIXME:
 // import moment from 'moment';
 
@@ -115,10 +115,26 @@ class App extends Component {
     const schema = verifySchema(schemaJson);
 
     // put schema to state
-    this.setState(() => ({
-      isSchemaAvailable: true,
-      schema: schema
-    }));
+    //  put empty fresh if fresh was not available to enable show of map and interface withour data
+    this.setState(prevState => {
+      if (prevState.isFreshAvailable === false) {
+        return {
+          isSchemaAvailable: true,
+          schema: schema,
+          isFreshAvailable: true,
+          fresh: freshDummy(schema)
+        }
+      } else {
+        return {
+          isSchemaAvailable: true,
+          schema: schema
+        }
+      }     
+    });
+
+    console.log(this.state.fresh)
+
+
   }
 
   fillStateWithFresh(freshPKs, trendHours = TREND_HRS) {
@@ -377,8 +393,7 @@ class App extends Component {
   }
 
   render() {
-    const isCanShowFresh =
-      this.state.isSchemaAvailable && this.state.isFreshAvailable;
+    const isCanShowFresh = this.state.isSchemaAvailable && this.state.isFreshAvailable;
     const isCanShowHistory = this.state.isSchemaAvailable;
 
     let display;

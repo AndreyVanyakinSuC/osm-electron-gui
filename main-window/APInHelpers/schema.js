@@ -1,4 +1,21 @@
 import _ from 'lodash';
+import {FRESH_DUMMY} from './base'
+import { nowTS } from "./timeseries";
+
+// Fresh dummy from schema
+export const freshDummy = schema => {
+
+  const sensorIdsArr = schemaObjIDs(schema);
+
+  const pairedArr = sensorIdsArr.map(id => [id, FRESH_DUMMY(id, nowTS())]);
+
+  const object = _.fromPairs(pairedArr);
+  // console.log(object);
+
+  return object;
+  
+
+}
 
 // IN schema OUT [integer ids]
 export const schemaObjIDs = schema => _.keys(schema.obj).map(k => parseInt(k));
