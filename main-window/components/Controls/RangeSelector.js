@@ -1,9 +1,10 @@
 import React from 'react';
 import Dropdown from 'react-dropdown';
+import { sortRangeIdsbyNo } from "../../APInHelpers/schema";
 import 'react-dropdown/style.css';
 
 const rangeSelector = ({ value, schema, selectedLine, changed }) => {
-  const rangeIDs = schema.lines[selectedLine].ranges;
+  const rangeIDs = sortRangeIdsbyNo(selectedLine, schema);
   // [1,2,4]
 
   const towersNameByRange = (id, schema) => [
