@@ -184,7 +184,6 @@ class Connect extends Component {
         />
 
         <div className="btn-strip">
-          <CancelBtn clicked={this.handleCancelBtnClick} />
           <ConnectBtn
             isValidIPInput={this.state.isValidIPInput}
             isConnecting={this.state.isConnecting}
@@ -193,7 +192,8 @@ class Connect extends Component {
             clickedConnecting={this.handleDisconnectClick.bind(this)}
             clickedConnected={this.handleDisconnectClick.bind(this)}
           />
-        </div>
+          <CancelBtn clicked={this.handleCancelBtnClick} />
+        </div>	
       </div>
     );
   }
