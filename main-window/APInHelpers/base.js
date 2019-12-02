@@ -1,7 +1,7 @@
 export const TREND_HRS = 8;
 export const TREND_PTS = 40;
 export const DEFAULT_HISTORY_HRS = 24;
-export const HISTORY_SPAN_SECS = 300;
+export const HISTORY_SPAN_SECS = 60;
 
 import default_1 from "../assets/default/twr1.png";
 import default_2 from "../assets/default/twr2.png";
@@ -91,8 +91,8 @@ export const ENTITY_NAMES = new Map([
 ]);
 
 export const UNITS = new Map([
-  ['F', 'даН'],
-  ['dF', 'даН'],
+  ['F', 'Н'],
+  ['dF', 'Н'],
   ['I', 'мм'],
   ['T', '\u00B0C'],
   ['Tamb', '\u00B0C'],
@@ -113,6 +113,7 @@ export const MSGS = new Map([
       priority: 1,
       class: 'light-ice',
       threshold: 1,
+      to: 5,
       color: 'rgb(28, 200, 163);'
     }
   ], //  1mm =< ice < 5mm
@@ -122,6 +123,7 @@ export const MSGS = new Map([
       priority: 2,
       class: 'warning-ice',
       threshold: 5,
+      to: 10,
       color: '#ff8534'
     }
   ], //  5mm =< ice < 10mm
@@ -131,6 +133,7 @@ export const MSGS = new Map([
       priority: 3,
       class: 'alarm-ice',
       threshold: 10,
+      to:20,
       color: '#ff3333'
     }
   ], //  10mm =< ice < 20mm
@@ -140,6 +143,7 @@ export const MSGS = new Map([
       priority: 4,
       class: 'critical-ice',
       threshold: 20,
+      to:100,
       color: 'rgb(114, 19, 19);'
     }
   ] //  20mm =< ice

@@ -1,10 +1,31 @@
 import { readPKsByTSRanges, filterTss } from './database';
 import { displayHuman } from './timeseries';
 import _ from 'lodash';
+import { writeFileSync, writeFile } from 'fs';
 
 // pick all pks (ts+obj) in range
 // IN [ts start, ts end], [objids]
 
+
+// Sign msgs
+// IN [freshes with empty msgs field] out [freshes with msgs filled]
+export const addMsgs = (freshArr) => (
+  freshArr.map(f => {
+    const out = f;
+    if (f.I <= 1) {
+      out.I = 0;
+    } else if (f.I > 1 && f.I <=5) {
+      out.msg = ['011']
+    } else if  (f.I > 5 && f.I <=10) {
+      out.msg = ['012']
+    } else if  (f.I > 10 && f.I <=20) {
+      out.msg = ['013']
+    } else if (f.I > 20) {
+      out.msg = ['014']
+    }
+    return out;
+  })
+)
 
 // Will not account for the data already present in idb
 export const prepareSimpleHistoryRequest = async (

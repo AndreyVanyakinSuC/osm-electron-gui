@@ -39,7 +39,7 @@ import {
   addTrends,
   displayHuman
 } from './APInHelpers/timeseries';
-import { prepareHistoryRequest, prepareSimpleHistoryRequest,checkHistory } from './APInHelpers/history';
+import { prepareHistoryRequest, prepareSimpleHistoryRequest,checkHistory, addMsgs } from './APInHelpers/history';
 import { verifySchema, verifyData } from './APInHelpers/verification';
 import { worstCaseRibbon } from './APInHelpers/notification';
 import { freshDummy } from './APInHelpers/schema';
@@ -89,16 +89,16 @@ class App extends Component {
     }
 
     // 1) verify
-    const verifiedHistory = verifyData(historyJson);
+    const verifiedHistory = addMsgs(verifyData(historyJson));
 
     // 2) Count how many records received of the requested
-    const history = checkHistory(
-      this.state.lastHistoryRequest,
-      verifiedHistory
-    );
+    // const history = checkHistory(
+    //   this.state.lastHistoryRequest,
+    //   verifiedHistory
+    // );
 
     // 3) Write to db and clear the last history request
-    writeDataToDB(history).then(() => {
+    writeDataToDB(verifiedHistory).then(() => {
       this.setState( {historyPKs: crypto.randomBytes(16)})
       // if (PKs === null) {
       //   log.silly('[History] No new history was written to dbs');
@@ -271,7 +271,7 @@ class App extends Component {
 
     ipcRenderer.on(MAINWINDOW__FRESH, (e, freshJson) => {
       log.silly('[IPC] Received MAINWINDOW__FRESH');
-      const verified = verifyData(freshJson);
+      const verified = addMsgs(verifyData(freshJson));
 
       writeDataToDB(verified)
         // will only update state if some new fresh was actually written to db
