@@ -256,32 +256,32 @@ const menuTemplate = [
             detail: 'Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
           });
         }
-      },
-      {
-        label: 'Сообщить об ошибке',
-        click() {
-          console.log('[MENU] Сообщить об ошибке was сlicked');
-        }
       }
-    ]
-  },
-  {
-    label: 'Разработчик',
-    submenu: [
-      {
-        label: 'DevTools',
-        accelerator: 'Ctrl+Shift+I',
-        click() {
-          mainWindow.webContents.openDevTools();
-        }
-      },
-      {
-        label: 'Refresh',
-        accelerator: 'F5',
-        click() {
-          mainWindow.reload();
-        }
-      }
+      // {
+      //   label: 'Сообщить об ошибке',
+      //   click() {
+      //     console.log('[MENU] Сообщить об ошибке was сlicked');
+      //   }
+      // }
     ]
   }
+  // {
+  //   label: 'Разработчик',
+  //   submenu: [
+  //     {
+  //       label: 'DevTools',
+  //       accelerator: 'Ctrl+Shift+I',
+  //       click() {
+  //         mainWindow.webContents.openDevTools();
+  //       }
+  //     },
+  //     {
+  //       label: 'Refresh',
+  //       accelerator: 'F5',
+  //       click() {
+  //         mainWindow.reload();
+  //       }
+  //     }
+  //   ]
+  // }
 ];
