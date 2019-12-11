@@ -10,7 +10,7 @@ const Ribbon = ({ value, msgCode, isHasIcon = false }) => {
   // if no message code => do not apply animation, just show plain value
   // if message code undefined (no fresh yet => show plain ribbon )
   const ribbonClass =
-    msgCode === null || msgCode === undefined
+    msgCode === null || msgCode === undefined || msgCode === ''
       ? 'ribbon'
       : `ribbon ${MSGS.get(msgCode).class}`;
 

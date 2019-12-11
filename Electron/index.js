@@ -264,24 +264,24 @@ const menuTemplate = [
       //   }
       // }
     ]
+  },
+  {
+    label: 'Разработчик',
+    submenu: [
+      {
+        label: 'DevTools',
+        accelerator: 'Ctrl+Shift+I',
+        click() {
+          mainWindow.webContents.openDevTools();
+        }
+      },
+      {
+        label: 'Refresh',
+        accelerator: 'F5',
+        click() {
+          mainWindow.reload();
+        }
+      }
+    ]
   }
-  // {
-  //   label: 'Разработчик',
-  //   submenu: [
-  //     {
-  //       label: 'DevTools',
-  //       accelerator: 'Ctrl+Shift+I',
-  //       click() {
-  //         mainWindow.webContents.openDevTools();
-  //       }
-  //     },
-  //     {
-  //       label: 'Refresh',
-  //       accelerator: 'F5',
-  //       click() {
-  //         mainWindow.reload();
-  //       }
-  //     }
-  //   ]
-  // }
 ];

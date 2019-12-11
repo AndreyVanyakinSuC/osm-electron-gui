@@ -61,7 +61,7 @@ export const FRESH_DUMMY = (objID, ts) => ({
   I: 0,
   VI: 0,
   Tamb: 0,
-  msg: [],
+  msg: ['000'],
   ITrend:(new Array(10)).fill(0),
   FTrend:(new Array(10)).fill(0), 
   FmnTrend:(new Array(10)).fill(0),
@@ -107,6 +107,16 @@ export const PROP_STRINGS = new Map([
 ]);
 
 export const MSGS = new Map([
+  [
+    '000',
+    {
+      priority: 0,
+      class: '',
+      threshold: 0,
+      to: 1,
+      color: ''
+    }
+  ],
   [
     '011',
     {

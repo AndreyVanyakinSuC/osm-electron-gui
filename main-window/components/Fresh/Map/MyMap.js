@@ -134,9 +134,14 @@ export default class MyMap extends Component {
         // console.log(schema.ranges[rID].obj);
         // console.log(fresh);
         const messages = schema.ranges[rID].obj.map(o => fresh[o].msg);
-        const worstMsg = pickWorstMessage(messages);
+        // console.log(messages[0][0])
+        // const worstMsg = pickWorstMessage(messages);
+        const pickedWorst = pickWorstMessage(messages)
+        // const worstMsg = messages[0][0]
+        const worstMsg = pickedWorst
+        console.log('worst msg',worstMsg, 'picked worst', pickedWorst)
         const rangeClasses =
-          worstMsg === null || worstMsg === undefined
+          worstMsg === null || worstMsg === undefined || worstMsg === ''
             ? 'range'
             : `range ${MSGS.get(worstMsg).class}`;
 
