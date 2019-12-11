@@ -17,6 +17,7 @@ import { schema_towerObjs } from '../../../APInHelpers/schema';
 import { filterFresh } from '../../../APInHelpers/history';
 import { MSGS, TILE_URL } from '../../../APInHelpers/base';
 
+
 import L from 'leaflet';
 require('leaflet_css');
 require('leaflet_marker');
@@ -27,8 +28,8 @@ export default class MyMap extends Component {
   state = {
     viewport: {
       center: geo_Center(this.props.schema),
-      zoom: 10 // not importany
-    }
+      zoom: 10 // not important
+    },
   };
 
   componentDidMount() {
@@ -79,7 +80,7 @@ export default class MyMap extends Component {
     });
   }
 
-  handleZommHomeCLick() {
+  handleZoomHomeCLick() {
     console.log('Zoom home clicked');
     this.refs.map.leafletElement.fitBounds(this.maxBounds, {
       padding: [50, 50]
@@ -89,8 +90,8 @@ export default class MyMap extends Component {
   // getMapRef = (node) => { this.map = node; }
 
   render() {
-    console.log('%c[MAP] Render', 'color:blue');
-    const { schema, fresh, focusChart } = this.props;
+    console.log('%c[MAP] Render', 'color:blue', this.state);
+    const { focusChart, schema,  fresh} = this.props;
     // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
     const tileUrl = TILE_URL;
 
@@ -150,7 +151,7 @@ export default class MyMap extends Component {
         return (
           <Polyline
             ref={`range_${rID}`}
-            key={`range_${rID}`}
+            key={`range_${rID}_${Math.random()}`} // key changing to force React ot rerender range to upadte stytles
             className={rangeClasses} // +alert +warning +hint
             positions={schema.ranges[rID].latlng}
           />
@@ -188,13 +189,14 @@ export default class MyMap extends Component {
         useFlyTo={true}
         zoomControl={false}
         animate={true}
+        // onViewportChanged={this.handleViewportChange.bind(this)}
       >
         <TileLayer url={tileUrl} />
 
         <ZoomControl position="topright" />
 
         <Control position="topleft">
-          <ZoomHomeBtn onClick={this.handleZommHomeCLick.bind(this)} />
+          <ZoomHomeBtn onClick={this.handleZoomHomeCLick.bind(this)} />
         </Control>
 
         {renderDeps()}
