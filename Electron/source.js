@@ -20,7 +20,7 @@ const notifier = require('./notifier');
 
 let es;
 
-const keepaliveSecs = 20;
+const keepaliveSecs = 120;
 let keepaliveTimer = null;
 
 // Will be updated by onerror and reset by onopen or by onclose

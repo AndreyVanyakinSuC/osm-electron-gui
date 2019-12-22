@@ -37,7 +37,7 @@ let mainWindow, connectWindow;
 //
 log.transports.file.clear()
 log.transports.file.maxSize = 5242880;
-log.transports.file.file = path.resolve('./') + '/osm-gui.log';
+log.transports.file.file = path.resolve('./') + '/Лог.log';
 // log.transports.file.fileName = 'osm-gui.log';
 log.transports.file.init()
 
@@ -256,7 +256,7 @@ const menuTemplate = [
             title: 'О программе',
             type: 'info',
             message: 'Клиент ОСМ ВЛ',
-            detail: 'Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
+            detail: 'Версия 2019-12a. Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
           });
         }
       }
