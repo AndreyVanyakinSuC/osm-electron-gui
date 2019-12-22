@@ -30,6 +30,7 @@ export default class MyMap extends Component {
       center: geo_Center(this.props.schema),
       zoom: 10 // not important
     },
+    maxBounds: L.latLngBounds(geo_globalBounds(this.props.schema)).pad(1)
   };
 
   componentDidMount() {
@@ -82,7 +83,7 @@ export default class MyMap extends Component {
 
   handleZoomHomeCLick() {
     console.log('Zoom home clicked');
-    this.refs.map.leafletElement.fitBounds(this.maxBounds, {
+    this.refs.map.leafletElement.fitBounds(this.state.maxBounds, {
       padding: [50, 50]
     });
   }
@@ -91,7 +92,7 @@ export default class MyMap extends Component {
 
   render() {
     console.log('%c[MAP] Render', 'color:blue', this.state);
-    const { focusChart, schema,  fresh} = this.props;
+    const { schema, focusChart, fresh} = this.props;
     // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
     const tileUrl = TILE_URL;
 
@@ -140,7 +141,7 @@ export default class MyMap extends Component {
         const pickedWorst = pickWorstMessage(messages)
         // const worstMsg = messages[0][0]
         const worstMsg = pickedWorst
-        console.log('worst msg',worstMsg, 'picked worst', pickedWorst)
+        // console.log('worst msg',worstMsg, 'picked worst', pickedWorst)
         const rangeClasses =
           worstMsg === null || worstMsg === undefined || worstMsg === ''
             ? 'range'
@@ -178,12 +179,14 @@ export default class MyMap extends Component {
         </FeatureGroup>
       ));
 
+    // console.log(this.maxBounds);
+
     return (
       <Map
         ref={'map'}
         attributionControl={false}
         viewport={this.state.viewport}
-        maxBounds={this.maxBounds}
+        maxBounds={this.state.maxBounds}
         boundsOptions={{ padding: [50, 50] }}
         className="map_cont"
         useFlyTo={true}

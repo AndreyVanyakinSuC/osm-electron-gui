@@ -1,6 +1,7 @@
 const { app, ipcMain, Menu, dialog, BrowserWindow } = require('electron');
 // Emitter
 const notifier = require('./notifier');
+const electronLocalshortcut = require('electron-localshortcut');
 //
 const _ = require('lodash');
 const log = require('electron-log');
@@ -70,9 +71,10 @@ app.on('ready', () => {
   //   Enable custom menu
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 
+  electronLocalshortcut.register(mainWindow,"Ctrl+Shift+I", () => mainWindow.webContents.openDevTools())
+
   mainWindow.on('show', () => {
     log.silly('[MainWindow] _on show_');
-
     // Autoconenct if set to true and has settings
     if (readSettings() !== undefined && readSettings().isAutoconnect) {
       connect();
@@ -128,7 +130,7 @@ app.on('ready', () => {
       .then(res => {log.info('[AXIOS] Incoming history');
         mainWindow.webContents.send(
           MAINWINDOW__HISTORYRES,
-          JSON.stringify(res.data)
+          res.data
         );
       })
       .catch(err => {
@@ -264,24 +266,24 @@ const menuTemplate = [
       //   }
       // }
     ]
-  },
-  {
-    label: 'Разработчик',
-    submenu: [
-      {
-        label: 'DevTools',
-        accelerator: 'Ctrl+Shift+I',
-        click() {
-          mainWindow.webContents.openDevTools();
-        }
-      },
-      {
-        label: 'Refresh',
-        accelerator: 'F5',
-        click() {
-          mainWindow.reload();
-        }
-      }
-    ]
   }
+  // {
+  //   label: 'Разработчик',
+  //   submenu: [
+  //     {
+  //       label: 'Средства разработчика',
+  //       accelerator: 'Ctrl+Shift+I',
+  //       click() {
+  //         mainWindow.webContents.openDevTools();
+  //       }
+  //     }
+  //     // {
+  //     //   label: 'Refresh',
+  //     //   accelerator: 'F5',
+  //     //   click() {
+  //     //     mainWindow.reload();
+  //     //   }
+  //     // }
+  //   ]
+  // }
 ];

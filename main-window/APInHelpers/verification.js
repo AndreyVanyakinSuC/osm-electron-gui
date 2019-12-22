@@ -56,6 +56,7 @@ export const verifySchema = schemaJson => {
 // IN json => OUT [ ]
 export const verifyData = dataJSON => {
   const data = JSON.parse(dataJSON);
+  // console.log('verification', dataJSON);
 
   if (Array.isArray(data)) {
     if (data.length > 0) {
@@ -81,7 +82,7 @@ export const verifyData = dataJSON => {
       log.error('[Data] data is an empty array');
     }
   } else {
-    log.error('[Data] data is not an array');
+    log.error('[Data] data is not an array', data);
   }
 };
 
