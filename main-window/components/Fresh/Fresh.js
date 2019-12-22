@@ -95,7 +95,7 @@ class Fresh extends Component {
 
   render() {
     const { fresh, schema, historyPKs } = this.props;
-    console.log(fresh)
+    // console.log(fresh)
     // have smth in scope
     const isChartVisible = this.state.scopedRange !== null ? true : false;
     const latestTS = freshMaxTS(fresh);

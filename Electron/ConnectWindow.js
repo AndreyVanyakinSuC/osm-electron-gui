@@ -36,9 +36,9 @@ const createConnectWindow = function(mainWindow, dev) {
 
   connectWindow.once('ready-to-show', () => {
     //FIX<E:
-    if (dev) {
-      connectWindow.webContents.openDevTools();
-    }
+    // if (dev) {
+    //   connectWindow.webContents.openDevTools();
+    // }
     connectWindow.show();
   });
 

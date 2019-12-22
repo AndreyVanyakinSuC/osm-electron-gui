@@ -35,11 +35,11 @@ export default class MyMap extends Component {
 
   componentDidMount() {
     // console.log('%c[MAP] Component did mount','color:blue');
-    console.log('%c[MAP] Refs', 'color:blue', this.refs);
+    // console.log('%c[MAP] Refs', 'color:blue', this.refs);
   }
 
   componentDidUpdate(prevProps) {
-    console.log('%c[MAP] Component did update', 'color:blue');
+    // console.log('%c[MAP] Component did update', 'color:blue');
 
     // Handle focusing on demand
     const { entityID, entityType } = this.props.zoomTo;
@@ -71,7 +71,7 @@ export default class MyMap extends Component {
   //
 
   handleViewportChange(vp) {
-    console.log('%c[MAP] Viewport change fired', 'color:blue', vp);
+    // console.log('%c[MAP] Viewport change fired', 'color:blue', vp);
     this.setState(prevState => {
       if (_.isEqual(prevState.viewport, vp)) {
         return null;
@@ -82,7 +82,7 @@ export default class MyMap extends Component {
   }
 
   handleZoomHomeCLick() {
-    console.log('Zoom home clicked');
+    // console.log('Zoom home clicked');
     this.refs.map.leafletElement.fitBounds(this.state.maxBounds, {
       padding: [50, 50]
     });
@@ -91,7 +91,7 @@ export default class MyMap extends Component {
   // getMapRef = (node) => { this.map = node; }
 
   render() {
-    console.log('%c[MAP] Render', 'color:blue', this.state);
+    // console.log('%c[MAP] Render', 'color:blue', this.state);
     const { schema, focusChart, fresh} = this.props;
     // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
     const tileUrl = TILE_URL;

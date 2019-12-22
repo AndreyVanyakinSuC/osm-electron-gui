@@ -1,4 +1,5 @@
 const { app, ipcMain, Menu, dialog, BrowserWindow } = require('electron');
+
 // Emitter
 const notifier = require('./notifier');
 const electronLocalshortcut = require('electron-localshortcut');

@@ -69,8 +69,7 @@ export const verifyData = dataJSON => {
         const allPropNamesAreOk = data.every(f => singledataPropNamesOk(f));
 
         if (allPropNamesAreOk) {
-          // console.log('data verified');
-          log.info('[Data] Fresh/history verified ');
+          // log.info('[Data] Fresh/history verified ');
           return data;
         } else {
           log.error('[Data] Some of the data have wrong propnames');
