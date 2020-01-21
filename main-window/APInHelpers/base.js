@@ -176,5 +176,5 @@ export const TILE_URLS = new Map([
     }
   ]
 ])
-export const PRIMARY_TILE_URL = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
-export const SECONDARY_TILE_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+// export const PRIMARY_TILE_URL = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+// export const SECONDARY_TILE_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';

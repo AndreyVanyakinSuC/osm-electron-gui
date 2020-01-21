@@ -7,6 +7,8 @@ const { spawn } = require('child_process');
 const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
 const OUTPUT_DIR = path.resolve(__dirname, 'dist/');
 const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/');
+const MAPSETTINGS_SRC_DIR = path.resolve(__dirname, 'map-window/');
+
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
 const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
@@ -15,7 +17,8 @@ module.exports = {
   mode: 'development',
   entry: {
     main: MAIN_SRC_DIR + '/mainIndex.js',
-    connect: CONNECT_SRC_DIR + '/connectIndex.js'
+    connect: CONNECT_SRC_DIR + '/connectIndex.js',
+    map: MAPSETTINGS_SRC_DIR + '/mapSettingsIndex.js'
   },
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
@@ -101,9 +104,15 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       // inject: false,
-      title: 'Соедниние с сервером',
+      title: 'Соединение с сервером',
       chunks: ['connect'],
       filename: OUTPUT_DIR + '/connectIndex.html'
+    }),
+    new HtmlWebpackPlugin({
+      // inject: false,
+      title: 'Настройки карты',
+      chunks: ['map'],
+      filename: OUTPUT_DIR + '/mapIndex.html'
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')

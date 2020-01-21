@@ -31,6 +31,7 @@ const reqHistory = require('./history.js');
 const { connectStatusIPC, connect, disconnect, esUrl } = require('./source');
 const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
+const { createMapSettingsWindow } = require('./MapSettingsWindow')
 
 // let windows = [];
 let mainWindow, connectWindow;
@@ -63,7 +64,7 @@ dev = process.env.NODE_ENV === 'dev' ? true : false;
 
 app.on('ready', () => {
   
-  installReactDEvTools();
+  // installReactDEvTools();
 
   //
   // HANDLE MAIN WINDOW
@@ -184,6 +185,12 @@ app.on('ready', () => {
   });
 });
 
+app.on('login', (event, webContents, request, authInfo, callback) => {
+  log.info('Login event fired', request)
+  // console.log('Login event fired', request);
+  callback("FSKURAL\\disp-opmes","Disp12345")
+});
+
 // app.on('', () => {
 
 // });
@@ -207,6 +214,20 @@ const enableConnectWindow = () => {
   });
 };
 
+// MAP SETTINGS WINDOW ROUTINE
+const enableMapSettingsWindow = () => {
+  mapSettingsWindow = createMapSettingsWindow(mainWindow, dev);
+  mapSettingsWindow.on('show', () => {
+    log.silly('[mapSettingsWindow] _on show_');
+
+    // STUFF
+
+  })
+  mapSettingsWindow.on('close', () => {
+    log.silly('[mapSettingsWindow] _on close_');
+  });
+
+}
 // MENU
 const menuTemplate = [
   {
@@ -261,27 +282,28 @@ const menuTemplate = [
     }]
   },
   {
-    label: 'Помощь',
-    submenu: [
-      {
-        label: 'О программе..',
-        accelerator: 'F1',
-        click() {
-          dialog.showMessageBox({
-            title: 'О программе',
-            type: 'info',
-            message: 'Клиент ОСМ ВЛ',
-            detail: 'Версия 2019-12a. Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
-          });
-        }
-      }
+    label: 'Карта',
+    click() {
+      enableMapSettingsWindow();
+    }
+  },
+  {
+    label: 'О программе',
+    accelerator: 'F1',
+    click() {
+      dialog.showMessageBox({
+        title: 'О программе',
+        type: 'info',
+        message: 'Клиент ОСМ ВЛ',
+        detail: 'Версия 2020-01a. Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
+      });
+    }
       // {
       //   label: 'Сообщить об ошибке',
       //   click() {
       //     console.log('[MENU] Сообщить об ошибке was сlicked');
       //   }
       // }
-    ]
   }
   // {
   //   label: 'Разработчик',
