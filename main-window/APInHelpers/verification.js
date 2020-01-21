@@ -56,7 +56,7 @@ export const verifySchema = schemaJson => {
 // IN json => OUT [ ]
 export const verifyData = dataJSON => {
   const data = JSON.parse(dataJSON);
-  // console.log('verification', dataJSON);
+  // console.log('before JSOn.parse', dataJSON);
 
   if (Array.isArray(data)) {
     if (data.length > 0) {

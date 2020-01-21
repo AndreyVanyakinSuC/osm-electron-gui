@@ -79,7 +79,7 @@ class App extends Component {
 
   parseHistory(historyJson) {
     // Server has no history for the requested timespans i.e. return an empty [arr]
-    const isEmpty = JSON.parse(historyJson).length === 0;
+    const isEmpty = historyJson.length === 0;
 
     if (isEmpty) {
       log.silly(
@@ -305,13 +305,13 @@ class App extends Component {
     //   console.log('%c[IPC] history:request-fired', 'color: darkgreen')
     // );
 
-    ipcRenderer.on(MAINWINDOW__HISTORYRES, (e, historyJson) => {
+    ipcRenderer.on(MAINWINDOW__HISTORYRES, (e, historyJSON) => {
       log.silly('[IPC] _MAINWINDOW__HISTORYRES_ new history received by main window');
       // stop waiting in state
       this.setState({ isWaitingHistory: false });
 
       // Parse it 
-      this.parseHistory(historyJson);
+      this.parseHistory(historyJSON);
     });
 
     ipcRenderer.on(MAINWINDOW__HISTORYERR, e => {

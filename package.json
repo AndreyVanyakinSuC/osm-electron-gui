@@ -60,6 +60,7 @@
     "electron-log": "^3.0.5",
     "electron-settings": "^3.2.0",
     "eventsource": "^1.0.7",
+    "flatted": "^2.0.1",
     "ip": "^1.1.5",
     "iput": "^1.0.1",
     "is-ip": "^3.1.0",

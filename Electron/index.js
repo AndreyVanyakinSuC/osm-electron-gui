@@ -1,4 +1,7 @@
 const { app, ipcMain, Menu, dialog, BrowserWindow } = require('electron');
+const moment = require('moment')
+const fs = require('fs');
+const {stringify} = require('flatted/cjs')
 
 // Emitter
 const notifier = require('./notifier');
@@ -124,15 +127,27 @@ app.on('ready', () => {
     const historyUrl = new URL(esUrl());
     historyUrl.pathname = 'history'
 
-    // log.info(historyUrl.href);
-
+ 
 
     return reqHistory(historyUrl.href, request)
       .then(res => {log.info('[AXIOS] Incoming history');
+        // log.info('response',res);
         mainWindow.webContents.send(
           MAINWINDOW__HISTORYRES,
-          res.data
+          stringify(res.data)
         );
+        
+        // Write history json to debug
+        // const dirName = './historyResponses/'
+        // if (!fs.existsSync(dirName)) {
+        //   fs.mkdir(dirName, err => {
+        //     if (err) throw err;
+        //   })
+        // }
+        // fs.writeFile(`${dirName}${moment.now()}.json`, stringify(res.data), err => {
+        //   if (err) throw err;
+        // })
+
       })
       .catch(err => {
         log.error('[AXIOS] Error requesting history', err);

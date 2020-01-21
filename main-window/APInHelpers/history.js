@@ -14,6 +14,7 @@ export const addMsgs = (freshArr) => (
     const out = f;
     if (f.I <= 1) {
       out.I = 0;
+      out.msg = ['000']
     } else if (f.I > 1 && f.I <=5) {
       out.msg = ['011']
     } else if  (f.I > 5 && f.I <=10) {
