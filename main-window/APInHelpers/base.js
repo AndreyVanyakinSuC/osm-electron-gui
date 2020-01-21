@@ -160,4 +160,21 @@ export const MSGS = new Map([
 ]);
 
 // MAP
-export const TILE_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+export const TILE_URLS = new Map([
+  [
+    'primary',
+    {
+      description: 'Топографическая карта',
+      url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
+    }
+  ],
+  [
+    'secondary',
+    {
+      description: 'Стандартная карта',
+      url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    }
+  ]
+])
+export const PRIMARY_TILE_URL = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+export const SECONDARY_TILE_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';

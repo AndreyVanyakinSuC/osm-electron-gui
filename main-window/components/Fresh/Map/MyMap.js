@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Map,
   TileLayer,
+  LayersControl,
   Polyline,
   FeatureGroup,
   ZoomControl
@@ -15,7 +16,7 @@ import { geo_globalBounds, geo_Center } from '../../../APInHelpers/map';
 import { pickWorstMessage } from '../../../APInHelpers/notification';
 import { schema_towerObjs } from '../../../APInHelpers/schema';
 import { filterFresh } from '../../../APInHelpers/history';
-import { MSGS, TILE_URL } from '../../../APInHelpers/base';
+import { MSGS, TILE_URLS} from '../../../APInHelpers/base';
 
 
 import L from 'leaflet';
@@ -93,8 +94,9 @@ export default class MyMap extends Component {
   render() {
     // console.log('%c[MAP] Render', 'color:blue', this.state);
     const { schema, focusChart, fresh} = this.props;
+    const { tileSource } = this.state;
     // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
-    const tileUrl = TILE_URL;
+    // const tileUrl = PRIMARY_TILE_URL;
 
     //
     //RENDER SHIT
@@ -194,7 +196,24 @@ export default class MyMap extends Component {
         animate={true}
         // onViewportChanged={this.handleViewportChange.bind(this)}
       >
-        <TileLayer url={tileUrl} />
+        {/* <TileLayer url={tileSource.url} /> */}
+
+        <LayersControl position="topright">
+          <LayersControl.BaseLayer 
+            name={TILE_URLS.get('primary').description}
+            checked={true}>
+            <TileLayer
+              // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url={TILE_URLS.get('primary').url}
+            />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name={TILE_URLS.get('secondary').description}>
+            <TileLayer
+              // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url={TILE_URLS.get('secondary').url}
+            />
+          </LayersControl.BaseLayer>
+        </LayersControl>
 
         <ZoomControl position="topright" />
 
