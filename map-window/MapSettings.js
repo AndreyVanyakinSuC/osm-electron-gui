@@ -40,11 +40,11 @@ class MapSettings extends Component {
       password: '',
       availability: 'unknown'
     },
-    primaryMap: {
+    primary: {
       description: DEFAULT.get('primary').description,
       url: DEFAULT.get('primary').url
     },
-    secondaryMap: {
+    secondary: {
       description: DEFAULT.get('secondary').description,
       url: DEFAULT.get('secondary').url
     }
@@ -71,6 +71,19 @@ class MapSettings extends Component {
   handleCloseClick() {
     log.silly('[IPC] Sending settings to main');
     ipcRenderer.send(SWINDOW_SEND, this.state);
+    ipcRenderer.send(SWINDOW_CLOSE);
+  }
+
+  handleDefaultClick(event) {
+    const { id } = event.target;
+    this.setState(prevState => {
+      return _.merge(prevState, {
+        [id]: {
+          description: DEFAULT.get('primary').description,
+          url: DEFAULT.get('primary').url
+        }
+      });
+    });
   }
 
   componentDidMount() {
@@ -102,15 +115,17 @@ class MapSettings extends Component {
           <div className="block-header">Источники карт-подложки</div>
           <TileSourceBlock
             primary={true}
-            description={this.state.primaryMap.description}
-            url={this.state.primaryMap.url}
+            description={this.state.primary.description}
+            url={this.state.primary.url}
             inputChanged={this.handleMapInputChange.bind(this)}
+            defaultClicked={this.handleDefaultClick.bind(this)}
           />
           <TileSourceBlock
             primary={false}
-            description={this.state.secondaryMap.description}
-            url={this.state.secondaryMap.url}
+            description={this.state.secondary.description}
+            url={this.state.secondary.url}
             inputChanged={this.handleMapInputChange.bind(this)}
+            defaultClicked={this.handleDefaultClick.bind(this)}
           />
         </div>
         <div className="full-block">
