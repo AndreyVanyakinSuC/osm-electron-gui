@@ -13,14 +13,14 @@ const createMapSettingsWindow = function(mainWindow, dev) {
     darkTheme: true,
     center: true,
     alwaysOnTop: true,
-    width: 285,
-    height: 271,
+    width: 325,
+    height: 500,
     // useContentSize: true,
     show: false,
     modal: true,
-    minimizable: false,
+    minimizable: true,
     // maximizable:false,
-    resizable: false,
+    resizable: true,
     // movable: false
     icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
     webPreferences: {
@@ -31,14 +31,14 @@ const createMapSettingsWindow = function(mainWindow, dev) {
     }
   });
 
-  mapSettingsWindow.loadURL(winIndexpath('mapIndex.html',dev));
+  mapSettingsWindow.loadURL(winIndexpath('mapIndex.html', dev));
   mapSettingsWindow.setMenu(null);
 
   mapSettingsWindow.once('ready-to-show', () => {
     //FIX<E:
-    // if (dev) {
-    //   connectWindow.webContents.openDevTools();
-    // }
+    if (dev) {
+      mapSettingsWindow.webContents.openDevTools();
+    }
     mapSettingsWindow.show();
   });
 

@@ -30,7 +30,7 @@ let errCount = 0;
 const connect = async () => {
   try {
     // 1) Read settings
-    const server = new URL(readSettings().url);
+    const server = new URL(readSettings('connectSettings').url);
 
     // 2) TCP ping ip:port
     log.silly(
@@ -58,22 +58,21 @@ const connect = async () => {
         log.info(`[SSE] Connected to ${es.url}`);
         ipcRadio(SOURCE__ISCONNECTED, es.url);
 
-        es.addEventListener('schema',schemaAction);
-        es.addEventListener('fresh',freshAction);
+        es.addEventListener('schema', schemaAction);
+        es.addEventListener('fresh', freshAction);
         es.addEventListener('ping', pingAction);
       };
 
       es.onerror = err => {
         if (errCount <= 5) {
           log.error('[SSE] Error occured', err);
-          es.removeListener('schema',schemaAction);
-          es.removeListener('fresh',freshAction);
+          es.removeListener('schema', schemaAction);
+          es.removeListener('fresh', freshAction);
           es.removeListener('ping', pingAction);
           errCount = errCount + 1;
         } else {
           disconnect();
         }
-        
       };
     } else {
       // Inform log and index
@@ -87,7 +86,7 @@ const connect = async () => {
 
 const disconnect = function() {
   es.close();
-  
+
   if (es.readyState === 2) {
     log.info(`[SSE] Disconnected`);
     errCount = 0;
@@ -101,18 +100,18 @@ const schemaAction = message => {
   gotActivity();
   log.silly(`[SSE] Received schema`);
   ipcRadio(MAINWINDOW__SCHEMA, message.data);
-}
+};
 
 const freshAction = message => {
   gotActivity();
   log.silly(`[SSE] Received fresh`);
   ipcRadio(MAINWINDOW__FRESH, message.data);
-}
+};
 
 const pingAction = () => {
   gotActivity();
   log.silly(`[SSE] Received ping`);
-}
+};
 
 // TCP PING
 
@@ -123,14 +122,13 @@ const tcpPing = (ip, portInt) =>
 
 // ACTIVITY TIMER, START EACH TIME A MESSAGE FROM SERVER IS RECEIVED AND LASTS FOR X SECONDS, IF NO MESSAGES DURING SPAN => RECONNECT
 const gotActivity = () => {
-  
   if (keepaliveTimer !== null) {
     // log.verbose('[TIMER] Cleared')
     clearTimeout(keepaliveTimer);
   }
-   
+
   keepaliveTimer = setTimeout(() => {
-    log.verbose('[TIMER] Expired')
+    log.verbose('[TIMER] Expired');
     disconnect();
     connect();
   }, keepaliveSecs * 1000);

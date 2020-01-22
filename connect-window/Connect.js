@@ -107,7 +107,7 @@ class Connect extends Component {
   }
 
   componentDidMount() {
-    log.info('CDM');
+    log.silly('CDM');
     ipcRenderer.on(CONNECTWINDOW__SETTINGS, (e, args) => {
       log.info('[IPC] Received _CONNECTWINDOW__SETTINGS_', args);
       const { url, isAutoconnect } = args; //url object
@@ -145,7 +145,7 @@ class Connect extends Component {
   }
 
   componentWillUnmount() {
-    log.info('CDUnmount');
+    log.silly('CDUnmount');
     ipcRenderer.removeAllListeners(CONNECTWINDOW__SETTINGS);
     ipcRenderer.removeAllListeners(SOURCE__ISCONNECTED);
     ipcRenderer.removeAllListeners(SOURCE__ISCONNECTING);
@@ -193,7 +193,7 @@ class Connect extends Component {
             clickedConnected={this.handleDisconnectClick.bind(this)}
           />
           <CancelBtn clicked={this.handleCancelBtnClick} />
-        </div>	
+        </div>
       </div>
     );
   }

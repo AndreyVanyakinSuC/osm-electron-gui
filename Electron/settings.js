@@ -1,17 +1,14 @@
 const settings = require('electron-settings');
 const log = require('electron-log');
 
-const writeSettings = args => {
-  const { url, isAutoconnect } = args;
+const writeSettings = (store, args) => {
+  // const { url, isAutoconnect } = args;
 
-  log.info('[SET] Writing settings', args);
+  log.silly('[SET] Writing settings', args);
   //  write dem to storage
-  settings.set('connectSettings', {
-    url: url, // url object
-    isAutoconnect: isAutoconnect
-  });
+  settings.set(store, args);
 };
 
-const readSettings = () => settings.get('connectSettings');
+const readSettings = store => settings.get(store);
 
 module.exports = { writeSettings, readSettings };

@@ -9,9 +9,8 @@ const OUTPUT_DIR = path.resolve(__dirname, 'dist/');
 const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/');
 const MAPSETTINGS_SRC_DIR = path.resolve(__dirname, 'map-window/');
 
-
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
-const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
+const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR, MAPSETTINGS_SRC_DIR];
 
 module.exports = {
   mode: 'development',
