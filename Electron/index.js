@@ -99,6 +99,10 @@ app.on('ready', () => {
     mainWindow.webContents.openDevTools()
   );
 
+  electronLocalshortcut.register(mainWindow, 'Alt+A', () =>
+    enableAdvancedWindow()
+  );
+
   mainWindow.once('ready-to-show', () => {
     //  SEND STORED SETTINGS TO UI ON STARTUP
     const { primary, secondary } = readSettings('settings');
@@ -384,12 +388,12 @@ const menuTemplate = [
       enableMapSettingsWindow();
     }
   },
-  {
-    label: 'Advanced',
-    click() {
-      enableAdvancedWindow();
-    }
-  },
+  // {
+  //   label: 'Advanced',
+  //   click() {
+  //     enableAdvancedWindow();
+  //   }
+  // },
   {
     label: 'О программе',
     accelerator: 'F1',
