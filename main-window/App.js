@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const url = require('url');
 const path = require('path');
 
-
 import {
   CONNECTWINDOW__CREATE,
   SOURCE__ISDISCONNECTED,
@@ -13,6 +12,8 @@ import {
   MAINWINDOW__SCHEMA,
   MAINWINDOW__FRESH,
   ELECTRON_HISTORYREQ,
+  MAINWINDOW_MAPSETTINGS,
+  MAINWINDOW_ADVSETTINGS,
   MAINWINDOW__HISTORYRES,
   MAINWINDOW__HISTORYERR,
   MAINWINDOW_CLEARIDB,
@@ -39,7 +40,12 @@ import {
   addTrends,
   displayHuman
 } from './APInHelpers/timeseries';
-import { prepareHistoryRequest, prepareSimpleHistoryRequest,checkHistory, addMsgs } from './APInHelpers/history';
+import {
+  prepareHistoryRequest,
+  prepareSimpleHistoryRequest,
+  checkHistory,
+  addMsgs
+} from './APInHelpers/history';
 import { verifySchema, verifyData } from './APInHelpers/verification';
 import { worstCaseRibbon } from './APInHelpers/notification';
 import { freshDummy } from './APInHelpers/schema';
@@ -55,8 +61,7 @@ import Fallback from './components/Fallback';
 // ### LOGGING INIT ###
 log.variables.label = 'MW';
 log.transports.file.file = path.resolve('./') + '/osm-gui.log';
-log.transports.file.init()
-
+log.transports.file.init();
 
 class App extends Component {
   state = {
@@ -99,7 +104,7 @@ class App extends Component {
 
     // 3) Write to db and clear the last history request
     writeDataToDB(verifiedHistory).then(() => {
-      this.setState( {historyPKs: crypto.randomBytes(16)})
+      this.setState({ historyPKs: crypto.randomBytes(16) });
       // if (PKs === null) {
       //   log.silly('[History] No new history was written to dbs');
       // } else {
@@ -123,18 +128,16 @@ class App extends Component {
           schema: schema,
           isFreshAvailable: true,
           fresh: freshDummy(schema)
-        }
+        };
       } else {
         return {
           isSchemaAvailable: true,
           schema: schema
-        }
-      }     
+        };
+      }
     });
 
     // console.log(this.state.fresh)
-
-
   }
 
   fillStateWithFresh(freshPKs, trendHours = TREND_HRS) {
@@ -230,6 +233,20 @@ class App extends Component {
     //   });
     // });
 
+    ipcRenderer.on(MAINWINDOW_MAPSETTINGS, (e, tileSources) => {
+      this.setState(() => ({
+        tileSources: tileSources
+      }));
+      // console.log(this.state);
+    });
+
+    ipcRenderer.on(MAINWINDOW_ADVSETTINGS, (e, advanced) => {
+      this.setState(() => ({
+        advanced: advanced
+      }));
+      console.log(this.state);
+    });
+
     ipcRenderer.on(MAINWINDOW__SCHEMA, (e, schemaJson) => {
       log.silly('[IPC] Received MAINWINDOW__SCHEMA');
 
@@ -284,33 +301,34 @@ class App extends Component {
         });
     });
 
-
     // Clear history on user request
     ipcRenderer.on(MAINWINDOW_CLEARIDB, async () => {
       try {
         log.silly('[IPC] Received MAINWINDOW_CLEARIDB');
         await clearDataDB();
-        this.setState( {
-          isWaitingHistory: false,  
+        this.setState({
+          isWaitingHistory: false,
           historyPKs: crypto.randomBytes(16)
-        })
+        });
         ipcRenderer.send(ELECTRON__HISTORYCLEARED);
       } catch (error) {
         log.error(error);
         ipcRenderer.send(ELECTRON__CLEARERR, err);
       }
-    })
+    });
 
     // ipcRenderer.on('history:request-fired', () =>
     //   console.log('%c[IPC] history:request-fired', 'color: darkgreen')
     // );
 
     ipcRenderer.on(MAINWINDOW__HISTORYRES, (e, historyJSON) => {
-      log.silly('[IPC] _MAINWINDOW__HISTORYRES_ new history received by main window');
+      log.silly(
+        '[IPC] _MAINWINDOW__HISTORYRES_ new history received by main window'
+      );
       // stop waiting in state
       this.setState({ isWaitingHistory: false });
 
-      // Parse it 
+      // Parse it
       this.parseHistory(historyJSON);
     });
 
@@ -318,8 +336,8 @@ class App extends Component {
       log.silly('[IPC] MAINWINDOW__HISTORYERR history request failed');
 
       // stop waiting in state
-      this.setState({ 
-        isWaitingHistory: false,  
+      this.setState({
+        isWaitingHistory: false,
         historyPKs: crypto.randomBytes(16)
       });
     });
@@ -335,7 +353,12 @@ class App extends Component {
     // const spanSecs = 600;
 
     // #### TESTING SIMPLE HISTORY REQUEST ####
-    const request = await prepareSimpleHistoryRequest(needMin,needMax,objIDs,spanSecs)
+    const request = await prepareSimpleHistoryRequest(
+      needMin,
+      needMax,
+      objIDs,
+      spanSecs
+    );
     // const request = await prepareHistoryRequest(
     //   needMin,
     //   needMax,
@@ -393,7 +416,8 @@ class App extends Component {
   }
 
   render() {
-    const isCanShowFresh = this.state.isSchemaAvailable && this.state.isFreshAvailable;
+    const isCanShowFresh =
+      this.state.isSchemaAvailable && this.state.isFreshAvailable;
     const isCanShowHistory = this.state.isSchemaAvailable;
 
     let display;
@@ -405,6 +429,7 @@ class App extends Component {
             <Fresh
               schema={this.state.schema}
               fresh={this.state.fresh}
+              tileSources={this.state.tileSources}
               historyPKs={this.state.historyPKs}
               onHistoryRequired={this.handleHistoryRequest.bind(this)}
             />

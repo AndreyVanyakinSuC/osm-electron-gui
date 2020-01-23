@@ -8,16 +8,23 @@ const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
 const OUTPUT_DIR = path.resolve(__dirname, 'dist/');
 const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/');
 const MAPSETTINGS_SRC_DIR = path.resolve(__dirname, 'map-window/');
+const ADVANCED_SRC_DIR = path.resolve(__dirname, 'advanced-window/');
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
-const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR, MAPSETTINGS_SRC_DIR];
+const defaultInclude = [
+  MAIN_SRC_DIR,
+  CONNECT_SRC_DIR,
+  MAPSETTINGS_SRC_DIR,
+  ADVANCED_SRC_DIR
+];
 
 module.exports = {
   mode: 'development',
   entry: {
     main: MAIN_SRC_DIR + '/mainIndex.js',
     connect: CONNECT_SRC_DIR + '/connectIndex.js',
-    map: MAPSETTINGS_SRC_DIR + '/mapSettingsIndex.js'
+    map: MAPSETTINGS_SRC_DIR + '/mapSettingsIndex.js',
+    advanced: ADVANCED_SRC_DIR + '/advancedIndex.js'
   },
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
@@ -109,9 +116,15 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       // inject: false,
-      title: 'Настройки карты',
+      title: 'Настройки',
       chunks: ['map'],
       filename: OUTPUT_DIR + '/mapIndex.html'
+    }),
+    new HtmlWebpackPlugin({
+      // inject: false,
+      title: 'Расширенные настройки',
+      chunks: ['advanced'],
+      filename: OUTPUT_DIR + '/advancedIndex.html'
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')

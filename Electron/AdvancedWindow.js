@@ -3,22 +3,22 @@ const { winIndexpath } = require('./base');
 const log = require('electron-log');
 const path = require('path');
 
-const createMapSettingsWindow = function(mainWindow, dev) {
+const createAdvancedWindow = function(mainWindow, dev) {
   log.info('[MapSettingsWindow] Creating..');
 
-  const mapSettingsWindow = new BrowserWindow({
+  const advancedWindow = new BrowserWindow({
     parent: mainWindow,
     title: 'Настройки',
     // frame: false,
     darkTheme: true,
     center: true,
     alwaysOnTop: true,
-    width: 350,
-    height: 480,
+    width: 410,
+    height: 520,
     // useContentSize: true,
     show: false,
     modal: true,
-    minimizable: false,
+    minimizable: true,
     // maximizable:false,
     resizable: false,
     // movable: false
@@ -31,19 +31,19 @@ const createMapSettingsWindow = function(mainWindow, dev) {
     }
   });
 
-  mapSettingsWindow.loadURL(winIndexpath('mapIndex.html', dev));
-  mapSettingsWindow.setMenu(null);
+  advancedWindow.loadURL(winIndexpath('advancedIndex.html', dev));
+  advancedWindow.setMenu(null);
 
-  mapSettingsWindow.once('ready-to-show', () => {
-    //FIX<E:
+  advancedWindow.once('ready-to-show', () => {
+    // FIX<E:
     // if (dev) {
-    //   mapSettingsWindow.webContents.openDevTools();
+    //   advancedWindow.webContents.openDevTools();
     // }
-    mapSettingsWindow.show();
+    advancedWindow.show();
   });
 
-  log.info('[mapSettingsWindow] Creating.. finished');
-  return mapSettingsWindow;
+  log.info('[advancedWindow] Creating.. finished');
+  return advancedWindow;
 };
 
-module.exports = { createMapSettingsWindow };
+module.exports = { createAdvancedWindow };

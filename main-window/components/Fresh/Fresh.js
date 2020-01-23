@@ -94,7 +94,7 @@ class Fresh extends Component {
   //
 
   render() {
-    const { fresh, schema, historyPKs } = this.props;
+    const { fresh, schema, historyPKs, tileSources } = this.props;
     // console.log(fresh)
     // have smth in scope
     const isChartVisible = this.state.scopedRange !== null ? true : false;
@@ -120,6 +120,7 @@ class Fresh extends Component {
             focusChart={this.handleWireStripClick.bind(this)}
             resetZoomTo={this.handleResetFocus.bind(this)}
             fresh={fresh}
+            tileSources={tileSources}
           />
 
           {isChartVisible ? (

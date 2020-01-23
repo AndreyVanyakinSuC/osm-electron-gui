@@ -20,7 +20,8 @@ const notifier = require('./notifier');
 
 let es;
 
-const keepaliveSecs = 120;
+const keepaliveSecs = readSettings('advanced').sseTimeoutSecs;
+console.log('keep alive', keepaliveSecs);
 let keepaliveTimer = null;
 
 // Will be updated by onerror and reset by onopen or by onclose

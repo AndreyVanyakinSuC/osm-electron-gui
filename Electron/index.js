@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu, dialog, BrowserWindow } = require('electron');
+const { app, ipcMain, Menu, dialog } = require('electron');
 const moment = require('moment');
 const fs = require('fs');
 const { stringify } = require('flatted/cjs');
@@ -16,10 +16,18 @@ const {
   CONNECTWINDOW__SETTINGS,
   SWINDOW_SEND,
   SWINDOW_RECEIVE,
+  SWINDOW_DEF_REQ,
+  SWINDOW_DEF_RES,
   SWINDOW_CLOSE,
+  ADVWINDOW_CLOSE,
+  ADVWINDOW_SEND,
+  ADVWINDOW_RECEIVE,
+  ADVWINDOW_DEF_REQ,
   SOURCE__CONNECT,
   SOURCE__DISCONNECT,
   ELECTRON_HISTORYREQ,
+  MAINWINDOW_MAPSETTINGS,
+  MAINWINDOW_ADVSETTINGS,
   MAINWINDOW__HISTORYRES,
   MAINWINDOW__HISTORYERR,
   MAINWINDOW_CLEARIDB,
@@ -29,15 +37,24 @@ const {
 const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 
 const { installReactDEvTools } = require('./base');
-const { writeSettings, readSettings } = require('./settings.js');
+const {
+  writeSettings,
+  readSettings,
+  setAdvancedDefaults,
+  setMapDefaults,
+  hasSettings,
+  DEFAULT_ADVANCED,
+  DEFAULT_MAP
+} = require('./settings.js');
 const reqHistory = require('./history.js');
 const { connectStatusIPC, connect, disconnect, esUrl } = require('./source');
 const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
 const { createMapSettingsWindow } = require('./MapSettingsWindow');
+const { createAdvancedWindow } = require('./AdvancedWindow');
 
 // let windows = [];
-let mainWindow, connectWindow, mapSettingsWindow;
+let mainWindow, connectWindow, mapSettingsWindow, advancedWindow;
 
 //
 // LOGGER
@@ -62,8 +79,13 @@ dev = process.env.NODE_ENV === 'dev' ? true : false;
 // log.silly(dev);
 
 app.on('ready', () => {
-  // installReactDEvTools();
-
+  // CHECK IF DEFAULT SETTINGS ARE SET
+  if (!hasSettings('advanced')) {
+    setAdvancedDefaults();
+  }
+  if (!hasSettings('settings')) {
+    setMapDefaults();
+  }
   //
   // HANDLE MAIN WINDOW
   //
@@ -77,6 +99,15 @@ app.on('ready', () => {
   electronLocalshortcut.register(mainWindow, 'Ctrl+Shift+I', () =>
     mainWindow.webContents.openDevTools()
   );
+
+  mainWindow.once('ready-to-show', () => {
+    //  SEND STORED SETTINGS TO UI ON STARTUP
+    const { primary, secondary } = readSettings('settings');
+    mainWindow.webContents.send(MAINWINDOW_MAPSETTINGS, { primary, secondary });
+    const advanced = readSettings('advanced');
+    mainWindow.webContents.send(MAINWINDOW_ADVSETTINGS, advanced);
+    mainWindow.show();
+  });
 
   mainWindow.on('show', () => {
     log.silly('[MainWindow] _on show_');
@@ -112,11 +143,39 @@ app.on('ready', () => {
     mapSettingsWindow.close();
   });
 
+  // RECEIVING SETTINGS FROM MAP SETTINGS WINDOW
   ipcMain.on(SWINDOW_SEND, (e, args) => {
     log.silly('[IPC] _on SWINDOW_SEND_');
     writeSettings('settings', args);
+    const { primary, secondary } = readSettings('settings');
+    mainWindow.webContents.send(MAINWINDOW_MAPSETTINGS, { primary, secondary });
   });
 
+  // RECEIVING DEFAULTS REQUEST FROM MAP SETTINGS  WINDOW
+  ipcMain.on(SWINDOW_DEF_REQ, () => {
+    log.silly('[IPC] _on SWINDOW_DEF_REQ_');
+    mapSettingsWindow.webContents.send(SWINDOW_DEF_RES, DEFAULT_MAP);
+  });
+
+  // USER WANTS TO CLOSE ADVANCED SETTINGS WINDOW
+  ipcMain.on(ADVWINDOW_CLOSE, () => {
+    log.silly('[IPC] _on ADVWINDOW_CLOSE_');
+    advancedWindow.close();
+  });
+
+  // RECEIVING SETTINGS FROM ADVANCED SETTINGS WINDOW
+  ipcMain.on(ADVWINDOW_SEND, (e, args) => {
+    log.silly('[IPC] _on ADVWINDOW_SEND_');
+    writeSettings('advanced', args);
+    const advanced = readSettings('advanced');
+    mainWindow.webContents.send(MAINWINDOW_ADVSETTINGS, advanced);
+  });
+
+  // ADV WINDOW REQUESTS DEFAULTS
+  ipcMain.on(ADVWINDOW_DEF_REQ, () => {
+    log.silly('[IPC] _on ADVWINDOW_DEF_REQ_');
+    advancedWindow.webContents.send(ADVWINDOW_RECEIVE, DEFAULT_ADVANCED);
+  });
   // CONNECT WINDOW SENT CONNECT SETTINGS AND IS WISHING TO CONNECT
   ipcMain.on(SOURCE__CONNECT, (e, args) => {
     log.silly('[IPC] _on SOURCE__CONNECT_');
@@ -242,6 +301,24 @@ const enableMapSettingsWindow = () => {
     log.silly('[mapSettingsWindow] _on close_');
   });
 };
+
+// ADVANCED SETTINGS WINDOW ROUTINE
+const enableAdvancedWindow = () => {
+  advancedWindow = createAdvancedWindow(mainWindow, dev);
+  advancedWindow.on('show', () => {
+    log.silly('[advancedWindow] _on show_');
+
+    // SEND DATA TO ADV SETTINGS WINDOW
+    advancedWindow.webContents.send(
+      ADVWINDOW_RECEIVE,
+      readSettings('advanced')
+    );
+  });
+  advancedWindow.on('close', () => {
+    log.silly('[advancedWindow] _on close_');
+  });
+};
+
 // MENU
 const menuTemplate = [
   {
@@ -298,9 +375,15 @@ const menuTemplate = [
     ]
   },
   {
-    label: 'Карта',
+    label: 'Настройки',
     click() {
       enableMapSettingsWindow();
+    }
+  },
+  {
+    label: 'Advanced',
+    click() {
+      enableAdvancedWindow();
     }
   },
   {

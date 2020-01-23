@@ -1,13 +1,7 @@
 import React from 'react';
 import TextForm from './TextForm';
 
-const TileSourceBlock = ({
-  primary,
-  description,
-  url,
-  inputChanged,
-  defaultClicked
-}) => {
+const TileSourceBlock = ({ primary, description, url, inputChanged }) => {
   const id = primary ? 'primary' : 'secondary';
   return (
     <div className="map-inputs">
@@ -27,14 +21,6 @@ const TileSourceBlock = ({
         title="Введите URL сайта тайлов"
         id={id}
       />
-      <button
-        id={id}
-        className="btn"
-        onClick={defaultClicked}
-        title="Нажатие восстановит значения по умолчанию"
-      >
-        По умолчанию
-      </button>
     </div>
   );
 };

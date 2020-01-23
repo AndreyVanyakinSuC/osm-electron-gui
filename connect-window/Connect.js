@@ -181,6 +181,9 @@ class Connect extends Component {
         <ConfirmationCheck
           isActive={this.state.isAutoconnect}
           changed={this.handleAutoConnectToggle.bind(this)}
+          id="confirmation"
+          label="Подключаться при запуске"
+          title="Сохранить настройки и подключаться автоматически при запуске программы"
         />
 
         <div className="btn-strip">

@@ -3,45 +3,44 @@ export const TREND_PTS = 40;
 export const DEFAULT_HISTORY_HRS = 24;
 export const HISTORY_SPAN_SECS = 60;
 
-import default_1 from "../assets/default/twr1.png";
-import default_2 from "../assets/default/twr2.png";
-import default_3 from "../assets/default/twr3.png";
-import default_4 from "../assets/default/twr4.png";
+import default_1 from '../assets/default/twr1.png';
+import default_2 from '../assets/default/twr2.png';
+import default_3 from '../assets/default/twr3.png';
+import default_4 from '../assets/default/twr4.png';
 // 48
-import twr48_1 from "../assets/9151/48_1.png";
-import twr48_2 from "../assets/9151/48_2.png";
-import twr48_3 from "../assets/9151/48_3.png";
-import twr48_4 from "../assets/9151/48_4.png";
+import twr48_1 from '../assets/9151/48_1.png';
+import twr48_2 from '../assets/9151/48_2.png';
+import twr48_3 from '../assets/9151/48_3.png';
+import twr48_4 from '../assets/9151/48_4.png';
 // 91
-import twr91_1 from "../assets/9155/91_1.png";
-import twr91_2 from "../assets/9155/91_2.png";
-import twr91_3 from "../assets/9155/91_3.png";
-import twr91_4 from "../assets/9155/91_4.png";
+import twr91_1 from '../assets/9155/91_1.png';
+import twr91_2 from '../assets/9155/91_2.png';
+import twr91_3 from '../assets/9155/91_3.png';
+import twr91_4 from '../assets/9155/91_4.png';
 // 133
-import twr133_1 from "../assets/9163/133_1.png";
-import twr133_2 from "../assets/9163/133_2.png";
-import twr133_3 from "../assets/9163/133_3.png";
-import twr133_4 from "../assets/9163/133_4.png";
+import twr133_1 from '../assets/9163/133_1.png';
+import twr133_2 from '../assets/9163/133_2.png';
+import twr133_3 from '../assets/9163/133_3.png';
+import twr133_4 from '../assets/9163/133_4.png';
 // 179
-import twr179_1 from "../assets/9170/179_1.png";
-import twr179_2 from "../assets/9170/179_2.png";
-import twr179_3 from "../assets/9170/179_3.png";
-import twr179_4 from "../assets/9170/179_4.png";
+import twr179_1 from '../assets/9170/179_1.png';
+import twr179_2 from '../assets/9170/179_2.png';
+import twr179_3 from '../assets/9170/179_3.png';
+import twr179_4 from '../assets/9170/179_4.png';
 // 209
-import twr209_1 from "../assets/9173/209_1.png";
-import twr209_2 from "../assets/9173/209_2.png";
-import twr209_3 from "../assets/9173/209_3.png";
-import twr209_4 from "../assets/9173/209_4.png";
+import twr209_1 from '../assets/9173/209_1.png';
+import twr209_2 from '../assets/9173/209_2.png';
+import twr209_3 from '../assets/9173/209_3.png';
+import twr209_4 from '../assets/9173/209_4.png';
 
 export const IMAGE_PATHS = new Map([
-  ["default",[default_1, default_2, default_3, default_4]],
-  [9151,[twr48_1,twr48_2,twr48_3,twr48_4]],
-  [9155,[twr91_1,twr91_2,twr91_3,twr91_4]],
-  [9163,[twr133_1,twr133_2,twr133_3,twr133_4]],
-  [9170,[twr179_1,twr179_2,twr179_3,twr179_4]],
-  [9173,[twr209_1,twr209_2,twr209_3,twr209_4]],
-])
-
+  ['default', [default_1, default_2, default_3, default_4]],
+  [9151, [twr48_1, twr48_2, twr48_3, twr48_4]],
+  [9155, [twr91_1, twr91_2, twr91_3, twr91_4]],
+  [9163, [twr133_1, twr133_2, twr133_3, twr133_4]],
+  [9170, [twr179_1, twr179_2, twr179_3, twr179_4]],
+  [9173, [twr209_1, twr209_2, twr209_3, twr209_4]]
+]);
 
 export const SCHEMA_1ST_LEVEL_NAMES = [
   'deps',
@@ -62,12 +61,12 @@ export const FRESH_DUMMY = (objID, ts) => ({
   VI: 0,
   Tamb: 0,
   msg: ['000'],
-  ITrend:(new Array(10)).fill(0),
-  FTrend:(new Array(10)).fill(0), 
-  FmnTrend:(new Array(10)).fill(0),
-  FmxTrend:(new Array(10)).fill(0),
-  FrmsTrend: (new Array(10)).fill(0)
-})
+  ITrend: new Array(10).fill(0),
+  FTrend: new Array(10).fill(0),
+  FmnTrend: new Array(10).fill(0),
+  FmxTrend: new Array(10).fill(0),
+  FrmsTrend: new Array(10).fill(0)
+});
 
 export const DATA_PROP_NAMES = [
   'ts',
@@ -143,7 +142,7 @@ export const MSGS = new Map([
       priority: 3,
       class: 'alarm-ice',
       threshold: 10,
-      to:20,
+      to: 20,
       color: '#ff3333'
     }
   ], //  10mm =< ice < 20mm
@@ -153,28 +152,28 @@ export const MSGS = new Map([
       priority: 4,
       class: 'critical-ice',
       threshold: 20,
-      to:100,
+      to: 100,
       color: 'rgb(114, 19, 19);'
     }
   ] //  20mm =< ice
 ]);
 
 // MAP
-export const TILE_URLS = new Map([
-  [
-    'primary',
-    {
-      description: 'Топографическая карта',
-      url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
-    }
-  ],
-  [
-    'secondary',
-    {
-      description: 'Стандартная карта',
-      url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    }
-  ]
-])
+// export const TILE_URLS = new Map([
+//   [
+//     'primary',
+//     {
+//       description: 'Топографическая карта',
+//       url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
+//     }
+//   ],
+//   [
+//     'secondary',
+//     {
+//       description: 'Стандартная карта',
+//       url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+//     }
+//   ]
+// ])
 // export const PRIMARY_TILE_URL = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
 // export const SECONDARY_TILE_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';

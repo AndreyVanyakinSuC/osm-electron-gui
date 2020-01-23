@@ -16,8 +16,7 @@ import { geo_globalBounds, geo_Center } from '../../../APInHelpers/map';
 import { pickWorstMessage } from '../../../APInHelpers/notification';
 import { schema_towerObjs } from '../../../APInHelpers/schema';
 import { filterFresh } from '../../../APInHelpers/history';
-import { MSGS, TILE_URLS} from '../../../APInHelpers/base';
-
+import { MSGS } from '../../../APInHelpers/base';
 
 import L from 'leaflet';
 require('leaflet_css');
@@ -93,8 +92,7 @@ export default class MyMap extends Component {
 
   render() {
     // console.log('%c[MAP] Render', 'color:blue', this.state);
-    const { schema, focusChart, fresh} = this.props;
-    const { tileSource } = this.state;
+    const { schema, focusChart, fresh, tileSources } = this.props;
     // const maxBounds= L.latLngBounds(geo_globalBounds(schema)).pad(1);
     // const tileUrl = PRIMARY_TILE_URL;
 
@@ -140,9 +138,9 @@ export default class MyMap extends Component {
         const messages = schema.ranges[rID].obj.map(o => fresh[o].msg);
         // console.log(messages[0][0])
         // const worstMsg = pickWorstMessage(messages);
-        const pickedWorst = pickWorstMessage(messages)
+        const pickedWorst = pickWorstMessage(messages);
         // const worstMsg = messages[0][0]
-        const worstMsg = pickedWorst
+        const worstMsg = pickedWorst;
         // console.log('worst msg',worstMsg, 'picked worst', pickedWorst)
         const rangeClasses =
           worstMsg === null || worstMsg === undefined || worstMsg === ''
@@ -199,18 +197,19 @@ export default class MyMap extends Component {
         {/* <TileLayer url={tileSource.url} /> */}
 
         <LayersControl position="topright">
-          <LayersControl.BaseLayer 
-            name={TILE_URLS.get('primary').description}
-            checked={true}>
+          <LayersControl.BaseLayer
+            name={tileSources.primary.description}
+            checked={true}
+          >
             <TileLayer
               // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url={TILE_URLS.get('primary').url}
+              url={tileSources.primary.url}
             />
           </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name={TILE_URLS.get('secondary').description}>
+          <LayersControl.BaseLayer name={tileSources.secondary.description}>
             <TileLayer
               // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url={TILE_URLS.get('secondary').url}
+              url={tileSources.secondary.url}
             />
           </LayersControl.BaseLayer>
         </LayersControl>

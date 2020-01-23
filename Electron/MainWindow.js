@@ -3,7 +3,6 @@ const { winIndexpath } = require('./base');
 const log = require('electron-log');
 const path = require('path');
 
-
 const createMainWindow = function(dev) {
   log.info('[MainWindow] Creating..');
 
@@ -29,16 +28,8 @@ const createMainWindow = function(dev) {
 
   // log.info('Main window', winIndexpath('mainIndex.html'), __dirname)
   // Don't show until we are ready and loaded
-  mainWindow.once('ready-to-show', () => {
-    // Open the DevTools automatically if developing
-    // if (dev) {
-    //   mainWindow.webContents.openDevTools();
-    // }
-    mainWindow.show();
-  });
 
   log.info('[MainWindow] Creating.. finished');
-
 
   return mainWindow;
 };

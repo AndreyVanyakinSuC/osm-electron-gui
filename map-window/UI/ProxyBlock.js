@@ -4,7 +4,9 @@ import TextForm from './TextForm';
 const ProxyBlock = ({ domain_user, password, inputChanged }) => {
   return (
     <div className="full-block">
-      <div className="block-header">Аутентификация прокси-сервера</div>
+      <div className="block-header">
+        Параметры аутентификации прокси-сервера
+      </div>
       <div className="proxy-inputs">
         {/* Domain input */}
         <span className="inputs-tile">
@@ -13,7 +15,7 @@ const ProxyBlock = ({ domain_user, password, inputChanged }) => {
             name="domain_user"
             value={domain_user}
             changed={inputChanged}
-            title="Введите имя домена"
+            title="Введите имя домена и пользователя"
             placeholder="MES/Ivanov"
           />
         </span>

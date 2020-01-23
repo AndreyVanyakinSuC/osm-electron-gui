@@ -6,7 +6,7 @@ import {
   faCheck
 } from '@fortawesome/free-solid-svg-icons';
 
-const ConfirmationCheck = ({ isActive, changed }) => {
+const ConfirmationCheck = ({ isActive, changed, id, label, title }) => {
   let icon, style;
 
   if (isActive) {
@@ -18,16 +18,12 @@ const ConfirmationCheck = ({ isActive, changed }) => {
   }
 
   return (
-    <div
-      className="confirmation-check"
-      onClick={changed}
-      title="Сохранить настройки и подключаться автоматически при запуске программы"
-    >
+    <div id={id} className="confirmation-check" onClick={changed} title={title}>
       <input type="checkbox" checked={isActive} />
 
       <span className={style}>{icon}</span>
 
-      <label>Подключаться при запуске</label>
+      <label>{label}</label>
     </div>
   );
 };

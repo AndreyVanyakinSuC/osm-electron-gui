@@ -22,21 +22,7 @@ body {
                 font-weight: bold;
                 padding: 1rem 0 ;
             }
-            .proxy-inputs {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-
-                .inputs-tile {
-                    &#slash {
-                        
-                    }
-                }
-
-            }
-            .map-inputs {
-                margin-bottom: 1.5rem;
-            }
+            
         }
 
         .center-block {
@@ -44,9 +30,48 @@ body {
             justify-content: center;
         }
     
+        .numeric-input {
+            display: flex;
+            flex-direction: row;
+            align-content: space-between;
+            align-items: baseline;
+            input {
+                margin-right: 1rem;
+                font-family: inherit;
+                font-weight: normal;
+                width: 4rem;
+            }
+
+        }
+
+        .confirmation-check {
+
+    
+            cursor: pointer;
+            
+            input {
+                display: none;
+            }
+    
+            label {
+                cursor: inherit;
+                margin-left: .5rem;
+            }
+    
+            .checked {
+                color: $BLUE;
+                @include color-transition();
+            }
+    
+            .unchecked {
+                color:lightgray; 
+                @include color-transition();
+            }
+        }
+
         input {
             cursor: text;
-            margin: 0.25rem 0 0.25rem 0;
+            margin: 0.1rem 0 0.1rem 0;
             width: 100%;
             font-family: inherit;
             font-weight: normal;
