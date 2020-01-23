@@ -199,14 +199,16 @@ class Chart extends Component {
   render() {
     const dataArr = this.state.dataArr;
     const props = this.props;
-    const { isTempVisible, mode, tsRange, propMode } = props;
+    const { isTempVisible, mode, tsRange, propMode, ptsCount } = props;
 
     // Main
-    const plotlyMainData = mainTraces(dataArr, props);
+    const plotlyMainData = mainTraces(dataArr, props, ptsCount);
     const plotlyYLayoutMain = yLayout(propMode, mode, this.state.yMainRange);
 
     // Temperature
-    const plotlyTempData = isTempVisible ? tempTraces(dataArr, props) : null;
+    const plotlyTempData = isTempVisible
+      ? tempTraces(dataArr, props, ptsCount)
+      : null;
     const plotlyYLayoutTemp = isTempVisible
       ? yLayout('Tamb', mode, this.state.yTempRange)
       : null;

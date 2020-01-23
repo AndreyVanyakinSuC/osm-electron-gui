@@ -1,5 +1,3 @@
-export const TREND_HRS = 8;
-export const TREND_PTS = 40;
 export const DEFAULT_HISTORY_HRS = 24;
 export const HISTORY_SPAN_SECS = 60;
 
@@ -157,23 +155,3 @@ export const MSGS = new Map([
     }
   ] //  20mm =< ice
 ]);
-
-// MAP
-// export const TILE_URLS = new Map([
-//   [
-//     'primary',
-//     {
-//       description: 'Топографическая карта',
-//       url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
-//     }
-//   ],
-//   [
-//     'secondary',
-//     {
-//       description: 'Стандартная карта',
-//       url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-//     }
-//   ]
-// ])
-// export const PRIMARY_TILE_URL = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
-// export const SECONDARY_TILE_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';

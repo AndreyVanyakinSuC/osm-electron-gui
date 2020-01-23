@@ -146,9 +146,9 @@ const trace = (xyArr, name, propMode, yaxis) => {
   };
 };
 
-export const mainTraces = (dataArr, props) => {
+export const mainTraces = (dataArr, props, ptsCount) => {
   const { objData, propMode, scopedWires, mode } = props;
-  const PTS_COUNT = SETTINGS[mode].PTS_COUNT;
+  const PTS_COUNT = ptsCount;
 
   return scopedWires.map(w => {
     if (propMode === 'F') {
@@ -167,9 +167,9 @@ export const mainTraces = (dataArr, props) => {
   });
 };
 
-export const tempTraces = (dataArr, props) => {
+export const tempTraces = (dataArr, props, ptsCount) => {
   const { scopedWires, mode } = props;
-  const PTS_COUNT = SETTINGS[mode].PTS_COUNT;
+  const PTS_COUNT = ptsCount;
 
   const allTempXY = scopedWires.map(w =>
     pullXYpairs(dataArr, w, 'Tamb', PTS_COUNT)

@@ -21,49 +21,12 @@ window.addEventListener('keydown', e => {
   }
 });
 
-const ADVANCED_DEFAULT = new Map([
-  ['isAddMsgToFresh', true],
-  ['freshMaxPtsCount', 100],
-  ['sseTimeoutSecs', 200],
-  ['trendHrs', 8],
-  ['trensMaxPtsCount', 40],
-  ['historyShowHrs', 8],
-  ['historyMaxPtsCount', 400],
-  ['historySpanSecs', 300],
-  ['isSaveHistoryReqs', false],
-  ['isSaveHistoryReps', false]
-]);
-
 class Advanced extends Component {
-  state = {
-    isAddMsgToFresh: ADVANCED_DEFAULT.get('isAddMsgToFresh'),
-    freshMaxPtsCount: ADVANCED_DEFAULT.get('freshMaxPtsCount'),
-    sseTimeoutSecs: ADVANCED_DEFAULT.get('sseTimeoutSecs'),
-    trendHrs: ADVANCED_DEFAULT.get('trendHrs'),
-    trensMaxPtsCount: ADVANCED_DEFAULT.get('trensMaxPtsCount'),
-    historyShowHrs: ADVANCED_DEFAULT.get('historyShowHrs'),
-    historyMaxPtsCount: ADVANCED_DEFAULT.get('historyMaxPtsCount'),
-    historySpanSecs: ADVANCED_DEFAULT.get('historySpanSecs'),
-    isSaveHistoryReqs: ADVANCED_DEFAULT.get('isSaveHistoryReqs'),
-    isSaveHistoryReps: ADVANCED_DEFAULT.get('isSaveHistoryReps')
-  };
+  state = {};
 
   handleDefaultsClick() {
     log.silly('[IPC] Requesting defaults');
     ipcRenderer.send(ADVWINDOW_DEF_REQ);
-
-    // this.setState(prevState => ({
-    //   isAddMsgToFresh: ADVANCED_DEFAULT.get('isAddMsgToFresh'),
-    //   freshMaxPtsCount: ADVANCED_DEFAULT.get('freshMaxPtsCount'),
-    //   sseTimeoutSecs: ADVANCED_DEFAULT.get('sseTimeoutSecs'),
-    //   trendHrs: ADVANCED_DEFAULT.get('trendHrs'),
-    //   trensMaxPtsCount: ADVANCED_DEFAULT.get('trensMaxPtsCount'),
-    //   historyShowHrs: ADVANCED_DEFAULT.get('historyShowHrs'),
-    //   historyMaxPtsCount: ADVANCED_DEFAULT.get('historyMaxPtsCount'),
-    //   historySpanSecs: ADVANCED_DEFAULT.get('historySpanSecs'),
-    //   isSaveHistoryReqs: ADVANCED_DEFAULT.get('isSaveHistoryReqs'),
-    //   isSaveHistoryReps: ADVANCED_DEFAULT.get('isSaveHistoryReps')
-    // }));
   }
   handleSaveClick() {
     log.silly('[IPC] Sending advanced settings to main');
@@ -85,7 +48,8 @@ class Advanced extends Component {
   componentDidMount() {
     log.silly('CDM');
     ipcRenderer.on(ADVWINDOW_RECEIVE, (e, args) => {
-      log.info('[IPC] Received _ADVWINDOW_RECEIVE_', args);
+      log.info('[IPC] Received _ADVWINDOW_RECEIVE_');
+      console.log(args);
       this.setState(() => {
         return args;
       });

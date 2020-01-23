@@ -11,7 +11,6 @@ import ScopeSelector from '../Controls/ScopeSelector';
 import ModeSelector from '../Controls/ModeSelector';
 
 // HELPERS
-import { DEFAULT_HISTORY_HRS, HISTORY_SPAN_SECS } from '../../APInHelpers/base';
 import {
   nowTS,
   minusHrs,
@@ -42,7 +41,7 @@ import {
 
 class History extends PureComponent {
   state = {
-    startTS: minusHrs(nowTS(), DEFAULT_HISTORY_HRS),
+    startTS: minusHrs(nowTS(), this.props.historyShowHrs),
     endTS: nowTS(),
     isExpectingData: false, // any change was made that has to request new data from IDB
     propMode: 'F', //F, dF, I
@@ -242,7 +241,12 @@ class History extends PureComponent {
     const needMax = this.state.endTS;
     const objIDs = schemaObjIDs(this.props.schema);
 
-    this.props.onHistoryRequired(needMin, needMax, objIDs, HISTORY_SPAN_SECS);
+    this.props.onHistoryRequired(
+      needMin,
+      needMax,
+      objIDs,
+      this.props.historySpanSecs
+    );
 
     this.setState({ isExpectingData: true });
 
@@ -335,6 +339,7 @@ class History extends PureComponent {
           // isNormalBandVisible={true}
           onResize={this.handleChartResize.bind(this)}
           onDataLoaded={this.handleDataReady.bind(this)}
+          ptsCount={this.props.historyMaxPtsCount}
           mode="history"
         />
       </div>

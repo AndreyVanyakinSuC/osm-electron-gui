@@ -166,8 +166,24 @@ app.on('ready', () => {
   ipcMain.on(ADVWINDOW_SEND, (e, args) => {
     log.silly('[IPC] _on ADVWINDOW_SEND_');
     writeSettings('advanced', args);
-    const advanced = readSettings('advanced');
-    mainWindow.webContents.send(MAINWINDOW_ADVSETTINGS, advanced);
+    const {
+      isAddMsgToFresh,
+      freshMaxPtsCount,
+      trendHrs,
+      trensMaxPtsCount,
+      historyShowHrs,
+      historyMaxPtsCount,
+      historySpanSecs
+    } = readSettings('advanced');
+    mainWindow.webContents.send(MAINWINDOW_ADVSETTINGS, {
+      isAddMsgToFresh,
+      freshMaxPtsCount,
+      trendHrs,
+      trensMaxPtsCount,
+      historyShowHrs,
+      historyMaxPtsCount,
+      historySpanSecs
+    });
   });
 
   // ADV WINDOW REQUESTS DEFAULTS
@@ -207,17 +223,6 @@ app.on('ready', () => {
           MAINWINDOW__HISTORYRES,
           stringify(res.data)
         );
-
-        // Write history json to debug
-        // const dirName = './historyResponses/'
-        // if (!fs.existsSync(dirName)) {
-        //   fs.mkdir(dirName, err => {
-        //     if (err) throw err;
-        //   })
-        // }
-        // fs.writeFile(`${dirName}${moment.now()}.json`, stringify(res.data), err => {
-        //   if (err) throw err;
-        // })
       })
       .catch(err => {
         log.error('[AXIOS] Error requesting history', err);

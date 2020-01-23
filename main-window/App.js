@@ -21,7 +21,6 @@ import {
   ELECTRON__CLEARERR
 } from '../Electron/IPC';
 import { ipcRenderer } from 'electron';
-import { TREND_HRS } from './APInHelpers/base';
 import {
   writeSchemaToDB,
   compareSchemas,
@@ -94,7 +93,14 @@ class App extends Component {
     }
 
     // 1) verify
-    const verifiedHistory = addMsgs(verifyData(historyJson));
+    // Add messages only if flag set
+    let verifiedHistory;
+
+    if (this.state.advanced.isAddMsgToFresh) {
+      verifiedHistory = addMsgs(verifyData(historyJson));
+    } else {
+      verifiedHistory = verifyData(historyJson);
+    }
 
     // 2) Count how many records received of the requested
     // const history = checkHistory(
@@ -140,7 +146,7 @@ class App extends Component {
     // console.log(this.state.fresh)
   }
 
-  fillStateWithFresh(freshPKs, trendHours = TREND_HRS) {
+  fillStateWithFresh(freshPKs, trendHours = this.state.advanced.trendHrs) {
     //
 
     // console.log('fresh PKs',freshPKs);
@@ -161,7 +167,11 @@ class App extends Component {
         // read data for trends
         readDataByTSRanges(objIDs, trendRange).then(trendMaterial => {
           // dataArr
-          const fresh = addTrends(dataArr, trendMaterial); // Calculate trends and add properties
+          const fresh = addTrends(
+            dataArr,
+            trendMaterial,
+            this.state.advanced.trensMaxPtsCount
+          ); // Calculate trends and add properties
           // console.log('Befroe grouping', freshArr);
           this.setState(prevState => {
             // add new fresh objects, keep existing and not updated unchanged
@@ -288,7 +298,15 @@ class App extends Component {
 
     ipcRenderer.on(MAINWINDOW__FRESH, (e, freshJson) => {
       log.silly('[IPC] Received MAINWINDOW__FRESH');
-      const verified = addMsgs(verifyData(freshJson));
+
+      // Add messages only if required
+      let verified;
+
+      if (this.state.advanced.isAddMsgToFresh) {
+        verified = addMsgs(verifyData(freshJson));
+      } else {
+        verified = verifyData(freshJson);
+      }
 
       writeDataToDB(verified)
         // will only update state if some new fresh was actually written to db
@@ -432,6 +450,10 @@ class App extends Component {
               tileSources={this.state.tileSources}
               historyPKs={this.state.historyPKs}
               onHistoryRequired={this.handleHistoryRequest.bind(this)}
+              freshMaxPtsCount={this.state.advanced.freshMaxPtsCount}
+              trendHrs={this.state.advanced.trendHrs}
+              trensMaxPtsCount={this.state.advanced.trensMaxPtsCount}
+              historySpanSecs={this.state.advanced.historySpanSecs}
             />
           );
         } else {
@@ -458,6 +480,9 @@ class App extends Component {
               isConnected={this.state.isConnected}
               onHistoryRequired={this.handleHistoryRequest.bind(this)}
               historyPKs={this.state.historyPKs}
+              historyShowHrs={this.state.advanced.historyShowHrs}
+              historyMaxPtsCount={this.state.advanced.historyMaxPtsCount}
+              historySpanSecs={this.state.advanced.historySpanSecs}
             />
           );
         } else {

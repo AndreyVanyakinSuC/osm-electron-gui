@@ -4,7 +4,6 @@ import Map from './Map/MyMap';
 import FreshChart from './FreshChart';
 
 import { freshMaxTS, minusHrs } from '../../APInHelpers/timeseries';
-import { TREND_HRS, HISTORY_SPAN_SECS } from '../../APInHelpers/base';
 import { schemaObjIDs } from '../../APInHelpers/schema';
 
 class Fresh extends Component {
@@ -21,10 +20,15 @@ class Fresh extends Component {
   componentDidMount() {
     // Will request history for trends on startup for all objects in schema
     const needMax = freshMaxTS(this.props.fresh);
-    const needMin = minusHrs(needMax, TREND_HRS);
+    const needMin = minusHrs(needMax, this.props.trendHrs);
     const objIDs = schemaObjIDs(this.props.schema);
 
-    this.props.onHistoryRequired(needMin, needMax, objIDs, HISTORY_SPAN_SECS);
+    this.props.onHistoryRequired(
+      needMin,
+      needMax,
+      objIDs,
+      this.props.historySpanSecs
+    );
     console.log('[F] Fired onHistoryRequired handler');
   }
 
@@ -132,6 +136,7 @@ class Fresh extends Component {
               historyPKs={historyPKs}
               changePropMode={this.handlePropModeChange.bind(this)}
               changeScope={this.handleScopeRangeChange.bind(this)}
+              freshMaxPtsCount={this.props.freshMaxPtsCount}
             />
           ) : null}
         </div>

@@ -242,6 +242,7 @@ class FreshChart extends Component {
           historyPKs={historyPKs}
           onResize={() => null}
           onDataLoaded={this.handleDataReady.bind(this)}
+          ptsCount={this.props.freshMaxPtsCount}
           mode="fresh"
         />
       </div>

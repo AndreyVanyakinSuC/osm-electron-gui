@@ -1,7 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
 import downsampler from 'downsample-lttb';
-import { TREND_PTS } from './base';
 
 // in dataArr out max ts
 export const maxTS = dataArr => _.max(dataArr.map(d => d.ts));
@@ -72,15 +71,15 @@ export const displayHuman = unixSecs => {
 //
 
 // IN => dataArr wo trends + trendmaterial, OUT => -//- w/ trends
-export const addTrends = (freshPack, trendMaterial) => {
+export const addTrends = (freshPack, trendMaterial, trendPts) => {
   const freshArr = freshPack.map(f => {
     const objId = f.obj;
 
-    f.ITrend = formTrend(trendMaterial, objId, 'I');
-    f.FTrend = formTrend(trendMaterial, objId, 'F');
-    f.FmnTrend = formTrend(trendMaterial, objId, 'Fmn');
-    f.FmxTrend = formTrend(trendMaterial, objId, 'Fmx');
-    f.FrmsTrend = formTrend(trendMaterial, objId, 'Frms');
+    f.ITrend = formTrend(trendMaterial, objId, 'I', trendPts);
+    f.FTrend = formTrend(trendMaterial, objId, 'F', trendPts);
+    f.FmnTrend = formTrend(trendMaterial, objId, 'Fmn', trendPts);
+    f.FmxTrend = formTrend(trendMaterial, objId, 'Fmx', trendPts);
+    f.FrmsTrend = formTrend(trendMaterial, objId, 'Frms', trendPts);
     // console.log('Trends added');
     return f;
   });
@@ -89,7 +88,7 @@ export const addTrends = (freshPack, trendMaterial) => {
 };
 
 // IN dataArr, objId, propName OUT downsampled [Y arr]
-const formTrend = (trendMaterial, objId, propName) => {
+const formTrend = (trendMaterial, objId, propName, trendPts) => {
   const xyPairs = _.sortBy(
     trendMaterial
       .filter(tm => tm.obj === objId)
@@ -99,7 +98,7 @@ const formTrend = (trendMaterial, objId, propName) => {
 
   // console.log('Xy pairs', xyPairs);
 
-  return downsample(xyPairs, TREND_PTS).map(xy => xy[1]); // return only Ys
+  return downsample(xyPairs, trendPts).map(xy => xy[1]); // return only Ys
 };
 
 // OUT
