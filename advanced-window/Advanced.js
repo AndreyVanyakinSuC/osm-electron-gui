@@ -182,8 +182,8 @@ class Advanced extends Component {
             title="Осуществлять сохранение входящих файлов истории на диск в JSON(для отладки)"
           />
           <div>
-            JSON-файлы будут сохраняться в папке \history\req и \res
-            соответственно, подписанные timestamp
+            JSON-файлы будут сохраняться в папке \history\ подписанные
+            timestamp. Файлы, содержащие req - запросы, res - ответная история.
           </div>
         </div>
         {/* Default btn */}

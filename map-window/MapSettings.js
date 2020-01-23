@@ -14,23 +14,6 @@ import _ from 'lodash';
 
 log.variables.label = 'MapW';
 
-const DEFAULT = new Map([
-  [
-    'primary',
-    {
-      description: 'Топографическая карта',
-      url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
-    }
-  ],
-  [
-    'secondary',
-    {
-      description: 'Стандартная карта',
-      url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    }
-  ]
-]);
-
 // Close window on ESC without setting up the settings
 window.addEventListener('keydown', e => {
   if (e.keyCode == 27) {

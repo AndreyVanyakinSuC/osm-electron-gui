@@ -36,7 +36,6 @@ const {
 } = require('./IPC');
 const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 
-const { installReactDEvTools } = require('./base');
 const {
   writeSettings,
   readSettings,
