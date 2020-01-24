@@ -5,11 +5,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // Config directories
 const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
 const CONNECT_SRC_DIR = path.resolve(__dirname, 'connect-window/');
+const MAPSETTINGS_SRC_DIR = path.resolve(__dirname, 'map-window/');
+const ADVANCED_SRC_DIR = path.resolve(__dirname, 'advanced-window/');
 const ELECTRON_SRC_DIR = path.resolve(__dirname, 'Electron/');
 const OUTPUT_DIR = path.resolve(__dirname, 'dist/');
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
-const defaultInclude = [MAIN_SRC_DIR, CONNECT_SRC_DIR];
+const defaultInclude = [
+  MAIN_SRC_DIR,
+  CONNECT_SRC_DIR,
+  MAPSETTINGS_SRC_DIR,
+  ADVANCED_SRC_DIR
+];
 
 module.exports = {
   mode: 'production',
@@ -20,7 +27,9 @@ module.exports = {
   entry: {
     main: ELECTRON_SRC_DIR + '/index.js',
     bigWindow: MAIN_SRC_DIR + '/mainIndex.js',
-    connectWindow: CONNECT_SRC_DIR + '/connectIndex.js'
+    connectWindow: CONNECT_SRC_DIR + '/connectIndex.js',
+    map: MAPSETTINGS_SRC_DIR + '/mapSettingsIndex.js',
+    advanced: ADVANCED_SRC_DIR + '/advancedIndex.js'
   },
   resolve: {
     extensions: ['.html', '.js', '.json', '.scss', '.css'],
@@ -109,6 +118,18 @@ module.exports = {
       title: 'Соедниние с сервером',
       chunks: ['connectWindow'],
       filename: OUTPUT_DIR + '/connectIndex.html'
+    }),
+    new HtmlWebpackPlugin({
+      // inject: false,
+      title: 'Настройки',
+      chunks: ['map'],
+      filename: OUTPUT_DIR + '/mapIndex.html'
+    }),
+    new HtmlWebpackPlugin({
+      // inject: false,
+      title: 'Расширенные настройки',
+      chunks: ['advanced'],
+      filename: OUTPUT_DIR + '/advancedIndex.html'
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')

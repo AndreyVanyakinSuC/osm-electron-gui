@@ -20,8 +20,6 @@ const notifier = require('./notifier');
 
 let es;
 
-const keepaliveSecs = readSettings('advanced').sseTimeoutSecs;
-console.log('keep alive', keepaliveSecs);
 let keepaliveTimer = null;
 
 // Will be updated by onerror and reset by onopen or by onclose
@@ -95,6 +93,11 @@ const disconnect = function() {
   }
 };
 
+const reconnect = () => {
+  disconnect();
+  connect();
+};
+
 // SSE MESSAGE ACTIONS
 
 const schemaAction = message => {
@@ -130,9 +133,8 @@ const gotActivity = () => {
 
   keepaliveTimer = setTimeout(() => {
     log.verbose('[TIMER] Expired');
-    disconnect();
-    connect();
-  }, keepaliveSecs * 1000);
+    reconnect();
+  }, readSettings('advanced').sseTimeoutSecs * 1000);
 
   // log.verbose('[TIMER] set')
 };
@@ -161,4 +163,4 @@ const connectStatusIPC = () => {
 // RETURNS THE ES.URL
 const esUrl = () => es.url;
 
-module.exports = { connect, disconnect, connectStatusIPC, esUrl };
+module.exports = { connect, disconnect, reconnect, connectStatusIPC, esUrl };

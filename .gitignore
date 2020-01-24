@@ -2,6 +2,7 @@
 
 # Created by https://www.gitignore.io/api/visualstudiocode,windows,node
 # Edit at https://www.gitignore.io/?templates=visualstudiocode,windows,node
+history/
 
 API description/
 .vscode/

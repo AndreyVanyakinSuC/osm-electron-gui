@@ -1,5 +1,4 @@
 const { app, ipcMain, Menu, dialog } = require('electron');
-const fs = require('fs');
 const { stringify } = require('flatted/cjs');
 
 // Emitter
@@ -44,7 +43,13 @@ const {
   initDefaults
 } = require('./settings.js');
 const reqHistory = require('./history.js');
-const { connectStatusIPC, connect, disconnect, esUrl } = require('./source');
+const {
+  connectStatusIPC,
+  connect,
+  disconnect,
+  reconnect,
+  esUrl
+} = require('./source');
 const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
 const { createMapSettingsWindow } = require('./MapSettingsWindow');
@@ -83,7 +88,7 @@ app.on('ready', () => {
   if (!hasSettings('settings')) {
     setMapDefaults(DEFAULT_SETTINGS.settings);
   }
-  //
+
   // HANDLE MAIN WINDOW
   //
 
@@ -170,7 +175,7 @@ app.on('ready', () => {
   // RECEIVING SETTINGS FROM ADVANCED SETTINGS WINDOW
   ipcMain.on(ADVWINDOW_SEND, (e, args) => {
     log.silly('[IPC] _on ADVWINDOW_SEND_');
-    writeSettings('advanced', args);
+    writeSettings('advanced');
     const {
       isAddMsgToFresh,
       freshMaxPtsCount,
@@ -225,7 +230,7 @@ app.on('ready', () => {
 
     return reqHistory(historyUrl.href, request)
       .then(res => {
-        log.info('[AXIOS] Incoming history');
+        log.silly('[AXIOS] Incoming history');
         // log.info('response',res);
         mainWindow.webContents.send(
           MAINWINDOW__HISTORYRES,
@@ -379,7 +384,7 @@ const menuTemplate = [
           });
 
           if (result.response === 0) {
-            log.info('[MENU] User wants to clear the storage');
+            log.silly('[MENU] User wants to clear the storage');
             mainWindow.webContents.send(MAINWINDOW_CLEARIDB);
           }
         }

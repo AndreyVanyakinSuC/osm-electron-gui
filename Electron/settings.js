@@ -53,7 +53,7 @@ const initDefaults = () => {
   let DEFAULT_SETTINGS;
   try {
     DEFAULT_SETTINGS = JSON.parse(fs.readFileSync('./defaults.json'));
-    console.log(DEFAULT_SETTINGS);
+    // console.log(DEFAULT_SETTINGS);
   } catch (error) {
     log.error(
       'Could not read the defaults.json file, using hardcoded fallback',
