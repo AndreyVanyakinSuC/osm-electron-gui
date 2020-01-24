@@ -1,5 +1,6 @@
 const settings = require('electron-settings');
 const log = require('electron-log');
+const fs = require('fs');
 
 const writeSettings = (store, args) => {
   // const { url, isAutoconnect } = args;
@@ -14,37 +15,54 @@ const readSettings = store => settings.get(store);
 // check if any values in advanced setitngs
 const hasSettings = store => settings.has(store);
 
-const DEFAULT_ADVANCED = {
-  isAddMsgToFresh: true,
-  freshMaxPtsCount: 100,
-  sseTimeoutSecs: 200,
-  trendHrs: 8,
-  trensMaxPtsCount: 40,
-  historyShowHrs: 8,
-  historyMaxPtsCount: 400,
-  historySpanSecs: 300,
-  isSaveHistoryReqs: false,
-  isSaveHistoryReps: false
-};
-
-const DEFAULT_MAP = {
-  primary: {
-    description: 'Топографическая карта',
-    url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
+const DEFAULTS_FALLBACK = {
+  advanced: {
+    isAddMsgToFresh: true,
+    freshMaxPtsCount: 100,
+    sseTimeoutSecs: 200,
+    trendHrs: 8,
+    trensMaxPtsCount: 40,
+    historyShowHrs: 8,
+    historyMaxPtsCount: 400,
+    historySpanSecs: 300,
+    isSaveHistoryReqs: false,
+    isSaveHistoryReps: false
   },
-  secondary: {
-    description: 'Стандартная карта',
-    url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  settings: {
+    primary: {
+      description: 'Топографическая карта',
+      url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
+    },
+    secondary: {
+      description: 'Стандартная карта',
+      url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    }
   }
 };
 
 //  set default advanced values
-const setAdvancedDefaults = () => {
-  writeSettings('advanced', DEFAULT_ADVANCED);
+const setAdvancedDefaults = settings => {
+  writeSettings('advanced', settings);
 };
 
-const setMapDefaults = () => {
-  writeSettings('settings', DEFAULT_MAP);
+const setMapDefaults = settings => {
+  writeSettings('settings', settings);
+};
+
+const initDefaults = () => {
+  let DEFAULT_SETTINGS;
+  try {
+    DEFAULT_SETTINGS = JSON.parse(fs.readFileSync('./defaults.json'));
+    console.log(DEFAULT_SETTINGS);
+  } catch (error) {
+    log.error(
+      'Could not read the defaults.json file, using hardcoded fallback',
+      error
+    );
+    DEFAULT_SETTINGS = DEFAULTS_FALLBACK;
+  } finally {
+    return DEFAULT_SETTINGS;
+  }
 };
 
 module.exports = {
@@ -53,6 +71,5 @@ module.exports = {
   hasSettings,
   setAdvancedDefaults,
   setMapDefaults,
-  DEFAULT_ADVANCED,
-  DEFAULT_MAP
+  initDefaults
 };

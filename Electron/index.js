@@ -1,5 +1,4 @@
 const { app, ipcMain, Menu, dialog } = require('electron');
-const moment = require('moment');
 const fs = require('fs');
 const { stringify } = require('flatted/cjs');
 
@@ -42,8 +41,7 @@ const {
   setAdvancedDefaults,
   setMapDefaults,
   hasSettings,
-  DEFAULT_ADVANCED,
-  DEFAULT_MAP
+  initDefaults
 } = require('./settings.js');
 const reqHistory = require('./history.js');
 const { connectStatusIPC, connect, disconnect, esUrl } = require('./source');
@@ -73,17 +71,17 @@ log.transports.file.format =
 log.info(log.transports.file.findLogPath());
 
 // Keep a reference for dev mode
-// let dev = true;
 dev = process.env.NODE_ENV === 'dev' ? true : false;
-// log.silly(dev);
+
+const DEFAULT_SETTINGS = initDefaults();
 
 app.on('ready', () => {
   // CHECK IF DEFAULT SETTINGS ARE SET
   if (!hasSettings('advanced')) {
-    setAdvancedDefaults();
+    setAdvancedDefaults(DEFAULT_SETTINGS.advanced);
   }
   if (!hasSettings('settings')) {
-    setMapDefaults();
+    setMapDefaults(DEFAULT_SETTINGS.settings);
   }
   //
   // HANDLE MAIN WINDOW
@@ -157,7 +155,10 @@ app.on('ready', () => {
   // RECEIVING DEFAULTS REQUEST FROM MAP SETTINGS  WINDOW
   ipcMain.on(SWINDOW_DEF_REQ, () => {
     log.silly('[IPC] _on SWINDOW_DEF_REQ_');
-    mapSettingsWindow.webContents.send(SWINDOW_DEF_RES, DEFAULT_MAP);
+    mapSettingsWindow.webContents.send(
+      SWINDOW_DEF_RES,
+      DEFAULT_SETTINGS.settings
+    );
   });
 
   // USER WANTS TO CLOSE ADVANCED SETTINGS WINDOW
@@ -193,7 +194,10 @@ app.on('ready', () => {
   // ADV WINDOW REQUESTS DEFAULTS
   ipcMain.on(ADVWINDOW_DEF_REQ, () => {
     log.silly('[IPC] _on ADVWINDOW_DEF_REQ_');
-    advancedWindow.webContents.send(ADVWINDOW_RECEIVE, DEFAULT_ADVANCED);
+    advancedWindow.webContents.send(
+      ADVWINDOW_RECEIVE,
+      DEFAULT_SETTINGS.advanced
+    );
   });
   // CONNECT WINDOW SENT CONNECT SETTINGS AND IS WISHING TO CONNECT
   ipcMain.on(SOURCE__CONNECT, (e, args) => {
