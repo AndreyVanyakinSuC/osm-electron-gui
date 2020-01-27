@@ -1,6 +1,7 @@
 const settings = require('electron-settings');
 const log = require('electron-log');
 const fs = require('fs');
+const path = require('path');
 
 const writeSettings = (store, args) => {
   // const { url, isAutoconnect } = args;
@@ -49,14 +50,24 @@ const setMapDefaults = settings => {
   writeSettings('settings', settings);
 };
 
-const initDefaults = () => {
-  let DEFAULT_SETTINGS;
+const initDefaults = dev => {
+  // settings.setPath(path.resolve('./') + '/Settings.json');
+  // log.info(`Settings can be found at ${settings.file()}`);
+
+  let DEFAULT_SETTINGS, defaultsPath;
+  if (dev) {
+    defaultsPath = path.join('./static/defaults.json');
+  } else {
+    defaultsPath = path.join(__dirname, 'defaults.json');
+  }
+
   try {
-    DEFAULT_SETTINGS = JSON.parse(fs.readFileSync('./defaults.json'));
-    // console.log(DEFAULT_SETTINGS);
+    DEFAULT_SETTINGS = JSON.parse(fs.readFileSync(defaultsPath));
+
+    log.silly(`Successfully read from default file @ ${defaultsPath}`);
   } catch (error) {
     log.error(
-      'Could not read the defaults.json file, using hardcoded fallback',
+      `Could not read the defaults.json from ${defaultsPath}, using hardcoded fallback`,
       error
     );
     DEFAULT_SETTINGS = DEFAULTS_FALLBACK;

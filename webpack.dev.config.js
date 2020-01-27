@@ -125,9 +125,6 @@ module.exports = {
       title: 'Расширенные настройки',
       chunks: ['advanced'],
       filename: OUTPUT_DIR + '/advancedIndex.html'
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
     })
   ],
   devtool: 'cheap-source-map',

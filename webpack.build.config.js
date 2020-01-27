@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Config directories
 const MAIN_SRC_DIR = path.resolve(__dirname, 'main-window/');
@@ -107,6 +108,13 @@ module.exports = {
   },
   target: 'electron-main',
   plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '/static'),
+        to: path.join(__dirname, '/dist'),
+        ignore: ['.*']
+      }
+    ]),
     new HtmlWebpackPlugin({
       // inject: false,
       title: 'Система ОАИСКГН',
@@ -130,9 +138,6 @@ module.exports = {
       title: 'Расширенные настройки',
       chunks: ['advanced'],
       filename: OUTPUT_DIR + '/advancedIndex.html'
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
     })
   ],
   stats: {

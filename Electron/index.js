@@ -1,5 +1,4 @@
 const { app, ipcMain, Menu, dialog } = require('electron');
-const { stringify } = require('flatted/cjs');
 
 // Emitter
 const notifier = require('./notifier');
@@ -76,9 +75,16 @@ log.transports.file.format =
 log.info(log.transports.file.findLogPath());
 
 // Keep a reference for dev mode
-dev = process.env.NODE_ENV === 'dev' ? true : false;
 
-const DEFAULT_SETTINGS = initDefaults();
+dev = process.env.NODE_ENV === 'development' ? true : false;
+// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+
+// Set `__static` path to static files in production
+// if (!dev) {
+//   global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\');
+// }
+
+const DEFAULT_SETTINGS = initDefaults(dev);
 
 app.on('ready', () => {
   // CHECK IF DEFAULT SETTINGS ARE SET
@@ -175,7 +181,7 @@ app.on('ready', () => {
   // RECEIVING SETTINGS FROM ADVANCED SETTINGS WINDOW
   ipcMain.on(ADVWINDOW_SEND, (e, args) => {
     log.silly('[IPC] _on ADVWINDOW_SEND_');
-    writeSettings('advanced');
+    writeSettings('advanced', args);
     const {
       isAddMsgToFresh,
       freshMaxPtsCount,
@@ -234,7 +240,7 @@ app.on('ready', () => {
         // log.info('response',res);
         mainWindow.webContents.send(
           MAINWINDOW__HISTORYRES,
-          stringify(res.data)
+          JSON.stringify(res.data)
         );
       })
       .catch(err => {
