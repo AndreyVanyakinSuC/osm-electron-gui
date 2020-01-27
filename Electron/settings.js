@@ -56,9 +56,10 @@ const initDefaults = dev => {
 
   let DEFAULT_SETTINGS, defaultsPath;
   if (dev) {
-    defaultsPath = path.join('./static/defaults.json');
+    // defaultsPath = path.join('./static/defaults.json');
+    defaultsPath = path.resolve('./') + '/defaults.json';
   } else {
-    defaultsPath = path.join(__dirname, 'defaults.json');
+    defaultsPath = path.resolve('./') + '/defaults.json';
   }
 
   try {

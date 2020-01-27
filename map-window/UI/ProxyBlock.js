@@ -16,7 +16,7 @@ const ProxyBlock = ({ domain_user, password, inputChanged }) => {
             value={domain_user}
             changed={inputChanged}
             title="Введите имя домена и пользователя"
-            placeholder="MES/Ivanov"
+            placeholder="MES\Ivanov"
           />
         </span>
 
