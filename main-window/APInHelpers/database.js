@@ -1,17 +1,17 @@
+import log from 'electron-log';
 import Dexie from 'dexie';
 import _ from 'lodash';
-import log from 'electron-log';
-log.variables.label = 'MW';
+// log.variables.label = 'MW';
 const crypto = require('crypto');
-
 
 let db = new Dexie('osm');
 
 export const clearDataDB = () => {
-  db.data.clear()
+  db.data
+    .clear()
     .then(() => log.info('[DB] Data has been cleared'))
-    .catch(err => log.error(err))
-}
+    .catch(err => log.error(err));
+};
 
 // export const destroyDB = () => {
 //   db.schema.clear();
@@ -91,10 +91,10 @@ export const readSchemaFromDB = () => {
 // input => dataArr
 // Will overwrite existing records having the same PKs and return a hash of the written array
 export const writeDataToDB = dataArr => {
-
   const incomingPKs = outPKs(dataArr); // primary keys of incoming data slices
-  
-  return db.data.bulkPut(dataArr)
+
+  return db.data
+    .bulkPut(dataArr)
     .then(() => {
       log.silly(
         `[DB] Data was successfully put to IDB, ${incomingPKs.length} slices were put`
@@ -102,11 +102,9 @@ export const writeDataToDB = dataArr => {
       return incomingPKs;
     })
     .catch(Dexie.BulkError, err => {
-      console.error(
-        `${err.failures.length} items were not added successfully`
-      );
-    })
-}
+      console.error(`${err.failures.length} items were not added successfully`);
+    });
+};
 
 // export const writeDataToDB = dataArr => {
 //   return db.transaction('rw', db.data, async () => {

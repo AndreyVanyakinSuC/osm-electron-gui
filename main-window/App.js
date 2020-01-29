@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import { initLogger } from '../Electron/logger';
+initLogger(log, 'MainW');
 const crypto = require('crypto');
 const url = require('url');
-const path = require('path');
 
 import {
   CONNECTWINDOW__CREATE,
@@ -20,7 +22,7 @@ import {
   ELECTRON__HISTORYCLEARED,
   ELECTRON__CLEARERR
 } from '../Electron/IPC';
-import { ipcRenderer } from 'electron';
+
 import {
   writeSchemaToDB,
   compareSchemas,
@@ -58,9 +60,9 @@ import History from './components/History/History';
 import Fallback from './components/Fallback';
 
 // ### LOGGING INIT ###
-log.variables.label = 'MW';
-log.transports.file.file = path.resolve('./') + '/osm-gui.log';
-log.transports.file.init();
+// log.variables.label = 'MW';
+// log.transports.file.file = path.resolve('./') + '/osm-gui.log';
+// log.transports.file.init();
 
 class App extends Component {
   state = {

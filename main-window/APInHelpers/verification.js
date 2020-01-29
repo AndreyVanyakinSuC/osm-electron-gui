@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { SCHEMA_1ST_LEVEL_NAMES, DATA_PROP_NAMES } from './base';
 import log from 'electron-log';
 const url = require('url');
-log.variables.label = 'MW';
+// log.variables.label = 'MW';
 
 // check if schema is ok
 // 1) schema is an {}

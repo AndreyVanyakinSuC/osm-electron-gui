@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 const url = require('url');
 const ip = require('ip');
+const { ipcRenderer } = require('electron');
 import log from 'electron-log';
-
-log.variables.label = 'CW';
+import { initLogger } from '../Electron/logger';
+initLogger(log, 'ConW');
 
 import {
   CONNECTWINDOW__CLOSE,
@@ -21,7 +22,6 @@ import PassInput from './controls/PassInput';
 import CancelBtn from './controls/CancelBtn';
 import ConnectBtn from './controls/ConnectBtn';
 import ConfirmationCheck from './controls/ConfirmationCheck';
-const { ipcRenderer } = require('electron');
 
 // Close window on ESC
 window.addEventListener('keydown', e => {

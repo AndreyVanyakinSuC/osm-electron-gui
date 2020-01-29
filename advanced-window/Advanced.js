@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import { initLogger } from '../Electron/logger';
+initLogger(log, 'AdvW');
 import _ from 'lodash';
 import ConfirmationCheck from '../connect-window/controls/ConfirmationCheck';
 import NumericInput from './UI/NumericInput';
@@ -10,8 +12,6 @@ import {
   ADVWINDOW_SEND,
   ADVWINDOW_DEF_REQ
 } from '../Electron/IPC';
-
-log.variables.label = 'AdvW';
 
 // Close window on ESC without setting up the settings
 window.addEventListener('keydown', e => {

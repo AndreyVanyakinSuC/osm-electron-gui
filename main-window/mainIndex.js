@@ -3,7 +3,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
 import { declareDB, thinDB } from './APInHelpers/database';
-import { HISTORY_SPAN_SECS } from './APInHelpers/base';
 
 // import setupSSEListeners from './API/LiveData';
 // import {setupDexie} from './API/IndexedDexie';

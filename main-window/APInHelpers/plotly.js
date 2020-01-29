@@ -171,10 +171,13 @@ export const tempTraces = (dataArr, props, ptsCount) => {
   const { scopedWires, mode } = props;
   const PTS_COUNT = ptsCount;
 
-  const allTempXY = scopedWires.map(w =>
-    pullXYpairs(dataArr, w, 'Tamb', PTS_COUNT)
-  ); // [[ts, F], [ts, F]]
-  return trace(averageXYpairs(allTempXY), 'Участок', 'Tamb', 'y2');
+  const allTempXY = scopedWires.map(w => pullXYpairs(dataArr, w, 'Tamb')); // [[ts, F], [ts, F]]
+  return trace(
+    downsample(averageXYpairs(allTempXY), PTS_COUNT),
+    'Участок',
+    'Tamb',
+    'y2'
+  );
 };
 
 //
@@ -633,13 +636,17 @@ export const deltaY = xyPairs => {
 };
 
 // IN dataArr,  OUT [[ts, Yprop],[ts, Yprop], ... ]
-export const pullXYpairs = (dataArr, objID, propName, PTS_COUNT) => {
+export const pullXYpairs = (dataArr, objID, propName, PTS_COUNT = null) => {
   const xyPairs = _.sortBy(
     dataArr.filter(d => d.obj === objID).map(d => [d.ts, d[propName]]),
     d => d[0]
   ); // sort by ts
 
-  return downsample(xyPairs, PTS_COUNT);
+  if (PTS_COUNT === null) {
+    return xyPairs;
+  } else {
+    return downsample(xyPairs, PTS_COUNT);
+  }
 };
 
 const toPath = XYPairs => {

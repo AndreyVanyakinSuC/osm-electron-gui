@@ -60,13 +60,12 @@ let mainWindow, connectWindow, mapSettingsWindow, advancedWindow;
 //
 // LOGGER
 //
-log.transports.file.clear();
+// log.transports.file.clear();
 log.transports.file.maxSize = 5242880;
 log.transports.file.file = path.resolve('./') + '/Лог.log';
-// log.transports.file.fileName = 'osm-gui.log';
 log.transports.file.init();
-
 log.variables.label = 'ECN';
+
 log.transports.console.format =
   '[{y}-{d}-{m} {h}:{i}:{s}.{ms}] [{label}] [{level}] {text}';
 log.transports.file.format =

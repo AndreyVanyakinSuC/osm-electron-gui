@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import { initLogger } from '../Electron/logger';
+initLogger(log, 'SetW');
 import ProxyBlock from './UI/ProxyBlock';
 import TileSourceBlock from './UI/TileSourceBlock';
 import {
@@ -11,8 +13,6 @@ import {
   SWINDOW_DEF_RES
 } from '../Electron/IPC';
 import _ from 'lodash';
-
-log.variables.label = 'MapW';
 
 // Close window on ESC without setting up the settings
 window.addEventListener('keydown', e => {
