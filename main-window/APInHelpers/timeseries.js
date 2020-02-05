@@ -30,6 +30,9 @@ export const plusHrs = (uts, hours) =>
     .add(hours, 'hours')
     .unix();
 
+// 	IN
+export const secondsRange = (startTS, endTS) => {};
+
 // IN [[x,y], [x,y] ... [x,y]] => OUT downsampled, pts = how many points on chart
 export const downsample = (XYpairs, pts) => {
   if (XYpairs.length <= pts) {

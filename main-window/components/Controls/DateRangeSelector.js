@@ -2,6 +2,7 @@ import React from 'react';
 import Button from './Button';
 import * as ru from 'date-fns/locale/ru';
 import DatePicker, { registerLocale } from 'react-datepicker';
+import SpanSecsInput from './SpanSecsInput';
 registerLocale('ru', ru);
 
 const DateRangeSelector = props => {
@@ -11,7 +12,9 @@ const DateRangeSelector = props => {
     onStartChanged,
     onEndChanged,
     isConnected,
-    onHistoryRequestClick
+    onHistoryRequestClick,
+    spanSecs,
+    onSpanSecsChange
   } = props;
 
   return (
@@ -64,6 +67,8 @@ const DateRangeSelector = props => {
           label="Скачать историю"
           clicked={isConnected ? onHistoryRequestClick : null}
         />
+
+        <SpanSecsInput value={spanSecs} changed={onSpanSecsChange} />
       </div>
     </div>
   );

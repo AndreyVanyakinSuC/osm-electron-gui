@@ -58,7 +58,8 @@ class History extends PureComponent {
       this.props.schema,
       schemaFirstLineID(this.props.schema)
     ), // default first range ID
-    scopedLine: schemaFirstLineID(this.props.schema) // defautl first line ID
+    scopedLine: schemaFirstLineID(this.props.schema), // defautl first line ID
+    spanSecs: 100
   };
 
   handleLineSelect(lineOption) {
@@ -146,16 +147,25 @@ class History extends PureComponent {
     this.setState(prevState => {
       // Force startDate to be endDate - 24h if user tries to set startDate > endDate
 
-      let newStartTs;
+      let newStartTs = date_UTS(date),
+        newEndTs = prevState.endTS;
 
       if (date_UTS(date) >= prevState.endTS) {
-        newStartTs = minusHrs(prevState.endTS, 24);
+        // Force startDate to be endDate - 24h if user tries to set startDate > endDate
+        newStartTs = minusHrs(prevState.endTS, this.props.historyShowHrs);
       } else {
-        newStartTs = date_UTS(date);
+        // Do not let show more than 30 days, force end date to be startTS + 30 days
+        const isMorethan30Days =
+          prevState.endTS - date_UTS(date) >= 30 * 24 * 3600;
+        if (isMorethan30Days) {
+          // console.log('Is more that 30 days');
+          newEndTs = plusHrs(newStartTs, 30 * 24);
+        }
       }
 
       return {
         startTS: newStartTs,
+        endTS: newEndTs,
         isExpectingData: true
       };
     });
@@ -165,15 +175,23 @@ class History extends PureComponent {
     this.setState(prevState => {
       // Force startDate to be endDate - 24h if user tries to set startDate > endDate
 
-      let newEndTs;
+      let newEndTs = date_UTS(date),
+        newStartTs = prevState.startTS;
 
       if (date_UTS(date) <= prevState.startTS) {
-        newEndTs = plusHrs(prevState.startTS, 24);
+        newEndTs = plusHrs(prevState.startTS, this.props.historyShowHrs);
       } else {
-        newEndTs = date_UTS(date);
+        // Do not let show more than 30 days, force end date to be startTS + 30 days
+        const isMorethan30Days =
+          date_UTS(date) - prevState.startTS >= 30 * 24 * 3600;
+        if (isMorethan30Days) {
+          // console.log('Is more that 30 days');
+          newStartTs = minusHrs(newEndTs, 30 * 24);
+        }
       }
 
       return {
+        startTS: newStartTs,
         endTS: newEndTs,
         isExpectingData: true
       };
@@ -229,6 +247,11 @@ class History extends PureComponent {
 
   handleDataReady() {
     this.setState({ isExpectingData: false });
+  }
+
+  handleSpanSecsChange(e) {
+    console.log(e.target.value);
+    this.setState({ spanSecs: _.toNumber(e.target.value) });
   }
 
   handleHistoryRequest() {
@@ -302,6 +325,8 @@ class History extends PureComponent {
             onEndChanged={this.handleEndDateChange.bind(this)}
             isConnected={isConnected}
             onHistoryRequestClick={this.handleHistoryRequest.bind(this)}
+            spanSecs={this.state.spanSecs}
+            onSpanSecsChange={this.handleSpanSecsChange.bind(this)}
           />
 
           <ScopeSelector

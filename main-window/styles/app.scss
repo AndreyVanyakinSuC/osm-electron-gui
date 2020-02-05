@@ -903,7 +903,10 @@ body, html {
                 display: flex;
                 flex-direction: row;
 
-               
+                .seconds-span {
+                    max-width: 3rem;
+                }
+
                 .line-range {
                     display: flex;
                     flex-direction: column;

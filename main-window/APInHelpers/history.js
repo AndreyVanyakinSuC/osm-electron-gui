@@ -3,30 +3,46 @@ import { displayHuman } from './timeseries';
 import _ from 'lodash';
 import { writeFileSync, writeFile } from 'fs';
 
+export const setRecommendedSpan = (intervalSecs, HISTORY_CHART_PTS) => {
+  const calcedSpan = intervalSecs / HISTORY_CHART_PTS;
+
+  let span;
+  // Finest span = 10 secs, not less
+  if (calcedSpan <= 10) {
+    span = 10;
+    // if calculated span is between 10 secs and 60 secs = round it to tens of seconds ie 43 => 40 secs
+  } else if (calcedSpan > 10 && calcedSpan < 60) {
+    span = _.round(calcedSpan, 1);
+  } else if (calcedSpan >= 60 && calcedSpan < 3600) {
+    // if calced span is 1 to 60 minutes, then round to 1 minute
+    span = _.round(calcedSpan / 60) * 60;
+  } else if (calcedSpan >= 3600) {
+    // if calced is 60 mins or more
+  }
+};
+
 // pick all pks (ts+obj) in range
 // IN [ts start, ts end], [objids]
 
-
 // Sign msgs
 // IN [freshes with empty msgs field] out [freshes with msgs filled]
-export const addMsgs = (freshArr) => (
+export const addMsgs = freshArr =>
   freshArr.map(f => {
     const out = f;
     if (f.I <= 1) {
       out.I = 0;
-      out.msg = ['000']
-    } else if (f.I > 1 && f.I <=5) {
-      out.msg = ['011']
-    } else if  (f.I > 5 && f.I <=10) {
-      out.msg = ['012']
-    } else if  (f.I > 10 && f.I <=20) {
-      out.msg = ['013']
+      out.msg = ['000'];
+    } else if (f.I > 1 && f.I <= 5) {
+      out.msg = ['011'];
+    } else if (f.I > 5 && f.I <= 10) {
+      out.msg = ['012'];
+    } else if (f.I > 10 && f.I <= 20) {
+      out.msg = ['013'];
     } else if (f.I > 20) {
-      out.msg = ['014']
+      out.msg = ['014'];
     }
     return out;
-  })
-)
+  });
 
 // Will not account for the data already present in idb
 export const prepareSimpleHistoryRequest = async (
@@ -34,7 +50,7 @@ export const prepareSimpleHistoryRequest = async (
   needMax,
   objIDs,
   secsSpan
-) => (objIDs.map(o => ({[o]: [[needMin, needMax, secsSpan]]})))
+) => objIDs.map(o => ({ [o]: [[needMin, needMax, secsSpan]] }));
 
 // will request only the data thta is missing in the idb
 export const prepareHistoryRequest = async (
