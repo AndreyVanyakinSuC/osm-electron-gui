@@ -904,6 +904,8 @@ body, html {
                 flex-direction: row;
 
                 .seconds-span {
+                    font-size: inherit;
+                    font-family: inherit;
                     max-width: 3rem;
                 }
 

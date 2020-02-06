@@ -5,10 +5,10 @@ const SpanSecsInput = ({ value, changed }) => {
     <input
       className="seconds-span"
       type="number"
-      step="5"
-      min="10"
+      step="10"
+      min="0"
       //   defaultValue={100}
-      value={`${value} сек.`}
+      value={value}
       onChange={changed}
       title="Скважность запроса истории (в секундах)"
     ></input>

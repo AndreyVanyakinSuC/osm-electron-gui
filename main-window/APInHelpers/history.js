@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { writeFileSync, writeFile } from 'fs';
 
 export const setRecommendedSpan = (intervalSecs, HISTORY_CHART_PTS) => {
-  const calcedSpan = intervalSecs / HISTORY_CHART_PTS;
+  const calcedSpan = intervalSecs / (3 * HISTORY_CHART_PTS);
 
   let span;
   // Finest span = 10 secs, not less
@@ -12,13 +12,12 @@ export const setRecommendedSpan = (intervalSecs, HISTORY_CHART_PTS) => {
     span = 10;
     // if calculated span is between 10 secs and 60 secs = round it to tens of seconds ie 43 => 40 secs
   } else if (calcedSpan > 10 && calcedSpan < 60) {
-    span = _.round(calcedSpan, 1);
+    span = _.round(calcedSpan, -1);
   } else if (calcedSpan >= 60 && calcedSpan < 3600) {
     // if calced span is 1 to 60 minutes, then round to 1 minute
     span = _.round(calcedSpan / 60) * 60;
-  } else if (calcedSpan >= 3600) {
-    // if calced is 60 mins or more
   }
+  return span;
 };
 
 // pick all pks (ts+obj) in range

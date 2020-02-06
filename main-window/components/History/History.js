@@ -18,6 +18,7 @@ import {
   date_UTS,
   uts_Date
 } from '../../APInHelpers/timeseries';
+import { setRecommendedSpan } from '../../APInHelpers/history';
 import {
   schemaRangeObjects,
   schemaObjIDbyType,
@@ -59,7 +60,10 @@ class History extends PureComponent {
       schemaFirstLineID(this.props.schema)
     ), // default first range ID
     scopedLine: schemaFirstLineID(this.props.schema), // defautl first line ID
-    spanSecs: 100
+    spanSecs: setRecommendedSpan(
+      this.props.historyShowHrs * 3600,
+      this.props.historyMaxPtsCount
+    )
   };
 
   handleLineSelect(lineOption) {
@@ -166,6 +170,10 @@ class History extends PureComponent {
       return {
         startTS: newStartTs,
         endTS: newEndTs,
+        spanSecs: setRecommendedSpan(
+          newEndTs - newStartTs,
+          this.props.historyMaxPtsCount
+        ),
         isExpectingData: true
       };
     });
@@ -193,6 +201,10 @@ class History extends PureComponent {
       return {
         startTS: newStartTs,
         endTS: newEndTs,
+        spanSecs: setRecommendedSpan(
+          newEndTs - newStartTs,
+          this.props.historyMaxPtsCount
+        ),
         isExpectingData: true
       };
     });
@@ -221,26 +233,64 @@ class History extends PureComponent {
     }));
   }
 
-  handleChartResize(xLimits) {
+  handleChartResize(resizedLimits) {
     // console.log('[HISTORY] Updated');
     // console.log(limits);
-    const [xStart, xEnd] = xLimits;
     // console.log(xStart, xEnd);
+    const [resizedStartTS, resizedEndTS] = resizedLimits.map(lim =>
+      date_UTS(lim)
+    );
 
-    // Don't let scroll to future
-    let endTS;
+    let startTS, endTS;
 
-    if (date_UTS(xEnd) >= nowTS()) {
-      endTS = nowTS();
-    } else {
-      endTS = date_UTS(xEnd);
-    }
+    const isMorethan30Days = (resizedEndTS - resizedStartTS) / (24 * 3600) > 30;
 
     this.setState(prevState => {
+      if (isMorethan30Days) {
+        // We have to limit to 30 days
+        if (prevState.endTS === resizedEndTS) {
+          // SCrolling <=left startTs is master
+          startTS = resizedStartTS;
+          endTS = plusHrs(startTS, 24 * 30);
+        } else if (prevState.startTS === resizedStartTS) {
+          // Scrollinmg right => endTs is master
+          if (resizedEndTS >= nowTS()) {
+            // Don't let scroll to future
+            endTS = nowTS();
+          } else {
+            endTS = resizedEndTS;
+          }
+          startTS = minusHrs(endTS, 24 * 30);
+        } else {
+          // Zooming <= => or => <= endTs centerTs is master
+          const centerTS = (resizedEndTS + resizedStartTS) / 2;
+          if (resizedEndTS >= nowTS()) {
+            // Don't let scroll to future
+            endTS = nowTS();
+          } else {
+            endTS = plusHrs(centerTS, 24 * 15);
+          }
+          startTS = minusHrs(endTS, 24 * 30);
+        }
+      } else {
+        if (resizedEndTS >= nowTS()) {
+          // Don't let scroll to future
+          endTS = nowTS();
+        } else {
+          endTS = resizedEndTS;
+        }
+
+        startTS = resizedStartTS;
+      }
+
       return {
-        isExpectingData: false,
-        startTS: date_UTS(xStart),
-        endTS: endTS
+        isExpectingData: true,
+        startTS: startTS,
+        endTS: endTS,
+        spanSecs: setRecommendedSpan(
+          endTS - startTS,
+          this.props.historyMaxPtsCount
+        )
       };
     });
   }
@@ -250,7 +300,8 @@ class History extends PureComponent {
   }
 
   handleSpanSecsChange(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
+    // const secsValue = _.t
     this.setState({ spanSecs: _.toNumber(e.target.value) });
   }
 
@@ -260,20 +311,12 @@ class History extends PureComponent {
     // 3) define missing spans for each object [[ts1, ts2], [ts3, ts4] ... [ts5, ts6]]
     // 4) prepare request
 
-    const needMin = this.state.startTS;
-    const needMax = this.state.endTS;
+    const { startTS, endTS, spanSecs } = this.state;
     const objIDs = schemaObjIDs(this.props.schema);
-
-    this.props.onHistoryRequired(
-      needMin,
-      needMax,
-      objIDs,
-      this.props.historySpanSecs
-    );
-
+    this.props.onHistoryRequired(startTS, endTS, objIDs, spanSecs);
     this.setState({ isExpectingData: true });
 
-    console.log('%c[H] onHistoryRequired fired', 'color: magenta');
+    // console.log('%c[H] onHistoryRequired fired', 'color: magenta');
     // const reqBody = [
     //     {
     //       "1": [[ts1, ts2, dts], [ts3, ts4, dts]]
