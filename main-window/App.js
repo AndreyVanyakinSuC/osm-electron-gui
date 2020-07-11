@@ -261,6 +261,7 @@ class App extends Component {
 
     ipcRenderer.on(MAINWINDOW__SCHEMA, (e, schemaJson) => {
       log.silly('[IPC] Received MAINWINDOW__SCHEMA');
+      log.info(schemaJson);
 
       if (this.state.isSchemaAvailable) {
         log.silly('[Schema] Some schema was available');
