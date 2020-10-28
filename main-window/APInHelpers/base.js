@@ -1,10 +1,11 @@
 export const DEFAULT_HISTORY_HRS = 24;
 export const HISTORY_SPAN_SECS = 60;
 
-import default_1 from '../assets/default/twr1.png';
-import default_2 from '../assets/default/twr2.png';
-import default_3 from '../assets/default/twr3.png';
-import default_4 from '../assets/default/twr4.png';
+import default_1 from '../assets/default/default.jpg';
+import default_2 from '../assets/default/default.jpg';
+import default_3 from '../assets/default/default.jpg';
+import default_4 from '../assets/default/default.jpg';
+// Газовая
 // 48
 import twr48_1 from '../assets/9151/48_1.png';
 import twr48_2 from '../assets/9151/48_2.png';
@@ -30,6 +31,46 @@ import twr209_1 from '../assets/9173/209_1.png';
 import twr209_2 from '../assets/9173/209_2.png';
 import twr209_3 from '../assets/9173/209_3.png';
 import twr209_4 from '../assets/9173/209_4.png';
+// Нижняя Волга
+import twr352_1 from '../assets/9185_352/352_1.jpg';
+import twr352_2 from '../assets/9185_352/352_2.jpg';
+import twr352_3 from '../assets/9185_352/352_3.jpg';
+import twr352_4 from '../assets/9185_352/352_4.jpg';
+
+import twr492_1 from '../assets/9326_492/492_1.jpg';
+import twr492_2 from '../assets/9326_492/492_2.jpg';
+import twr492_3 from '../assets/9326_492/492_3.jpg';
+import twr492_4 from '../assets/9326_492/492_4.jpg';
+
+import twr599_1 from '../assets/9433_599/599_1.jpg';
+import twr599_2 from '../assets/9433_599/599_2.jpg';
+import twr599_3 from '../assets/9433_599/599_3.jpg';
+import twr599_4 from '../assets/9433_599/599_4.jpg';
+
+import twr693_1 from '../assets/9527_693/693_1.jpg';
+import twr693_2 from '../assets/9527_693/693_2.jpg';
+import twr693_3 from '../assets/9527_693/693_3.jpg';
+import twr693_4 from '../assets/9527_693/693_4.jpg';
+
+import twr43_1 from '../assets/9638_43/43_1.jpg';
+import twr43_2 from '../assets/9638_43/43_2.jpg';
+import twr43_3 from '../assets/9638_43/43_3.jpg';
+import twr43_4 from '../assets/9638_43/43_4.jpg';
+
+import twr207_1 from '../assets/9802_207/207_1.jpg';
+import twr207_2 from '../assets/9802_207/207_2.jpg';
+import twr207_3 from '../assets/9802_207/207_3.jpg';
+import twr207_4 from '../assets/9802_207/207_4.jpg';
+
+import twr334_1 from '../assets/9950_334/334_1.jpg';
+import twr334_2 from '../assets/9950_334/334_2.jpg';
+import twr334_3 from '../assets/9950_334/334_3.jpg';
+import twr334_4 from '../assets/9950_334/334_4.jpg';
+
+import twr482_1 from '../assets/10098_482/482_1.jpg';
+import twr482_2 from '../assets/10098_482/482_2.jpg';
+import twr482_3 from '../assets/10098_482/482_3.jpg';
+import twr482_4 from '../assets/10098_482/482_4.jpg';
 
 export const IMAGE_PATHS = new Map([
   ['default', [default_1, default_2, default_3, default_4]],
@@ -37,7 +78,15 @@ export const IMAGE_PATHS = new Map([
   [9155, [twr91_1, twr91_2, twr91_3, twr91_4]],
   [9163, [twr133_1, twr133_2, twr133_3, twr133_4]],
   [9170, [twr179_1, twr179_2, twr179_3, twr179_4]],
-  [9173, [twr209_1, twr209_2, twr209_3, twr209_4]]
+  [9173, [twr209_1, twr209_2, twr209_3, twr209_4]],
+  [9185, [twr352_1, twr352_2, twr352_3, twr352_4]],
+  [9326, [twr492_1, twr492_2, twr492_3, twr492_4]],
+  [9433, [twr599_1, twr599_2, twr599_3, twr599_4]],
+  [9527, [twr693_1, twr693_2, twr693_3, twr693_4]],
+  [9638, [twr43_1, twr43_2, twr43_3, twr43_4]],
+  [9802, [twr207_1, twr207_2, twr207_3, twr207_4]],
+  [9950, [twr334_1, twr334_2, twr334_3, twr334_4]],
+  [10098, [twr482_1, twr482_2, twr482_3, twr482_4]]
 ]);
 
 export const SCHEMA_1ST_LEVEL_NAMES = [
