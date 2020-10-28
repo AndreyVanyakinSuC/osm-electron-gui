@@ -346,7 +346,9 @@ class History extends PureComponent {
     const tsRange = [this.state.startTS, this.state.endTS];
 
     // ENTITIES and WIRES stuff
-    const possibleEntities = _.sortBy(schemaAllObjectTypes(schema));
+    const possibleEntities = _.sortBy(
+      schemaRangeObjectTypes(schema, this.state.scopedRange)
+    );
     const possibleWires = schemaRangeObjects(schema, this.state.scopedRange); // all wires for this range
     const availableEntities = schemaRangeObjectTypes(
       schema,

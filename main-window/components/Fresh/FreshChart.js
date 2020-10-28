@@ -191,7 +191,7 @@ class FreshChart extends Component {
     const allLines = schema.lines;
 
     // ENTITIES stuff
-    const possibleEntities = _.sortBy(schemaAllObjectTypes(schema));
+    const possibleEntities = _.sortBy(schemaRangeObjectTypes(schema, scope));
     const possibleWires = schemaRangeObjects(schema, scope); // all wires for this range
     const availableEntities = schemaRangeObjectTypes(schema, scope);
     const scopedEntities = schemaTypesbyObjIDs(
