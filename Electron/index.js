@@ -1,5 +1,6 @@
 const { app, ipcMain, Menu, dialog } = require('electron');
-
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 // Emitter
 const notifier = require('./notifier');
 const electronLocalshortcut = require('electron-localshortcut');
@@ -417,7 +418,7 @@ const menuTemplate = [
         type: 'info',
         message: 'Клиент ОСМ ВЛ',
         detail:
-          'Версия 2020-01b. Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
+          'Версия 2020-12a. Разработано АО "Союзтехэнерго". Телефон +7 (495) 644-40-46. E-mail: ste@ste.su'
       });
     }
     // {
