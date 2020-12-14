@@ -32,6 +32,8 @@ import {
   outObjIDs,
   readDataByTSRanges,
   clearDataDB,
+  deleteDB,
+  declareDB,
   freshestPKs
 } from './APInHelpers/database';
 import {
@@ -326,7 +328,8 @@ class App extends Component {
     ipcRenderer.on(MAINWINDOW_CLEARIDB, async () => {
       try {
         log.silly('[IPC] Received MAINWINDOW_CLEARIDB');
-        await clearDataDB();
+        await deleteDB();
+        await declareDB();
         this.setState({
           isWaitingHistory: false,
           historyPKs: crypto.randomBytes(16)

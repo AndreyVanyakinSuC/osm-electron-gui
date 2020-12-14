@@ -37,6 +37,8 @@ const headerSwitch = ({
       <Ribbon value={ribbonData.value} msgCode={ribbonData.msgCode} />
     ) : null;
 
+  console.log('Ribbon Data in header', ribbonData);
+
   return (
     <div className="header-mode-switch-container">
       {/* Клавиfi current */}

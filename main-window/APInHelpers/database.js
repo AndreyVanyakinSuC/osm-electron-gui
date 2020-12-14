@@ -13,6 +13,13 @@ export const clearDataDB = () => {
     .catch(err => log.error(err));
 };
 
+// Deletes whole db
+export const deleteDB = () => {
+  db.delete()
+    .then(console.log('Local database deleted successfully'))
+    .catch(err => console.error(error));
+};
+
 // export const destroyDB = () => {
 //   db.schema.clear();
 // };

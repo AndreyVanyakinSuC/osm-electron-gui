@@ -87,6 +87,19 @@ module.exports = {
         // loader: 'file-loader?name=img/[name].[ext]'
       },
       {
+        test: /\.mp3$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'mp3',
+              name: '[name].[ext]'
+            }
+          }
+        ]
+        // loader: 'file-loader?name=img/[name].[ext]'
+      },
+      {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [
           {

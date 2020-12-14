@@ -1,6 +1,7 @@
 import React from 'react';
 import HeaderSwitch from './HeaderSwitch';
 import ConnectStatus from './ConnectStatus';
+import SoundAlarm from './SoundAlarm';
 
 const Header = props => {
   const {
@@ -30,6 +31,9 @@ const Header = props => {
         isWaitingHistory={isWaitingHistory}
         isSchemaAvailable={isSchemaAvailable}
         isFreshAvailable={isFreshAvailable}
+      />
+      <SoundAlarm
+        isAlarm={!!ribbonData.msgCode && ribbonData.msgCode !== '000'}
       />
       <HeaderSwitch
         mode={mode}

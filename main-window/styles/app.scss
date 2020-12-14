@@ -119,11 +119,11 @@ body, html {
         flex-direction: row;
         background-color:$LABEL-COLOR;
         justify-content: space-between;
-        align-items: baseline;
+        align-items: center;
 
         // position: fixed;
         // z-index: 1000;
-        height: 2rem;
+        // height: 2rem;
         width: 100%;
         
 
@@ -196,6 +196,12 @@ body, html {
                     @include icon-btn-hover();
                 }
             }
+        }
+
+        .sound-btn {
+            color: $TEXT-COLOR;
+            font-size: inherit;
+            font-family: inherit;
         }
 
         
