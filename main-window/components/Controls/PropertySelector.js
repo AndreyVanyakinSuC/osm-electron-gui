@@ -10,7 +10,7 @@ const PropertySelector = ({ value, changed }) => {
       value={value}
       options={[
         { value: 'F', label: 'Тяжение' },
-        { value: 'dF', label: 'Прирост тяжения' },
+        // { value: 'dF', label: 'Прирост тяжения' },
         { value: 'I', label: 'Гололёд' }
       ]}
       onChange={changed}

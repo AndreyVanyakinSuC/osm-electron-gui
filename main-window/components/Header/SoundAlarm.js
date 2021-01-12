@@ -41,7 +41,7 @@ const SoundAlarm = props => {
       />
       <Button
         startIcon={
-          isEnabled ? <VolumeOffRoundedIcon /> : <VolumeUpRoundedIcon />
+          isEnabled ? <VolumeUpRoundedIcon /> : <VolumeOffRoundedIcon />
         }
         onClick={() => setEnabled(!isEnabled)}
         className="sound-btn"
