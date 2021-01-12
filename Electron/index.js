@@ -54,6 +54,7 @@ const { createMainWindow } = require('./MainWindow.js');
 const { createConnectWindow } = require('./ConnectWindow');
 const { createMapSettingsWindow } = require('./MapSettingsWindow');
 const { createAdvancedWindow } = require('./AdvancedWindow');
+// const image = require('./_icon/green_icon.png');
 
 // let windows = [];
 let mainWindow, connectWindow, mapSettingsWindow, advancedWindow;
@@ -119,6 +120,7 @@ app.on('ready', () => {
     const advanced = readSettings('advanced');
     mainWindow.webContents.send(MAINWINDOW_ADVSETTINGS, advanced);
     mainWindow.show();
+    // setIconOverlay();
   });
 
   mainWindow.on('show', () => {
@@ -340,6 +342,11 @@ const enableAdvancedWindow = () => {
   advancedWindow.on('close', () => {
     log.silly('[advancedWindow] _on close_');
   });
+};
+
+// Set icon overlay
+const setOverlayIcon = color => {
+  mainWindow.setOverlayIcon(image);
 };
 
 // MENU
