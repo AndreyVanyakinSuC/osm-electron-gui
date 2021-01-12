@@ -375,6 +375,36 @@ export const normalBandShapes = (dataArr, props, isNormalVisible) => {
   });
 };
 
+export const ghostShape = dataArr => {
+  // console.log('ghost', dataArr);
+
+  const MULTIPLIER = 1;
+
+  if (!!dataArr && dataArr.length >= 2) {
+    const minBand = _.min(dataArr.map(da => da.Fmn));
+    const maxBand = _.max(dataArr.map(da => da.Fmx));
+    const spread = maxBand - minBand;
+
+    return {
+      visible: true,
+      type: 'rect',
+      layer: 'below',
+      xref: 'paper',
+      x0: 0,
+      x1: 1,
+      yref: 'y',
+      y0: minBand - spread >= 0 ? minBand - MULTIPLIER * spread : 0,
+      y1: maxBand + MULTIPLIER * spread,
+      opcaity: 0,
+      line: {
+        width: 0
+      }
+    };
+  } else {
+    return null;
+  }
+};
+
 // in [{msg: color}, {}]
 export const iceLevelsShapes = () => {
   return [...MSGS.entries()].map(tc => {

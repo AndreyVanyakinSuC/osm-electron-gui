@@ -21,6 +21,7 @@ import {
   yLayout,
   normalBandShapes,
   iceLevelsShapes,
+  ghostShape,
   traceShapes,
   highlightDangerShapes,
   valueAnnotation
@@ -228,6 +229,11 @@ class Chart extends Component {
         this.state.isNormalVisible
       );
       shapes = plotlyTensionLimitsShapes;
+      // WE add ghost shapes to make buffer view
+      if (mode === 'fresh') {
+        const ghostShapes = ghostShape(dataArr);
+        !!ghostShapes ? shapes.push(ghostShapes) : null;
+      }
     } else if (propMode === 'I') {
       const plotlyIceLevelShapes = iceLevelsShapes();
       shapes = plotlyIceLevelShapes;
