@@ -37,6 +37,11 @@ const DEFAULTS_FALLBACK = {
     secondary: {
       description: 'Стандартная карта',
       url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    },
+    proxy: {
+      availability: 'unknown',
+      domain_user: '',
+      password: ''
     }
   }
 };

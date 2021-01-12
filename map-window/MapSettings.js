@@ -76,8 +76,12 @@ class MapSettings extends Component {
     });
     ipcRenderer.on(SWINDOW_DEF_RES, (e, args) => {
       log.info('[IPC] Received _SWINDOW_DEF_RES_', args);
-      const { primary, secondary } = args;
-      this.setState(() => ({ primary: primary, secondary: secondary }));
+      const { primary, secondary, proxy } = args;
+      this.setState(() => ({
+        primary: primary,
+        secondary: secondary,
+        proxy: proxy
+      }));
     });
   }
 

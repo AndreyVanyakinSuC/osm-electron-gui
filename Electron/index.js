@@ -160,9 +160,14 @@ app.on('ready', () => {
   // RECEIVING SETTINGS FROM MAP SETTINGS WINDOW
   ipcMain.on(SWINDOW_SEND, (e, args) => {
     log.silly('[IPC] _on SWINDOW_SEND_');
+    console.log('SWINDOW_SEND', args);
     writeSettings('settings', args);
-    const { primary, secondary } = readSettings('settings');
-    mainWindow.webContents.send(MAINWINDOW_MAPSETTINGS, { primary, secondary });
+    const { primary, secondary, proxy } = readSettings('settings');
+    mainWindow.webContents.send(MAINWINDOW_MAPSETTINGS, {
+      primary,
+      secondary,
+      proxy
+    });
   });
 
   // RECEIVING DEFAULTS REQUEST FROM MAP SETTINGS  WINDOW
@@ -280,8 +285,10 @@ app.on('ready', () => {
 app.on('login', (event, webContents, request, authInfo, callback) => {
   log.silly('Login event fired', request);
   // console.log('Login event fired', request);
-  const { domain_user, password } = readSettings('settings').proxy;
-  callback(domain_user, password);
+  if (!!readSettings('settings') && !!readSettings('settings').proxy) {
+    const { domain_user, password } = readSettings('settings').proxy;
+    callback(domain_user, password);
+  }
 });
 
 // app.on('', () => {
