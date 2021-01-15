@@ -52,6 +52,7 @@ import {
 import { verifySchema, verifyData } from './APInHelpers/verification';
 import { worstCaseRibbon } from './APInHelpers/notification';
 import { freshDummy } from './APInHelpers/schema';
+import { formatFresh, F_MODES, I_MODE } from './APInHelpers/history';
 //FIXME:
 // import moment from 'moment';
 
@@ -76,6 +77,8 @@ class App extends Component {
     mode: 'fresh', // 'history / 'fresh'
     schema: {}, // schema
     //fresh
+    iceMode: I_MODE.kg_per_m,
+    fMode: F_MODES.kgs,
     fresh: {},
     lastFreshMessageTS: '', // timestamp of moment of last fresh message arrival
     isFreshAvailable: false, //if fresh is available to show
@@ -171,6 +174,7 @@ class App extends Component {
         // read data for trends
         readDataByTSRanges(objIDs, trendRange).then(trendMaterial => {
           // dataArr
+
           const fresh = addTrends(
             dataArr,
             trendMaterial,
@@ -179,7 +183,13 @@ class App extends Component {
           // console.log('Befroe grouping', freshArr);
           this.setState(prevState => {
             // add new fresh objects, keep existing and not updated unchanged
-            const mergedFresh = _.merge(prevState.fresh, fresh);
+            const mergedFresh = formatFresh(
+              _.merge(prevState.fresh, fresh),
+              this.state.fMode,
+              this.state.iceMode
+            );
+
+            console.log('mergerFresh', mergedFresh);
 
             if (prevState.isFreshAvailable) {
               return { fresh: mergedFresh };
@@ -452,6 +462,8 @@ class App extends Component {
           display = (
             <Fresh
               schema={this.state.schema}
+              fMode={this.state.fMode}
+              iceMode={this.state.iceMode}
               fresh={this.state.fresh}
               tileSources={this.state.tileSources}
               historyPKs={this.state.historyPKs}
@@ -483,6 +495,8 @@ class App extends Component {
           display = (
             <History
               schema={this.state.schema}
+              fMode={this.state.fMode}
+              iceMode={this.state.iceMode}
               isConnected={this.state.isConnected}
               onHistoryRequired={this.handleHistoryRequest.bind(this)}
               historyPKs={this.state.historyPKs}

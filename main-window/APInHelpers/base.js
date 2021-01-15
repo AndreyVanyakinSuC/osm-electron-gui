@@ -137,9 +137,10 @@ export const ENTITY_NAMES = new Map([
 ]);
 
 export const UNITS = new Map([
-  ['F', 'Н'],
-  ['dF', 'Н'],
-  ['I', 'мм'],
+  ['F', 'кгс'],
+  ['dF', 'кгс'],
+  // ['I', 'мм'],
+  ['I', 'кг/ 200м'],
   ['T', '\u00B0C'],
   ['Tamb', '\u00B0C'],
   ['L', 'км']
@@ -149,7 +150,8 @@ export const PROP_STRINGS = new Map([
   ['F', 'Тяжение'],
   ['dF', '\u0394 Тяжения'],
   ['Tamb', 'T воздуха'],
-  ['I', 'Стенка']
+  // ['I', 'Стенка'],
+  ['I', 'Гололёд']
 ]);
 
 export const MSGS = new Map([
@@ -204,3 +206,27 @@ export const MSGS = new Map([
     }
   ] //  20mm =< ice
 ]);
+
+export const CABLE_DIAMETER_MM = {
+  ACO300: 24,
+  AC400_51: 27.5
+};
+
+export const SENSOR_DIAMETER_MM = {
+  4024: CABLE_DIAMETER_MM.ACO300,
+  4031: CABLE_DIAMETER_MM.ACO300,
+  4032: CABLE_DIAMETER_MM.ACO300,
+  4033: CABLE_DIAMETER_MM.ACO300,
+  4041: CABLE_DIAMETER_MM.ACO300,
+  4042: CABLE_DIAMETER_MM.ACO300,
+  4043: CABLE_DIAMETER_MM.ACO300,
+  4046: CABLE_DIAMETER_MM.ACO300,
+  4048: CABLE_DIAMETER_MM.AC400_51,
+  4049: CABLE_DIAMETER_MM.AC400_51,
+  4050: CABLE_DIAMETER_MM.AC400_51,
+  4051: CABLE_DIAMETER_MM.AC400_51,
+  4052: CABLE_DIAMETER_MM.AC400_51,
+  4053: CABLE_DIAMETER_MM.AC400_51,
+  4054: CABLE_DIAMETER_MM.AC400_51,
+  4055: CABLE_DIAMETER_MM.AC400_51
+};

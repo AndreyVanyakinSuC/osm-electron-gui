@@ -400,6 +400,8 @@ class History extends PureComponent {
         <Chart
           objData={schema.obj} // schema objs
           tsRange={tsRange} // []
+          fMode={this.props.fMode}
+          iceMode={this.props.iceMode}
           scopedWires={this.state.scopedObjects} // wire ids [1,2,3]
           possibleWires={possibleWires} // for this range
           propMode={this.state.propMode}

@@ -130,6 +130,8 @@ class Fresh extends Component {
           {isChartVisible ? (
             <FreshChart
               schema={schema}
+              fMode={this.props.fMode}
+              iceMode={this.props.iceMode}
               latestTS={latestTS}
               scope={this.state.scopedRange}
               propMode={this.state.chartPropMode}

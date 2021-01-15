@@ -2,6 +2,7 @@ import { readPKsByTSRanges, filterTss } from './database';
 import { displayHuman } from './timeseries';
 import _ from 'lodash';
 import { writeFileSync, writeFile } from 'fs';
+import { CABLE_DIAMETER_MM, SENSOR_DIAMETER_MM } from './base';
 
 export const setRecommendedSpan = (intervalSecs, HISTORY_CHART_PTS) => {
   const calcedSpan = intervalSecs / (3 * HISTORY_CHART_PTS);
@@ -276,3 +277,103 @@ const firstLastN = (arr, N) =>
 //       "2": [[ts1, ts2, dts], [ts3, ts4, dts]]
 //    }
 //  ];
+
+export const F_MODES = {
+  newton: 'newton',
+  kgs: 'kgs'
+};
+
+export const I_MODE = {
+  mm: 'mm',
+  kg_per_m: 'kg_per_m'
+};
+
+const ICE_DENSITY = 900;
+const SPAN = 200;
+
+const mmToKgPerMeter = (cableDiameter, iceMm, span = SPAN) => {
+  const cableM = cableDiameter / 1000;
+  const thicknessM = iceMm / 1000;
+
+  return Math.PI * (cableM * thicknessM + thicknessM ** 2) * span * ICE_DENSITY;
+};
+
+export const formatFresh = (
+  fresh,
+  f_mode = F_MODES.newton,
+  i_mode = I_MODE.mm
+) => {
+  if (f_mode === F_MODES.newton && i_mode === I_MODE.mm) {
+    return fresh;
+  } else {
+    let outputFresh = {};
+    for (const objId in fresh) {
+      _.set(outputFresh, objId, {
+        ...fresh[objId],
+        F: f_mode === F_MODES.kgs ? fresh[objId].F / 10 : fresh[objId].F,
+        Fmn: f_mode === F_MODES.kgs ? fresh[objId].Fmn / 10 : fresh[objId].Fmn,
+        Fmx: f_mode === F_MODES.kgs ? fresh[objId].Fmx / 10 : fresh[objId].Fmx,
+        Frms:
+          f_mode === F_MODES.kgs ? fresh[objId].Frms / 10 : fresh[objId].Frms,
+        FTrend:
+          f_mode === F_MODES.kgs
+            ? fresh[objId].FTrend.map(f => f / 10)
+            : fresh[objId].FTrend,
+        FmxTrend:
+          f_mode === F_MODES.kgs
+            ? fresh[objId].FmxTrend.map(f => f / 10)
+            : fresh[objId].FmxTrend,
+        FmnTrend:
+          f_mode === F_MODES.kgs
+            ? fresh[objId].FmnTrend.map(f => f / 10)
+            : fresh[objId].FmnTrend,
+        FrmsTrend:
+          f_mode === F_MODES.kgs
+            ? fresh[objId].FrmsTrend.map(f => f / 10)
+            : fresh[objId].FrmsTrend,
+        I:
+          i_mode === I_MODE.kg_per_m
+            ? mmToKgPerMeter(
+                !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
+                fresh[objId].I
+              )
+            : fresh[objId].I,
+        ITrend:
+          i_mode === I_MODE.kg_per_m
+            ? fresh[objId].ITrend.map(I =>
+                mmToKgPerMeter(
+                  !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
+                  I
+                )
+              )
+            : fresh[objId].ITrend
+      });
+    }
+    return outputFresh;
+  }
+};
+
+export const formatDataArr = (
+  dataArr,
+  f_mode = F_MODES.newton,
+  i_mode = I_MODE.mm
+) => {
+  if (f_mode === F_MODES.newton && i_mode === I_MODE.mm) {
+    return dataArr;
+  } else {
+    return dataArr.map(da => ({
+      ...da,
+      F: f_mode === F_MODES.kgs ? da.F / 10 : da.F,
+      Fmn: f_mode === F_MODES.kgs ? da.Fmn / 10 : da.Fmn,
+      Fmx: f_mode === F_MODES.kgs ? da.Fmx / 10 : da.Fmx,
+      Frms: f_mode === F_MODES.kgs ? da.Frms / 10 : da.Frms,
+      I:
+        i_mode === I_MODE.kg_per_m
+          ? mmToKgPerMeter(
+              !!SENSOR_DIAMETER_MM[da.obj] ? SENSOR_DIAMETER_MM[da.obj] : 11,
+              da.I
+            )
+          : da.I
+    }));
+  }
+};

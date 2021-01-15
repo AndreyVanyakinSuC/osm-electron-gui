@@ -7,6 +7,7 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
 Plotly.register(locale);
 Plotly.setPlotConfig({ locale: 'ru' });
+import { formatDataArr, F_MODES, I_MODE } from '../../APInHelpers/history';
 
 import _ from 'lodash';
 import {
@@ -80,7 +81,11 @@ class Chart extends Component {
       'color: darkgreen'
     );
 
-    const dataArr = await readDataByTSRanges(possibleWires, tsRange);
+    const dataArr = formatDataArr(
+      await readDataByTSRanges(possibleWires, tsRange),
+      this.props.fMode,
+      this.props.iceMode
+    );
     // console.log(`%c[CHART] Max ts in datarr ${displayHuman(freshMaxTS(dataArr))}`,'color: darkgreen');
 
     this.setState(prevState => ({
@@ -234,7 +239,7 @@ class Chart extends Component {
         const ghostShapes = ghostShape(dataArr);
         !!ghostShapes ? shapes.push(ghostShapes) : null;
       }
-    } else if (propMode === 'I') {
+    } else if (propMode === 'I' && this.props.iceMode === I_MODE.mm) {
       const plotlyIceLevelShapes = iceLevelsShapes();
       shapes = plotlyIceLevelShapes;
     }
