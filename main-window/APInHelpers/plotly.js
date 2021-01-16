@@ -7,6 +7,7 @@ import {
 } from './timeseries';
 import _ from 'lodash';
 import { ENTITY_NAMES, UNITS, MSGS, PROP_STRINGS } from './base';
+import { F_MODES, I_MODE } from './history';
 
 const TEMP_TRACE_COLOR = '#3b41bf';
 const TEMP_AXIS_COLOR = TEMP_TRACE_COLOR;
@@ -264,7 +265,7 @@ export const xLayout = (tsRange, mode) => {
   };
 };
 
-export const yLayout = (prop, mode, yRange) => {
+export const yLayout = (prop, mode, yRange, iceMode, spanLength, fMode) => {
   // Range === null will cause autorange, In history range is null in state by default but is chenged when user scrolls
   // In fresh range is always null
 
@@ -278,7 +279,9 @@ export const yLayout = (prop, mode, yRange) => {
 
   if (prop === 'F') {
     axisNo = 'yaxis';
-    title = `${PROP_STRINGS.get('F')}, ${UNITS.get('F')}`;
+    title = `${PROP_STRINGS.get('F')}, ${
+      fMode === F_MODES.newton ? 'Н' : 'кгс'
+    }`;
     color = MAIN_AXIS_COLOR;
     side = 'left';
     rangemode = 'normal';
@@ -286,7 +289,9 @@ export const yLayout = (prop, mode, yRange) => {
     zeroline = false;
   } else if (prop === 'dF') {
     axisNo = 'yaxis';
-    title = `${PROP_STRINGS.get('dF')}, ${UNITS.get('dF')}`;
+    title = `${PROP_STRINGS.get('dF')}, ${
+      fMode === F_MODES.newton ? 'Н' : 'кгс'
+    }`;
     color = MAIN_AXIS_COLOR;
     side = 'left';
     rangemode = 'normal';
@@ -294,7 +299,9 @@ export const yLayout = (prop, mode, yRange) => {
     zeroline = true;
   } else if (prop === 'I') {
     axisNo = 'yaxis';
-    title = `${PROP_STRINGS.get('I')}, ${UNITS.get('I')}`;
+    title = `${PROP_STRINGS.get('I')}, ${
+      iceMode === I_MODE.kg_per_m ? `кг/${spanLength}м` : 'мм'
+    }`;
     color = MAIN_AXIS_COLOR;
     side = 'left';
     rangemode = 'tozero';
@@ -505,10 +512,19 @@ export const traceShapes = traces => {
 // ANNOTATIONS
 //
 
-export const valueAnnotation = tracesArr => {
+export const valueAnnotation = (tracesArr, iceMode, spanLength, fMode) => {
   return tracesArr.map(trace => {
     // console.log(trace);
     const { name, x, y, propMode } = trace;
+
+    let units = '';
+    if (propMode === 'F' || propMode === 'dF') {
+      units = fMode === F_MODES.newton ? 'Н' : 'кгс';
+    } else if (propMode === 'I') {
+      units = iceMode === I_MODE.kg_per_m ? `кг/${spanLength}м` : 'мм';
+    } else {
+      units = UNITS.get(propMode);
+    }
 
     // No data on the plot
     if (x.length === 0 || y.length === 0) {
@@ -527,7 +543,7 @@ export const valueAnnotation = tracesArr => {
         color: VALUE_ANNO_TEXT_COLOR
       },
       //startstandoff: 2, //Sets a distance, in pixels, to move the start arrowhead away from the position it is pointing at, for example to point at the edge of a marker independent of zoom. Note that this shortens the arrow from the `ax` / `ay` vector, in contrast to `xshift` / `yshift` which moves everything by this amount.
-      text: `<b>${name}</b>` + '<br>' + `${yData} ${UNITS.get(propMode)}`,
+      text: `<b>${name}</b>` + '<br>' + `${yData} ${units}`,
       bgcolor: VALUE_ANNO_BG_COLOR,
       bordercolor: VALUE_ANNO_BORDER_COLOR,
       borderpad: 2,

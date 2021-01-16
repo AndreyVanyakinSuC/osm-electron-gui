@@ -2,6 +2,9 @@ import React from 'react';
 import HeaderSwitch from './HeaderSwitch';
 import ConnectStatus from './ConnectStatus';
 import SoundAlarm from './SoundAlarm';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const Header = props => {
   const {
@@ -17,8 +20,12 @@ const Header = props => {
     isCanShowHistory,
     ribbonData,
     onModeChange,
-    mode
+    mode,
+    onSettingsClick,
+    isSoundAlarmOption
   } = props;
+
+  const isAlarm = !!ribbonData.msgCode && ribbonData.msgCode !== '000';
 
   return (
     <div className="app_header">
@@ -32,16 +39,22 @@ const Header = props => {
         isSchemaAvailable={isSchemaAvailable}
         isFreshAvailable={isFreshAvailable}
       />
-      <SoundAlarm
-        isAlarm={!!ribbonData.msgCode && ribbonData.msgCode !== '000'}
-      />
-      <HeaderSwitch
-        mode={mode}
-        onModeChange={onModeChange}
-        isCanShowFresh={isCanShowFresh}
-        isCanShowHistory={isCanShowHistory}
-        ribbonData={ribbonData}
-      />
+      <div style={{ display: 'flex', direction: 'row', alignItems: 'center' }}>
+        {isAlarm && isSoundAlarmOption && <SoundAlarm isAlarm={isAlarm} />}
+        {/* <Tooltip title="Настройки отображения"> */}
+        <IconButton onClick={onSettingsClick} className="setttings_btn">
+          <SettingsIcon />
+        </IconButton>
+        {/* </Tooltip> */}
+
+        <HeaderSwitch
+          mode={mode}
+          onModeChange={onModeChange}
+          isCanShowFresh={isCanShowFresh}
+          isCanShowHistory={isCanShowHistory}
+          ribbonData={ribbonData}
+        />
+      </div>
     </div>
   );
 };

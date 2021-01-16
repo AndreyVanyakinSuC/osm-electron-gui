@@ -8,6 +8,7 @@ const Plot = createPlotlyComponent(Plotly);
 Plotly.register(locale);
 Plotly.setPlotConfig({ locale: 'ru' });
 import { formatDataArr, F_MODES, I_MODE } from '../../APInHelpers/history';
+import SettingsContext from '../SettingsContext';
 
 import _ from 'lodash';
 import {
@@ -202,6 +203,8 @@ class Chart extends Component {
     this.setState({ yMainRange: null, yTempRange: null });
   }
 
+  static contextType = SettingsContext;
+
   render() {
     const dataArr = this.state.dataArr;
     const props = this.props;
@@ -209,7 +212,14 @@ class Chart extends Component {
 
     // Main
     const plotlyMainData = mainTraces(dataArr, props, ptsCount);
-    const plotlyYLayoutMain = yLayout(propMode, mode, this.state.yMainRange);
+    const plotlyYLayoutMain = yLayout(
+      propMode,
+      mode,
+      this.state.yMainRange,
+      this.context.iceMode,
+      this.context.spanLength,
+      this.context.fMode
+    );
 
     // Temperature
     const plotlyTempData = isTempVisible
@@ -248,7 +258,12 @@ class Chart extends Component {
     // Annotations
     let annotations = [];
     if (mode === 'fresh') {
-      annotations = valueAnnotation(plotlyMainData);
+      annotations = valueAnnotation(
+        plotlyMainData,
+        this.context.iceMode,
+        this.context.spanLength,
+        this.context.fMode
+      );
     }
 
     // Combine all

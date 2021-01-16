@@ -57,10 +57,12 @@ import { formatFresh, F_MODES, I_MODE } from './APInHelpers/history';
 // import moment from 'moment';
 
 import './styles/app.scss';
+import SettingsContext from './components/SettingsContext';
 import Header from './components/Header/Header';
 import Fresh from './components/Fresh/Fresh';
 import History from './components/History/History';
 import Fallback from './components/Fallback';
+import Settings from './components/Settings/Settings';
 
 // ### LOGGING INIT ###
 // log.variables.label = 'MW';
@@ -79,11 +81,14 @@ class App extends Component {
     //fresh
     iceMode: I_MODE.kg_per_m,
     fMode: F_MODES.kgs,
+    spanLength: 200,
+    isSoundAlarmOption: true,
     fresh: {},
     lastFreshMessageTS: '', // timestamp of moment of last fresh message arrival
     isFreshAvailable: false, //if fresh is available to show
     // history
     historyPKs: [],
+    isShowModal: false,
     lastHistoryRequest: {} // used to compare as well
     //
   };
@@ -449,6 +454,20 @@ class App extends Component {
     ipcRenderer.send(CONNECTWINDOW__CREATE);
   }
 
+  handleSettingsClick() {
+    this.setState(ps => ({ isShowModal: true }));
+  }
+
+  handleCloseSettings() {
+    this.setState(ps => ({ isShowModal: false }));
+  }
+
+  handleApplySettings(s) {
+    const { iceMode, fMode, spanLength, isSoundAlarmOption } = s;
+    this.setState(ps => ({ iceMode, fMode, spanLength, isSoundAlarmOption }));
+    this.handleCloseSettings();
+  }
+
   render() {
     const isCanShowFresh =
       this.state.isSchemaAvailable && this.state.isFreshAvailable;
@@ -462,6 +481,7 @@ class App extends Component {
           display = (
             <Fresh
               schema={this.state.schema}
+              spanLength={this.state.spanLength}
               fMode={this.state.fMode}
               iceMode={this.state.iceMode}
               fresh={this.state.fresh}
@@ -523,29 +543,49 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <Header
-          ip={this.state.ip}
-          lastFreshMessageTS={this.state.lastFreshMessageTS}
-          onConnectClick={this.handleConnectClick.bind(this)}
-          isConnected={this.state.isConnected}
-          isConnecting={this.state.isConnecting}
-          isWaitingHistory={this.state.isWaitingHistory}
-          isSchemaAvailable={this.state.isSchemaAvailable}
-          isFreshAvailable={this.state.isFreshAvailable}
-          isCanShowFresh={isCanShowFresh}
-          isCanShowHistory={isCanShowHistory}
-          ribbonData={
-            isCanShowFresh
-              ? worstCaseRibbon(this.state.fresh)
-              : { value: null, msgCode: null }
-          }
-          onModeChange={this.handleAppModeSwitch.bind(this)}
-          mode={this.state.mode}
-        />
-
-        <div className="main">{display}</div>
-      </div>
+      <SettingsContext.Provider
+        value={{
+          iceMode: this.state.iceMode,
+          fMode: this.state.fMode,
+          spanLength: this.state.spanLength
+        }}
+      >
+        <div className="App">
+          <Header
+            ip={this.state.ip}
+            isSoundAlarmOption={this.state.isSoundAlarmOption}
+            lastFreshMessageTS={this.state.lastFreshMessageTS}
+            onConnectClick={this.handleConnectClick.bind(this)}
+            isConnected={this.state.isConnected}
+            isConnecting={this.state.isConnecting}
+            isWaitingHistory={this.state.isWaitingHistory}
+            isSchemaAvailable={this.state.isSchemaAvailable}
+            isFreshAvailable={this.state.isFreshAvailable}
+            isCanShowFresh={isCanShowFresh}
+            isCanShowHistory={isCanShowHistory}
+            ribbonData={
+              isCanShowFresh
+                ? worstCaseRibbon(this.state.fresh)
+                : { value: null, msgCode: null }
+            }
+            onModeChange={this.handleAppModeSwitch.bind(this)}
+            mode={this.state.mode}
+            onSettingsClick={this.handleSettingsClick.bind(this)}
+          />
+          {this.state.isShowModal && (
+            <Settings
+              isOpen={this.state.isShowModal}
+              onClose={this.handleCloseSettings.bind(this)}
+              onApply={this.handleApplySettings.bind(this)}
+              iceMode={this.state.iceMode}
+              fMode={this.state.fMode}
+              spanLength={this.state.spanLength}
+              isSoundAlarmOption={this.state.isSoundAlarmOption}
+            />
+          )}
+          <div className="main">{display}</div>
+        </div>
+      </SettingsContext.Provider>
     );
   }
 }

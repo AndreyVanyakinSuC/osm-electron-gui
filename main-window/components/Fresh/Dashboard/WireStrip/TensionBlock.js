@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import TensionTrend from './TensionTrend';
 import { UNITS } from '../../../../APInHelpers/base';
+import { F_MODES } from '../../../../APInHelpers/history';
+import SettingsContext from '../../../SettingsContext';
 import RMSTrend from './RMSTrend';
 
 const tensionBlock = ({
@@ -14,6 +16,8 @@ const tensionBlock = ({
   FRedThreshold,
   focusChart
 }) => {
+  const { fMode } = useContext(SettingsContext);
+
   return (
     <span
       className="tension_block"
@@ -28,7 +32,7 @@ const tensionBlock = ({
         FRedThreshold={FRedThreshold}
       />
       {F.toFixed(0)}
-      <span className={'unit'}>{UNITS.get('F')}</span>
+      <span className={'unit'}>{fMode === F_MODES.newton ? 'Н' : 'кгс'}</span>
       {/* <RMSTrend 
                 FrmsTrend={FrmsTrend}
             /> */}
