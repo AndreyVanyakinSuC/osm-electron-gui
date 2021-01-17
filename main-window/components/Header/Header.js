@@ -22,10 +22,13 @@ const Header = props => {
     onModeChange,
     mode,
     onSettingsClick,
-    isSoundAlarmOption
+    isSoundAlarmOption,
+    soundIceThreshold
   } = props;
 
-  const isAlarm = !!ribbonData.msgCode && ribbonData.msgCode !== '000';
+  // console.log('ribbonData', soundIceThreshold, ribbonData);
+  // const isAlarm = !!ribbonData.msgCode && ribbonData.msgCode !== '000';
+  const isAlarm = ribbonData.value >= soundIceThreshold;
 
   return (
     <div className="app_header">

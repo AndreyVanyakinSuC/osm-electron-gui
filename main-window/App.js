@@ -83,6 +83,7 @@ class App extends Component {
     fMode: F_MODES.kgs,
     spanLength: 200,
     isSoundAlarmOption: true,
+    soundIceThreshold: 3, // mm
     fresh: {},
     lastFreshMessageTS: '', // timestamp of moment of last fresh message arrival
     isFreshAvailable: false, //if fresh is available to show
@@ -463,8 +464,20 @@ class App extends Component {
   }
 
   handleApplySettings(s) {
-    const { iceMode, fMode, spanLength, isSoundAlarmOption } = s;
-    this.setState(ps => ({ iceMode, fMode, spanLength, isSoundAlarmOption }));
+    const {
+      iceMode,
+      fMode,
+      spanLength,
+      isSoundAlarmOption,
+      soundIceThreshold
+    } = s;
+    this.setState(ps => ({
+      iceMode,
+      fMode,
+      spanLength,
+      isSoundAlarmOption,
+      soundIceThreshold
+    }));
     this.handleCloseSettings();
   }
 
@@ -571,6 +584,7 @@ class App extends Component {
             onModeChange={this.handleAppModeSwitch.bind(this)}
             mode={this.state.mode}
             onSettingsClick={this.handleSettingsClick.bind(this)}
+            soundIceThreshold={this.state.soundIceThreshold}
           />
           {this.state.isShowModal && (
             <Settings
@@ -580,6 +594,7 @@ class App extends Component {
               iceMode={this.state.iceMode}
               fMode={this.state.fMode}
               spanLength={this.state.spanLength}
+              soundIceThreshold={this.state.soundIceThreshold}
               isSoundAlarmOption={this.state.isSoundAlarmOption}
             />
           )}

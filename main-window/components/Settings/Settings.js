@@ -35,20 +35,29 @@ const Settings = props => {
     iceMode,
     fMode,
     spanLength,
-    isSoundAlarmOption
+    isSoundAlarmOption,
+    soundIceThreshold // mm or kg
   } = props;
 
   const [state, setState] = useState({});
-  const [error, setError] = useState(null);
+  const [spanError, setSpanError] = useState(null);
+  const [threshError, setThreshError] = useState(null);
 
   useEffect(() => {
-    setState({ iceMode, fMode, spanLength, isSoundAlarmOption });
-  }, [iceMode, fMode, spanLength]);
+    setState({
+      iceMode,
+      fMode,
+      spanLength,
+      isSoundAlarmOption,
+      soundIceThreshold
+    });
+  }, [iceMode, fMode, spanLength, isSoundAlarmOption, soundIceThreshold]);
 
   const handleChange = e => {
     console.log(e.target.value);
     setState({ ...state, [e.target.name]: e.target.value });
-    setError(null);
+    setSpanError(null);
+    setThreshError(null);
   };
 
   const handleToggle = e => {
@@ -56,8 +65,24 @@ const Settings = props => {
   };
 
   const handleApplyClick = () => {
-    if (state.spanLength === '' || state.spanLength <= 0) {
-      setError('Недопустимо');
+    let errorSpan = null;
+    let errorThreshold = null;
+
+    if (
+      state.spanLength === '' ||
+      state.spanLength <= 0 ||
+      state.spanLength > 999
+    ) {
+      errorSpan = 'Недопустимо';
+    }
+
+    if (state.soundIceThreshold < 0) {
+      errorThreshold = 'Недопустимо';
+    }
+
+    if (!!errorSpan || !!errorThreshold) {
+      setSpanError(errorSpan);
+      setThreshError(errorThreshold);
     } else {
       onApply(state);
     }
@@ -87,7 +112,30 @@ const Settings = props => {
                     color="primary"
                   />
                 }
-                label="Звуковая сигнализация при гололёде"
+                label={
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    Звуковая сигнализация при гололёде
+                    <TextField
+                      name="soundIceThreshold"
+                      id="soundIceThreshold"
+                      value={state.soundIceThreshold}
+                      disabled={!state.isSoundAlarmOption}
+                      style={{
+                        width: '5rem',
+                        marginLeft: '1rem',
+                        marginRight: '1rem'
+                      }}
+                      type="number"
+                      placeholder="Гололёд"
+                      error={!!threshError}
+                      onChange={handleChange}
+                      helperText={!!threshError ? threshError : ''}
+                    />
+                    {state.iceMode === I_MODE.kg_per_m
+                      ? `кг/${spanLength}м`
+                      : 'мм'}
+                  </div>
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -120,8 +168,8 @@ const Settings = props => {
                           placeholder="Длина"
                           value={state.spanLength}
                           onChange={handleChange}
-                          error={!!error}
-                          helperText={!!error ? error : ''}
+                          error={!!spanError}
+                          helperText={!!spanError ? spanError : ''}
                         />
                         метров
                       </div>
