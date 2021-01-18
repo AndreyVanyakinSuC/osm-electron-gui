@@ -74,7 +74,7 @@ module.exports = {
         include: defaultInclude
       },
       {
-        test: /\.(jpe?g|png|gif)$/,
+        test: /\.(jpe?g|png|gif|ico)$/,
         use: [
           {
             loader: 'file-loader',

@@ -20,7 +20,9 @@ import {
   MAINWINDOW__HISTORYERR,
   MAINWINDOW_CLEARIDB,
   ELECTRON__HISTORYCLEARED,
-  ELECTRON__CLEARERR
+  ELECTRON__CLEARERR,
+  MAINWINDOW_SIGNALSETTINGS,
+  ELECTRON_SIGNALSETTINGS
 } from '../Electron/IPC';
 
 import {
@@ -191,6 +193,7 @@ class App extends Component {
             // add new fresh objects, keep existing and not updated unchanged
             const mergedFresh = formatFresh(
               _.merge(prevState.fresh, fresh),
+              this.state.spanLength,
               this.state.fMode,
               this.state.iceMode
             );
@@ -223,6 +226,23 @@ class App extends Component {
       } else {
         log.silly('[Schema] No schema available in db');
       }
+    });
+
+    ipcRenderer.on(MAINWINDOW_SIGNALSETTINGS, (e, data) => {
+      const {
+        fMode,
+        iceMode,
+        isSoundAlarmOption,
+        soundIceThreshold,
+        spanLength
+      } = data;
+      this.setState(() => ({
+        fMode,
+        iceMode,
+        isSoundAlarmOption,
+        soundIceThreshold,
+        spanLength
+      }));
     });
 
     // connection handlers
@@ -264,6 +284,7 @@ class App extends Component {
     // });
 
     ipcRenderer.on(MAINWINDOW_MAPSETTINGS, (e, tileSources) => {
+      console.log('tileSources', tileSources);
       this.setState(() => ({
         tileSources: tileSources
       }));
@@ -271,6 +292,7 @@ class App extends Component {
     });
 
     ipcRenderer.on(MAINWINDOW_ADVSETTINGS, (e, advanced) => {
+      console.log('advanced', advanced);
       this.setState(() => ({
         advanced: advanced
       }));
@@ -471,6 +493,7 @@ class App extends Component {
       isSoundAlarmOption,
       soundIceThreshold
     } = s;
+    ipcRenderer.send(ELECTRON_SIGNALSETTINGS, s);
     this.setState(ps => ({
       iceMode,
       fMode,
@@ -528,6 +551,7 @@ class App extends Component {
           display = (
             <History
               schema={this.state.schema}
+              spanLength={this.state.spanLength}
               fMode={this.state.fMode}
               iceMode={this.state.iceMode}
               isConnected={this.state.isConnected}

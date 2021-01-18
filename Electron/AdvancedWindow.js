@@ -22,7 +22,7 @@ const createAdvancedWindow = function(mainWindow, dev) {
     // maximizable:false,
     resizable: true,
     // movable: false
-    icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
+    icon: path.join(__dirname, '_icon/app_logo.ico'),
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,

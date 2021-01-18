@@ -12,7 +12,7 @@ const createMainWindow = function(dev) {
     height: 768,
     show: false,
     darkTheme: true,
-    icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
+    icon: path.join(__dirname, '_icon/app_logo.ico'),
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,

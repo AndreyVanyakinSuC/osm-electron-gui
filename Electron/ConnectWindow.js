@@ -22,7 +22,7 @@ const createConnectWindow = function(mainWindow, dev) {
     // maximizable:false,
     resizable: false,
     // movable: false
-    icon: path.join(__dirname, '_icon/app_logo_Zqc_icon.ico'),
+    icon: path.join(__dirname, '_icon/app_logo.ico'),
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
@@ -31,7 +31,7 @@ const createConnectWindow = function(mainWindow, dev) {
     }
   });
 
-  connectWindow.loadURL(winIndexpath('connectIndex.html',dev));
+  connectWindow.loadURL(winIndexpath('connectIndex.html', dev));
   connectWindow.setMenu(null);
 
   connectWindow.once('ready-to-show', () => {

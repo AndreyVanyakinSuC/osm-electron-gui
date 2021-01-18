@@ -130,6 +130,7 @@ class Fresh extends Component {
           {isChartVisible ? (
             <FreshChart
               schema={schema}
+              spanLength={this.props.spanLength}
               fMode={this.props.fMode}
               iceMode={this.props.iceMode}
               latestTS={latestTS}

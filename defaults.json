@@ -25,5 +25,12 @@
       "domain_user": "",
       "password": ""
     }
+  },
+  "signal": {
+    "iceMode": "mm",
+    "fMode": "newton",
+    "spanLength": 200,
+    "isSoundAlarmOption": true,
+    "soundIceThreshold": 3
   }
 }

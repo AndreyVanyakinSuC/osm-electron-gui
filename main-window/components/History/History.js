@@ -401,6 +401,7 @@ class History extends PureComponent {
           objData={schema.obj} // schema objs
           tsRange={tsRange} // []
           fMode={this.props.fMode}
+          spanLength={this.props.spanLength}
           iceMode={this.props.iceMode}
           scopedWires={this.state.scopedObjects} // wire ids [1,2,3]
           possibleWires={possibleWires} // for this range

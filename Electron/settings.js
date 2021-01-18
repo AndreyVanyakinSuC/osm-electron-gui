@@ -43,6 +43,13 @@ const DEFAULTS_FALLBACK = {
       domain_user: '',
       password: ''
     }
+  },
+  signal: {
+    iceMode: 'mm',
+    fMode: 'newton',
+    spanLength: 200,
+    isSoundAlarmOption: true,
+    soundIceThreshold: 3
   }
 };
 
@@ -53,6 +60,10 @@ const setAdvancedDefaults = settings => {
 
 const setMapDefaults = settings => {
   writeSettings('settings', settings);
+};
+
+const setDisplayDefaults = signal => {
+  writeSettings('signal', signal);
 };
 
 const initDefaults = dev => {
@@ -88,5 +99,6 @@ module.exports = {
   hasSettings,
   setAdvancedDefaults,
   setMapDefaults,
+  setDisplayDefaults,
   initDefaults
 };

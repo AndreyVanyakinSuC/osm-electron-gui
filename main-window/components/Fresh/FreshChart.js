@@ -237,6 +237,7 @@ class FreshChart extends Component {
           tsRange={tsRange} // []
           fMode={this.props.fMode}
           iceMode={this.props.iceMode}
+          spanLength={this.props.spanLength}
           scopedWires={this.state.scopedObjects} // wire ids [1,2,3]
           possibleWires={possibleWires} // for this range
           propMode={propMode}

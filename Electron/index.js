@@ -1,4 +1,12 @@
-const { app, ipcMain, Menu, dialog } = require('electron');
+const {
+  app,
+  ipcMain,
+  Menu,
+  dialog,
+  Tray,
+  nativeImage,
+  Notification
+} = require('electron');
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 // Emitter
@@ -30,7 +38,9 @@ const {
   MAINWINDOW__HISTORYERR,
   MAINWINDOW_CLEARIDB,
   ELECTRON__HISTORYCLEARED,
-  ELECTRON__CLEARERR
+  ELECTRON__CLEARERR,
+  MAINWINDOW_SIGNALSETTINGS,
+  ELECTRON_SIGNALSETTINGS
 } = require('./IPC');
 const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 
@@ -39,6 +49,7 @@ const {
   readSettings,
   setAdvancedDefaults,
   setMapDefaults,
+  setDisplayDefaults,
   hasSettings,
   initDefaults
 } = require('./settings.js');
@@ -96,6 +107,16 @@ app.on('ready', () => {
     setMapDefaults(DEFAULT_SETTINGS.settings);
   }
 
+  if (!hasSettings('signal')) {
+    setDisplayDefaults(DEFAULT_SETTINGS.signal);
+  }
+  const note = new Notification({
+    title: 'ОАИСКГН. Необходимо внимание',
+    silent: false,
+    body: 'Тут какой-то текст',
+    timeoutType: 'never'
+  });
+
   // HANDLE MAIN WINDOW
   //
 
@@ -115,12 +136,17 @@ app.on('ready', () => {
 
   mainWindow.once('ready-to-show', () => {
     //  SEND STORED SETTINGS TO UI ON STARTUP
-    const { primary, secondary } = readSettings('settings');
-    mainWindow.webContents.send(MAINWINDOW_MAPSETTINGS, { primary, secondary });
+    // const { primary, secondary } = readSettings('settings');
+    const settings = readSettings('settings');
+    mainWindow.webContents.send(MAINWINDOW_MAPSETTINGS, settings);
     const advanced = readSettings('advanced');
     mainWindow.webContents.send(MAINWINDOW_ADVSETTINGS, advanced);
+    const signal = readSettings('signal');
+    if (!!signal) {
+      mainWindow.webContents.send(MAINWINDOW_SIGNALSETTINGS, signal);
+    }
+
     mainWindow.show();
-    // setIconOverlay();
   });
 
   mainWindow.on('show', () => {
@@ -132,6 +158,7 @@ app.on('ready', () => {
     ) {
       connect();
     }
+    note.show();
   });
 
   //
@@ -207,6 +234,10 @@ app.on('ready', () => {
       historyMaxPtsCount,
       historySpanSecs
     });
+  });
+
+  ipcMain.on(ELECTRON_SIGNALSETTINGS, (e, args) => {
+    writeSettings('signal', args);
   });
 
   // ADV WINDOW REQUESTS DEFAULTS
@@ -349,11 +380,6 @@ const enableAdvancedWindow = () => {
   advancedWindow.on('close', () => {
     log.silly('[advancedWindow] _on close_');
   });
-};
-
-// Set icon overlay
-const setOverlayIcon = color => {
-  mainWindow.setOverlayIcon(image);
 };
 
 // MENU

@@ -289,9 +289,8 @@ export const I_MODE = {
 };
 
 const ICE_DENSITY = 900;
-const SPAN = 200;
 
-const mmToKgPerMeter = (cableDiameter, iceMm, span = SPAN) => {
+const mmToKgPerMeter = (cableDiameter, iceMm, span) => {
   const cableM = cableDiameter / 1000;
   const thicknessM = iceMm / 1000;
 
@@ -300,6 +299,7 @@ const mmToKgPerMeter = (cableDiameter, iceMm, span = SPAN) => {
 
 export const formatFresh = (
   fresh,
+  spanLength,
   f_mode = F_MODES.newton,
   i_mode = I_MODE.mm
 ) => {
@@ -335,7 +335,8 @@ export const formatFresh = (
           i_mode === I_MODE.kg_per_m
             ? mmToKgPerMeter(
                 !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
-                fresh[objId].I
+                fresh[objId].I,
+                spanLength
               )
             : fresh[objId].I,
         ITrend:
@@ -343,7 +344,8 @@ export const formatFresh = (
             ? fresh[objId].ITrend.map(I =>
                 mmToKgPerMeter(
                   !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
-                  I
+                  I,
+                  spanLength
                 )
               )
             : fresh[objId].ITrend
@@ -355,6 +357,7 @@ export const formatFresh = (
 
 export const formatDataArr = (
   dataArr,
+  spanLength,
   f_mode = F_MODES.newton,
   i_mode = I_MODE.mm
 ) => {
@@ -371,7 +374,8 @@ export const formatDataArr = (
         i_mode === I_MODE.kg_per_m
           ? mmToKgPerMeter(
               !!SENSOR_DIAMETER_MM[da.obj] ? SENSOR_DIAMETER_MM[da.obj] : 11,
-              da.I
+              da.I,
+              spanLength
             )
           : da.I
     }));

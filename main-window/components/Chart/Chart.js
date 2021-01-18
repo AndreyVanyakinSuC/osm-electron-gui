@@ -84,6 +84,7 @@ class Chart extends Component {
 
     const dataArr = formatDataArr(
       await readDataByTSRanges(possibleWires, tsRange),
+      this.props.spanLength,
       this.props.fMode,
       this.props.iceMode
     );
