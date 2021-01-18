@@ -40,7 +40,8 @@ const {
   ELECTRON__HISTORYCLEARED,
   ELECTRON__CLEARERR,
   MAINWINDOW_SIGNALSETTINGS,
-  ELECTRON_SIGNALSETTINGS
+  ELECTRON_SIGNALSETTINGS,
+  ELECTRON_NOTIFY
 } = require('./IPC');
 const { PING_NOT_OK, PING_OK, CONNECTING } = require('./events');
 
@@ -113,7 +114,7 @@ app.on('ready', () => {
   const note = new Notification({
     title: 'ОАИСКГН. Необходимо внимание',
     silent: false,
-    body: 'Тут какой-то текст',
+    body: 'Перейдите в приложение Клиент',
     timeoutType: 'never'
   });
 
@@ -158,7 +159,6 @@ app.on('ready', () => {
     ) {
       connect();
     }
-    note.show();
   });
 
   //
@@ -298,6 +298,10 @@ app.on('ready', () => {
   // MAIN RENDERER HAS CLEAREAD HISTORY IN DA IDB
   ipcMain.on(ELECTRON__CLEARERR, err => {
     dialog.showErrorBox('Не удалось очистить хранилище', `${err}`);
+  });
+
+  ipcMain.on(ELECTRON_NOTIFY, () => {
+    note.show();
   });
 
   //

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { ipcRenderer } from 'electron';
+import usePrevious from '../../hooks/usePrevious';
 import HeaderSwitch from './HeaderSwitch';
 import ConnectStatus from './ConnectStatus';
 import SoundAlarm from './SoundAlarm';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+// import Tooltip from '@material-ui/core/Tooltip';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { ELECTRON_NOTIFY } from '../../../Electron/IPC';
 
 const Header = props => {
   const {
@@ -29,6 +32,14 @@ const Header = props => {
   // console.log('ribbonData', soundIceThreshold, ribbonData);
   // const isAlarm = !!ribbonData.msgCode && ribbonData.msgCode !== '000';
   const isAlarm = ribbonData.value >= soundIceThreshold;
+
+  const prevIsAlarm = usePrevious(isAlarm);
+  useEffect(() => {
+    console.log('now is=', isAlarm, 'was=', prevIsAlarm);
+    if (isAlarm && !prevIsAlarm) {
+      ipcRenderer.send(ELECTRON_NOTIFY);
+    }
+  }, [isAlarm, prevIsAlarm]);
 
   return (
     <div className="app_header">
