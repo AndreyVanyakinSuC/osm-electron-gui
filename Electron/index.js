@@ -9,6 +9,7 @@ const {
 } = require('electron');
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+app.setAppUserModelId('Клиент ОАИСКГН');
 // Emitter
 const notifier = require('./notifier');
 const electronLocalshortcut = require('electron-localshortcut');
