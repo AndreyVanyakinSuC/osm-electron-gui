@@ -1,0 +1,36 @@
+{
+  "advanced": {
+    "isAddMsgToFresh": true,
+    "freshMaxPtsCount": 100,
+    "sseTimeoutSecs": 200,
+    "trendHrs": 8,
+    "trensMaxPtsCount": 40,
+    "historyShowHrs": 8,
+    "historyMaxPtsCount": 400,
+    "historySpanSecs": 300,
+    "isSaveHistoryReqs": false,
+    "isSaveHistoryReps": false
+  },
+  "settings": {
+    "primary": {
+      "description": "Топографическая карта",
+      "url": "http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+    },
+    "secondary": {
+      "description": "Стандартная карта",
+      "url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    },
+    "proxy": {
+      "availability": "unknown",
+      "domain_user": "",
+      "password": ""
+    }
+  },
+  "signal": {
+    "iceMode": "mm",
+    "fMode": "newton",
+    "spanLength": 200,
+    "isSoundAlarmOption": true,
+    "soundIceThreshold": 3
+  }
+}
