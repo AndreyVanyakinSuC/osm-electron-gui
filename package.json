@@ -58,7 +58,7 @@
     "@material-ui/icons": "^4.11.2",
     "acorn": "^6.0.0",
     "ajv": "^6.0.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "date-fns": "^2.0.0-alpha.23",
     "dexie": "^2.0.4",
     "downsample-lttb": "0.0.1",
