@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { IMAGE_PATHS } from "../../../../APInHelpers/base";
+import { IMAGE_PATHS } from '../../../../APInHelpers/base';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 // import twr1 from '../../../../assets/twr1.png';
@@ -28,11 +28,12 @@ class TowerGallery extends Component {
   render() {
     const { photoIndex, isOpen } = this.state;
     // const { images } = this.props;
-    
+
     const { isExpanded, towerID } = this.props;
 
-    
-    const imagePaths = IMAGE_PATHS.has(towerID) ? IMAGE_PATHS.get(towerID) : IMAGE_PATHS.get("default")
+    const imagePaths = IMAGE_PATHS.has(towerID)
+      ? IMAGE_PATHS.get(towerID)
+      : IMAGE_PATHS.get('default');
     const classes = isExpanded ? 'details-gallery' : 'details-gallery hidden';
     const images = imagePaths.map((path, i) => (
       <div

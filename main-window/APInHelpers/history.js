@@ -301,7 +301,8 @@ export const formatFresh = (
   fresh,
   spanLength,
   f_mode = F_MODES.newton,
-  i_mode = I_MODE.mm
+  i_mode = I_MODE.mm,
+  schemaObj
 ) => {
   if (f_mode === F_MODES.newton && i_mode === I_MODE.mm) {
     return fresh;
@@ -334,7 +335,7 @@ export const formatFresh = (
         I:
           i_mode === I_MODE.kg_per_m
             ? mmToKgPerMeter(
-                !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
+                schemaObj[Number(objId)].cableDiameter_mm,
                 fresh[objId].I,
                 spanLength
               )
@@ -343,7 +344,7 @@ export const formatFresh = (
           i_mode === I_MODE.kg_per_m
             ? fresh[objId].ITrend.map(I =>
                 mmToKgPerMeter(
-                  !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
+                  schemaObj[Number(objId)].cableDiameter_mm,
                   I,
                   spanLength
                 )
@@ -359,11 +360,13 @@ export const formatDataArr = (
   dataArr,
   spanLength,
   f_mode = F_MODES.newton,
-  i_mode = I_MODE.mm
+  i_mode = I_MODE.mm,
+  schemaObj
 ) => {
   if (f_mode === F_MODES.newton && i_mode === I_MODE.mm) {
     return dataArr;
   } else {
+    console.log(dataArr[0]);
     return dataArr.map(da => ({
       ...da,
       F: f_mode === F_MODES.kgs ? da.F / 10 : da.F,
@@ -373,7 +376,7 @@ export const formatDataArr = (
       I:
         i_mode === I_MODE.kg_per_m
           ? mmToKgPerMeter(
-              !!SENSOR_DIAMETER_MM[da.obj] ? SENSOR_DIAMETER_MM[da.obj] : 11,
+              schemaObj[Number(da.obj)].cableDiameter_mm,
               da.I,
               spanLength
             )

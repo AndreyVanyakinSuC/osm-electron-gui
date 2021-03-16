@@ -86,7 +86,8 @@ class Chart extends Component {
       await readDataByTSRanges(possibleWires, tsRange),
       this.props.spanLength,
       this.props.fMode,
-      this.props.iceMode
+      this.props.iceMode,
+      this.props.schema.obj
     );
     // console.log(`%c[CHART] Max ts in datarr ${displayHuman(freshMaxTS(dataArr))}`,'color: darkgreen');
 

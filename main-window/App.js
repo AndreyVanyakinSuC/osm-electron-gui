@@ -195,7 +195,8 @@ class App extends Component {
               _.merge(prevState.fresh, fresh),
               this.state.spanLength,
               this.state.fMode,
-              this.state.iceMode
+              this.state.iceMode,
+              this.state.schema.obj
             );
 
             console.log('mergerFresh', mergedFresh);

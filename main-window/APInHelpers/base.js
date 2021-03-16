@@ -1,10 +1,10 @@
 export const DEFAULT_HISTORY_HRS = 24;
 export const HISTORY_SPAN_SECS = 60;
 
-import default_1 from '../assets/default/default.jpg';
-import default_2 from '../assets/default/default.jpg';
-import default_3 from '../assets/default/default.jpg';
-import default_4 from '../assets/default/default.jpg';
+import default_1 from '../assets/default/twr1.png';
+import default_2 from '../assets/default/twr2.png';
+import default_3 from '../assets/default/twr3.png';
+import default_4 from '../assets/default/twr4.png';
 // Газовая
 // 48
 import twr48_1 from '../assets/9151/48_1.png';

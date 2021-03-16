@@ -414,6 +414,7 @@ class History extends PureComponent {
           onDataLoaded={this.handleDataReady.bind(this)}
           ptsCount={this.props.historyMaxPtsCount}
           mode="history"
+          schema={this.props.schema}
         />
       </div>
     );
