@@ -1,7 +1,7 @@
 {
-  "name": "fotms-client-app",
-  "version": "0.7.0",
-  "description": "Fibre-optic tension measurement system app ",
+  "name": "OSM_client",
+  "version": "2021-03a",
+  "description": "Fibre-optic tension measurement system app",
   "author": "Andrey Vanyakin, Opten",
   "homepage": "http://www.optensolutions.com",
   "repository": {
