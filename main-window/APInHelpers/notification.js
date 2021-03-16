@@ -37,12 +37,14 @@ export const pickWorstMessage = messagesArrs => {
 // IN fresh or Subset
 // OUT {value, msgCode} for Ribbon
 export const worstCaseRibbon = fresh => {
-  const worstMsg = pickWorstMessage(_.map(fresh, f => f.msg));
-  const maxIce = _.max(_.map(fresh, f => f.I));
+  if (!!fresh) {
+    const worstMsg = pickWorstMessage(_.map(fresh, f => f.msg));
+    const maxIce = _.max(_.map(fresh, f => f.I));
 
-  if (worstMsg === null) {
-    return { value: null, msgCode: null };
-  } else {
-    return { value: maxIce, msgCode: worstMsg };
+    if (worstMsg === null) {
+      return { value: null, msgCode: null };
+    } else {
+      return { value: maxIce, msgCode: worstMsg };
+    }
   }
 };
