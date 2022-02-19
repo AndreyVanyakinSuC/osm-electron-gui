@@ -49,7 +49,7 @@ const DEFAULTS_FALLBACK = {
     fMode: 'newton',
     spanLength: 200,
     isSoundAlarmOption: true,
-    soundIceThreshold: 3
+    soundIceThreshold: 10
   }
 };
 

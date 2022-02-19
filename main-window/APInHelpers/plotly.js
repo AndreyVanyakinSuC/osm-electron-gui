@@ -95,7 +95,7 @@ export const SETTINGS = {
 //
 
 // traces
-const trace = (xyArr, name, propMode, yaxis) => {
+const trace = (xyArr, name, propMode, yaxis, iceMode, spanLength, fMode) => {
   const [x, y] = XYpairstoXYarrs(xyArr);
   const fill = propMode === 'I' ? 'tonexty' : 'none';
 
@@ -103,6 +103,17 @@ const trace = (xyArr, name, propMode, yaxis) => {
   const bordercolor = propMode === 'Tamb' ? TEMP_TRACE_COLOR : MAIN_TRACE_COLOR;
   const opacity = propMode === 'Tamb' ? 0.6 : 1.0;
   const width = propMode === 'Tamb' ? 3 : 3;
+
+  let hovertemplateUnits = UNITS.get(propMode);
+
+  if (propMode === 'I') {
+    hovertemplateUnits =
+      iceMode === I_MODE.kg_per_m ? `кг/${spanLength}м` : 'мм';
+  }
+
+  if (propMode === 'F' || propMode === 'dF') {
+    hovertemplateUnits = fMode === F_MODES.newton ? 'Н' : 'кгс';
+  }
 
   return {
     type: 'scatter',
@@ -139,7 +150,7 @@ const trace = (xyArr, name, propMode, yaxis) => {
     hovertemplate:
       '<b>%{fullData.name}</b>' +
       '<br>' +
-      `${PROP_STRINGS.get(propMode)}: %{y:.1f} ${UNITS.get(propMode)}` +
+      `${PROP_STRINGS.get(propMode)}: %{y:.1f} ${hovertemplateUnits}` +
       '<br>' +
       'Время: %{x}' +
       '<extra></extra>'
@@ -147,7 +158,14 @@ const trace = (xyArr, name, propMode, yaxis) => {
   };
 };
 
-export const mainTraces = (dataArr, props, ptsCount) => {
+export const mainTraces = (
+  dataArr,
+  props,
+  ptsCount,
+  iceMode,
+  spanLength,
+  fMode
+) => {
   const { objData, propMode, scopedWires, mode } = props;
   const PTS_COUNT = ptsCount;
 
@@ -155,15 +173,15 @@ export const mainTraces = (dataArr, props, ptsCount) => {
     if (propMode === 'F') {
       const Fxy = pullXYpairs(dataArr, w, 'F', PTS_COUNT); // [[ts, F], [ts, F]]
       const name = ENTITY_NAMES.get(objData[w].Type); // A, B, C
-      return trace(Fxy, name, propMode, 'y');
+      return trace(Fxy, name, propMode, 'y', iceMode, spanLength, fMode);
     } else if (propMode === 'dF') {
       const dFxy = deltaY(pullXYpairs(dataArr, w, 'F', PTS_COUNT)); // [[ts, F], [ts, F]]
       const name = ENTITY_NAMES.get(objData[w].Type); // A, B, C
-      return trace(dFxy, name, propMode, 'y');
+      return trace(dFxy, name, propMode, 'y', iceMode, spanLength, fMode);
     } else if (propMode === 'I') {
       const Fxy = pullXYpairs(dataArr, w, 'I', PTS_COUNT); // [[ts, F], [ts, F]]
       const name = ENTITY_NAMES.get(objData[w].Type); // A, B, C
-      return trace(Fxy, name, propMode, 'y');
+      return trace(Fxy, name, propMode, 'y', iceMode, spanLength, fMode);
     }
   });
 };

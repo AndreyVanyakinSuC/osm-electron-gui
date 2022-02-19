@@ -2,8 +2,7 @@ import { readPKsByTSRanges, filterTss } from './database';
 import { displayHuman } from './timeseries';
 import _ from 'lodash';
 import { writeFileSync, writeFile } from 'fs';
-import { CABLE_DIAMETER_MM, SENSOR_DIAMETER_MM } from './base';
-
+import { CABLE_DIAMETER_MM, MSGS, SENSOR_DIAMETER_MM } from './base';
 export const setRecommendedSpan = (intervalSecs, HISTORY_CHART_PTS) => {
   const calcedSpan = intervalSecs / (3 * HISTORY_CHART_PTS);
 
@@ -32,13 +31,13 @@ export const addMsgs = freshArr =>
     if (f.I <= 1) {
       out.I = 0;
       out.msg = ['000'];
-    } else if (f.I > 1 && f.I <= 5) {
+    } else if (f.I > 1 && f.I <= 10) {
       out.msg = ['011'];
-    } else if (f.I > 5 && f.I <= 10) {
-      out.msg = ['012'];
     } else if (f.I > 10 && f.I <= 20) {
+      out.msg = ['012'];
+    } else if (f.I > 20 && f.I <= 30) {
       out.msg = ['013'];
-    } else if (f.I > 20) {
+    } else if (f.I > 30) {
       out.msg = ['014'];
     }
     return out;
@@ -334,7 +333,7 @@ export const formatFresh = (
         I:
           i_mode === I_MODE.kg_per_m
             ? mmToKgPerMeter(
-                !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
+                !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11.1,
                 fresh[objId].I,
                 spanLength
               )
@@ -343,7 +342,9 @@ export const formatFresh = (
           i_mode === I_MODE.kg_per_m
             ? fresh[objId].ITrend.map(I =>
                 mmToKgPerMeter(
-                  !!SENSOR_DIAMETER_MM[objId] ? SENSOR_DIAMETER_MM[objId] : 11,
+                  !!SENSOR_DIAMETER_MM[objId]
+                    ? SENSOR_DIAMETER_MM[objId]
+                    : 11.1,
                   I,
                   spanLength
                 )
@@ -373,7 +374,7 @@ export const formatDataArr = (
       I:
         i_mode === I_MODE.kg_per_m
           ? mmToKgPerMeter(
-              !!SENSOR_DIAMETER_MM[da.obj] ? SENSOR_DIAMETER_MM[da.obj] : 11,
+              !!SENSOR_DIAMETER_MM[da.obj] ? SENSOR_DIAMETER_MM[da.obj] : 11.1,
               da.I,
               spanLength
             )
