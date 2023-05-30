@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 // Building plotly to enable RU locale
 import Plotly from 'plotly.js/dist/plotly';
@@ -47,7 +47,7 @@ import { readDataByTSRanges } from '../../APInHelpers/database';
 // mode: history / fresh
 // onUpdate
 
-class Chart extends Component {
+class Chart extends PureComponent {
   state = {
     dataArr: [], // [slices]
     revision: 0,
@@ -212,7 +212,14 @@ class Chart extends Component {
     const { isTempVisible, mode, tsRange, propMode, ptsCount } = props;
 
     // Main
-    const plotlyMainData = mainTraces(dataArr, props, ptsCount);
+    const plotlyMainData = mainTraces(
+      dataArr,
+      props,
+      ptsCount,
+      this.context.iceMode,
+      this.context.spanLength,
+      this.context.fMode
+    );
     const plotlyYLayoutMain = yLayout(
       propMode,
       mode,
@@ -258,6 +265,7 @@ class Chart extends Component {
 
     // Annotations
     let annotations = [];
+
     if (mode === 'fresh') {
       annotations = valueAnnotation(
         plotlyMainData,

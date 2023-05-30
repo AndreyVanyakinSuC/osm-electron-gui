@@ -174,59 +174,51 @@ export const MSGS = new Map([
       to: 5,
       color: 'rgb(28, 200, 163);'
     }
-  ], //  1mm =< ice < 5mm
+  ], //  1mm =< ice < 10mm
   [
     '012',
     {
       priority: 2,
       class: 'warning-ice',
-      threshold: 5,
+      threshold: 10,
       to: 10,
       color: '#ff8534'
     }
-  ], //  5mm =< ice < 10mm
+  ], //  5mm =< ice < 20mm
   [
     '013',
     {
       priority: 3,
       class: 'alarm-ice',
-      threshold: 10,
+      threshold: 20,
       to: 20,
       color: '#ff3333'
     }
-  ], //  10mm =< ice < 20mm
+  ], //  10mm =< ice < 30mm
   [
     '014',
     {
       priority: 4,
       class: 'critical-ice',
-      threshold: 20,
+      threshold: 30,
       to: 100,
       color: 'rgb(114, 19, 19);'
     }
-  ] //  20mm =< ice
+  ] //  30mm =< ice
 ]);
 
 export const CABLE_DIAMETER_MM = {
   ACO300: 24,
-  AC400_51: 27.5
+  OPGW: 11.5
 };
 
 export const SENSOR_DIAMETER_MM = {
-  4024: CABLE_DIAMETER_MM.ACO300,
-  4031: CABLE_DIAMETER_MM.ACO300,
-  4032: CABLE_DIAMETER_MM.ACO300,
-  4033: CABLE_DIAMETER_MM.ACO300,
-  4041: CABLE_DIAMETER_MM.ACO300,
-  4042: CABLE_DIAMETER_MM.ACO300,
-  4043: CABLE_DIAMETER_MM.ACO300,
-  4046: CABLE_DIAMETER_MM.ACO300,
-  4048: CABLE_DIAMETER_MM.AC400_51,
-  4049: CABLE_DIAMETER_MM.AC400_51,
-  4050: CABLE_DIAMETER_MM.AC400_51,
-  4051: CABLE_DIAMETER_MM.AC400_51,
-  4052: CABLE_DIAMETER_MM.AC400_51,
-  4053: CABLE_DIAMETER_MM.AC400_51,
-  4054: CABLE_DIAMETER_MM.AC400_51,
-  4055: CABLE_DIAMETER_MM.AC400_51
+  1: CABLE_DIAMETER_MM.ACO300,
+  2: CABLE_DIAMETER_MM.ACO300,
+  3: CABLE_DIAMETER_MM.OPGW,
+  4: CABLE_DIAMETER_MM.OPGW,
+  5: CABLE_DIAMETER_MM.ACO300,
+  6: CABLE_DIAMETER_MM.ACO300,
+  7: CABLE_DIAMETER_MM.OPGW,
+  8: CABLE_DIAMETER_MM.OPGW
 };

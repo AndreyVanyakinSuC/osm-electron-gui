@@ -19,21 +19,12 @@ const installReactDEvTools = function() {
 // index = 'index.html'
 const winIndexpath = (index, dev) => {
   let indexPath;
-  
+
   if (dev) {
-    indexPath = url.format({
-      protocol: 'http:',
-      host: 'localhost:8080',
-      pathname: index,
-      slashes: true
-    });
+    const urlObject = new URL(`http://localhost:8080/${index}`);
+    indexPath = urlObject.toString();
   } else {
-    indexPath = url.format({
-      protocol: 'file:',
-      pathname: path.join(__dirname, index),
-      // pathname: path.join(__dirname, '../dist', index),
-      slashes: true
-    });
+    indexPath = url.pathToFileURL(path.join(__dirname, index)).toString();
   }
   return indexPath;
 };
