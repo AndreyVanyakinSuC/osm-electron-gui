@@ -87,6 +87,7 @@ log.transports.file.format =
   '[{y}-{d}-{m} {h}:{i}:{s}.{ms}] [{label}] [{level}] {text}';
 
 log.info(log.transports.file.findLogPath());
+log.info('env', process.env.NODE_ENV);
 
 // Keep a reference for dev mode
 
@@ -154,6 +155,7 @@ app.on('ready', () => {
   mainWindow.on('show', () => {
     log.silly('[MainWindow] _on show_');
     // Autoconenct if set to true and has settings
+    mainWindow.webContents.openDevTools();
     if (
       readSettings('connectSettings') !== undefined &&
       readSettings('connectSettings').isAutoconnect
