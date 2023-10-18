@@ -5,6 +5,18 @@ import default_1 from '../assets/default/default.jpg';
 import default_2 from '../assets/default/default.jpg';
 import default_3 from '../assets/default/default.jpg';
 import default_4 from '../assets/default/default.jpg';
+
+// УП
+import twr585_1 from '../assets/585/585_1.png';
+import twr585_2 from '../assets/585/585_2.png';
+import twr585_3 from '../assets/585/585_3.png';
+import twr585_4 from '../assets/585/585_4.png';
+
+import twr650_1 from '../assets/650/650_1.png';
+import twr650_2 from '../assets/650/650_2.png';
+import twr650_3 from '../assets/650/650_3.png';
+import twr650_4 from '../assets/650/650_4.png';
+
 // Газовая
 // 48
 import twr48_1 from '../assets/9151/48_1.png';
@@ -74,6 +86,8 @@ import twr482_4 from '../assets/10098_482/482_4.jpg';
 
 export const IMAGE_PATHS = new Map([
   ['default', [default_1, default_2, default_3, default_4]],
+  [585, [twr585_1, twr585_2, twr585_3, twr585_4]],
+  [650, [twr650_1, twr650_2, twr650_3, twr650_4]],
   [9151, [twr48_1, twr48_2, twr48_3, twr48_4]],
   [9155, [twr91_1, twr91_2, twr91_3, twr91_4]],
   [9163, [twr133_1, twr133_2, twr133_3, twr133_4]],
